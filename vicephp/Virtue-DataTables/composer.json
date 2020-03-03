@@ -1,8 +1,8 @@
 {
   "name": "virtue/datatables",
+  "type": "library",
   "description": "I'm gonna go build my own datatables lib, with black jack and hookers!",
-  "license": "proprietary",
-  "type": "project",
+  "license": "MIT",
   "minimum-stability": "dev",
   "prefer-stable": true,
   "config": {
@@ -10,8 +10,7 @@
   },
   "require": {
     "php": "^7.1",
-    "ext-json": "*",
-    "beberlei/assert": "^3.2"
+    "ext-json": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "~7.0"
