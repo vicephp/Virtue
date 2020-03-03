@@ -2,7 +2,7 @@
 
 namespace Virtue\DataTables;
 
-class Request
+class Request implements \JsonSerializable
 {
     const search = 'search';
     const start = 'start';
@@ -68,7 +68,7 @@ class Request
         return $this->search;
     }
 
-    public function asArray()
+    public function jsonSerialize()
     {
         return $this->params;
     }
