@@ -11,7 +11,7 @@
   "require": {
     "php": "^7.1",
     "ext-pdo": "*",
-    "beberlei/assert": "^2.7"
+    "beberlei/assert": "^2.0"
   },
   "require-dev": {
     "phpunit/phpunit": "~7.0",
