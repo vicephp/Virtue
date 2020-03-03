@@ -52,15 +52,62 @@ class DataTablesTest extends TestCase
         $this->assertEquals('aDirection', $order->dir());
     }
 
+    public function testRequest()
+    {
+        $request = new Request(
+            $params = [
+                Request::draw => '1',
+                Request::columns => [
+                    [
+                        Column::data => 'aField',
+                        Column::name => 'aName',
+                        Column::searchable => 'true',
+                        Column::orderable => 'true',
+                        Column::search => [
+                            Search::value => 'aValue', Search::regex => 'false'
+                        ],
+                    ],
+                ],
+                Request::order => [
+                    [Order::column => '0', Order::dir => 'desc']
+                ],
+                Request::start => '0',
+                Request::length => '10',
+                Request::search => [
+                    Search::value => '', Search::regex => 'false'
+                ],
+                '_' => '1506604469131',
+            ]
+        );
+
+
+        $this->assertEquals(1, $request->draw());
+        $this->assertEquals('aField', $request->column(0)->data());
+        $this->assertEquals('aName', $request->column(0)->name());
+        $this->assertEquals(true, $request->column(0)->searchable());
+        $this->assertEquals(true, $request->column(0)->orderable());
+        $this->assertEquals(true, $request->column(0)->search()->notEmpty());
+        $this->assertEquals('aValue', $request->column(0)->search()->value());
+        $this->assertEquals(false, $request->column(0)->search()->regex());
+        $this->assertEquals(1, count($request->columns()));
+        $this->assertEquals(1, count($request->order()));
+        $this->assertEquals(0, $request->start());
+        $this->assertEquals(10, $request->length());
+        $this->assertEquals(false, $request->search()->notEmpty());
+        $this->assertEquals('', $request->search()->value());
+        $this->assertEquals(false, $request->search()->regex());
+        $this->assertEquals($params, $request->jsonSerialize());
+    }
+
     public function testResponseWithError()
     {
         $response = Response::withError('anError');
         $expected = [
-            'draw' => 1,
-            'recordsTotal' => 0,
-            'recordsFiltered' => 0,
-            'data' => [],
-            'error' => 'anError'
+            Response::draw => 1,
+            Response::recordsTotal => 0,
+            Response::recordsFiltered => 0,
+            Response::data => [],
+            Response::error => 'anError'
         ];
         $this->assertEquals($expected, $response->jsonSerialize());
     }
@@ -68,10 +115,10 @@ class DataTablesTest extends TestCase
     public function testResponse()
     {
         $expected = [
-            'draw' => 1,
-            'recordsTotal' => 3,
-            'recordsFiltered' => 3,
-            'data' => [
+            Response::draw => 1,
+            Response::recordsTotal => 3,
+            Response::recordsFiltered => 3,
+            Response::data => [
                 ['aRow'], ['bRow'], ['cRow']
             ],
         ];
