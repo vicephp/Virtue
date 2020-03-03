@@ -1,8 +1,8 @@
 {
   "name": "virtue/access",
+  "type": "library",
   "description": "I'm gonna go build my own access lib, with black jack and hookers!",
-  "license": "proprietary",
-  "type": "project",
+  "license": "MIT",
   "minimum-stability": "dev",
   "prefer-stable": true,
   "config": {
@@ -10,7 +10,7 @@
   },
   "require": {
     "php": "^7.1",
-    "beberlei/assert": "^3.2"
+    "beberlei/assert": "^2.0"
   },
   "require-dev": {
     "phpunit/phpunit": "~7.0",
@@ -18,12 +18,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Virtue\\": "src/"
+      "Virtue\\Access\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Virtue\\": ["tests/unit/"]
+      "Virtue\\Access\\": ["tests/"]
     }
   }
 }
