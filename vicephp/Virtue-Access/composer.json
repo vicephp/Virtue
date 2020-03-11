@@ -18,12 +18,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Virtue\\Access\\": "src/"
+      "Virtue\\Access\\": "src/Access/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Virtue\\Access\\": ["tests/"]
+      "Virtue\\Access\\": "tests/Access/"
     }
   }
 }
