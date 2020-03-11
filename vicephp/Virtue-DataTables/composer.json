@@ -17,12 +17,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Virtue\\DataTables\\": "src/DataTables"
+      "Virtue\\DataTables\\": "src/DataTables/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Virtue\\DataTables\\": ["tests/DataTables"]
+      "Virtue\\DataTables\\": "tests/DataTables/"
     }
   }
 }
