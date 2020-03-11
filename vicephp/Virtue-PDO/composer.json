@@ -19,12 +19,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Virtue\\Database\\": "src/"
+      "Virtue\\Database\\": "src/Database/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Virtue\\Database\\": ["tests/"]
+      "Virtue\\Database\\": "tests/Database/"
     }
   }
 }
