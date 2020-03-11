@@ -22,7 +22,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Virtue\\DataTables\\": ["tests/unit/DataTables"]
+      "Virtue\\DataTables\\": ["tests/DataTables"]
     }
   }
 }
