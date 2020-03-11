@@ -1,7 +1,7 @@
 {
   "name": "virtue/access",
   "type": "library",
-  "description": "I'm gonna go build my own access lib, with black jack and hookers!",
+  "description": "Making PHP more Pythonic",
   "license": "MIT",
   "minimum-stability": "dev",
   "prefer-stable": true,
