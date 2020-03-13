@@ -6,22 +6,21 @@ class HtmlRenderer
 {
     public function render(HtmlElement $element, $attr = []): string
     {
-        $body = new \SimpleXMLElement("<body></body>");
-        $element = json_decode(json_encode($element), true);
-        $node = $this->renderNode($body->addChild($element['element']), $element);
+        $element = $this->renderElement(new \SimpleXMLElement("<body></body>"), $element);
 
-        return $node->asXML();
+        return $element->asXML();
     }
 
-    private function renderNode(\SimpleXMLElement $node, $element): \SimpleXMLElement
+    private function renderElement(\SimpleXMLElement $parent, HtmlElement $child): \SimpleXMLElement
     {
-        foreach ($element['attributes'] as $attr => $val) {
+        $child = $child->jsonSerialize();
+        $node = $parent->addChild($child['element']);
+        foreach ($child['attributes'] as $attr => $val) {
             $node->addAttribute($attr, $val);
         }
-        foreach ($element['inner'] ?? [] as $inner) {
-            $this->renderNode($node->addChild($inner['element']), $inner);
+        foreach ($child['inner'] ?? [] as $inner) {
+            $this->renderElement($node, $inner);
         }
         return $node;
     }
-
 }
