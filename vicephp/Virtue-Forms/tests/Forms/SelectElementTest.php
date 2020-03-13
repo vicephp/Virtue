@@ -10,7 +10,7 @@ class SelectElementTest extends TestCase
     {
         $select = new SelectElement(['name' => 'aSelectElement']);
 
-        $this->assertEquals('{"element":"select","attributes":{"name":"aSelectElement"},"children":[]}', json_encode($select->jsonSerialize()));
+        $this->assertEquals('{"element":"select","attributes":{"name":"aSelectElement"}}', json_encode($select->jsonSerialize()));
     }
 
     public function testWithOptions()

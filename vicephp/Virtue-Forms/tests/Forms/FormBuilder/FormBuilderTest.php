@@ -10,7 +10,7 @@ class FormBuilderTest extends TestCase
     {
         $buildForm = new FormBuilder(['name' => 'aForm']);
 
-        $expected = '{"element":"form","attributes":{"name":"aForm"},"children":[]}';
+        $expected = '{"element":"form","attributes":{"name":"aForm"}}';
         $this->assertEquals($expected, json_encode($buildForm()));
     }
 }

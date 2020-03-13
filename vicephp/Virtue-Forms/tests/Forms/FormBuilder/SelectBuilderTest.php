@@ -20,7 +20,7 @@ class SelectBuilderTest extends TestCase
         $buildSelect = new SelectBuilder(['name' => 'aName']);
         $buildSelect->optGroup(['label' => 'optGroupLabel']);
 
-        $expected = '{"element":"select","attributes":{"name":"aName"},"children":[{"element":"optgroup","attributes":{"label":"optGroupLabel"},"children":[]}]}';
+        $expected = '{"element":"select","attributes":{"name":"aName"},"children":[{"element":"optgroup","attributes":{"label":"optGroupLabel"}}]}';
         $this->assertEquals($expected, json_encode($buildSelect()));
     }
 }
