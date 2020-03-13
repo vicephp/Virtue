@@ -41,4 +41,22 @@ class InputBuilderTest extends TestCase
         $expected = '{"element":"input","attributes":{"type":"datetime-local","name":"aDateTimeLocal"}}';
         $this->assertEquals($expected, json_encode($buildInput()));
     }
+
+    public function testHidden()
+    {
+        $buildInput = new InputBuilder();
+        $buildInput->typeHidden(['name' => 'aHiddenField', 'value' => 'youDontSeeMe']);
+
+        $expected = '{"element":"input","attributes":{"type":"hidden","name":"aHiddenField","value":"youDontSeeMe"}}';
+        $this->assertEquals($expected, json_encode($buildInput()));
+    }
+
+    public function testRadio()
+    {
+        $buildInput = new InputBuilder();
+        $buildInput->typeRadio(['name' => 'aRadioButton', 'value' => 'pressMe']);
+
+        $expected = '{"element":"input","attributes":{"type":"radio","name":"aRadioButton","value":"pressMe"}}';
+        $this->assertEquals($expected, json_encode($buildInput()));
+    }
 }

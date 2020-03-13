@@ -2,9 +2,9 @@
 
 namespace Virtue\Forms\FormBuilder;
 
-use Virtue\Forms\TextareaElement;
+use Virtue\Forms\TextAreaElement;
 
-class TextareaBuilder
+class TextAreaBuilder
 {
     private $attributes = [];
 
@@ -13,8 +13,8 @@ class TextareaBuilder
         $this->attributes = $attributes;
     }
 
-    public function __invoke(): TextareaElement
+    public function __invoke(): TextAreaElement
     {
-        return new TextareaElement($this->attributes);
+        return new TextAreaElement($this->attributes);
     }
 }

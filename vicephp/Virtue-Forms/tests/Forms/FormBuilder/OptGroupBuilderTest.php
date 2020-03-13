@@ -11,7 +11,23 @@ class OptGroupBuilderTest extends TestCase
         $buildOptGroup = new OptGroupBuilder(['label' => 'anOptGroup']);
         $buildOptGroup->option(['label' => 'optLabel', 'value' => 'optValue']);
 
-        $expected = '{"element":"optgroup","attributes":{"label":"anOptGroup"},"children":[{"element":"option","attributes":{"label":"optLabel","value":"optValue"}}]}';
-        $this->assertEquals($expected, json_encode($buildOptGroup()));
+        $expected = <<<JSON
+{
+    "element": "optgroup",
+    "attributes": {
+        "label": "anOptGroup"
+    },
+    "children": [
+        {
+            "element": "option",
+            "attributes": {
+                "label": "optLabel",
+                "value": "optValue"
+            }
+        }
+    ]
+}
+JSON;
+        $this->assertEquals($expected, json_encode($buildOptGroup(), JSON_PRETTY_PRINT));
     }
 }

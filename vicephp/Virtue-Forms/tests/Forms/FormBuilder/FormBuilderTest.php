@@ -12,5 +12,25 @@ class FormBuilderTest extends TestCase
 
         $expected = '{"element":"form","attributes":{"name":"aForm"}}';
         $this->assertEquals($expected, json_encode($buildForm()));
+
+        $buildForm->input()->typeText(['name' => 'aTextInput']);
+        $expected = <<<JSON
+{
+    "element": "form",
+    "attributes": {
+        "name": "aForm"
+    },
+    "children": [
+        {
+            "element": "input",
+            "attributes": {
+                "type": "text",
+                "name": "aTextInput"
+            }
+        }
+    ]
+}
+JSON;
+        $this->assertEquals($expected, json_encode($buildForm(), JSON_PRETTY_PRINT));
     }
 }

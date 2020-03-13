@@ -2,7 +2,7 @@
 
 namespace Virtue\Forms;
 
-class TextareaElement
+class TextAreaElement
 {
     private $element = 'option';
     private $attributes = [];

@@ -11,8 +11,24 @@ class SelectBuilderTest extends TestCase
         $buildSelect = new SelectBuilder(['name' => 'aName']);
         $buildSelect->option(['label' => 'optLabel', 'value' => 'optValue']);
 
-        $expected = '{"element":"select","attributes":{"name":"aName"},"children":[{"element":"option","attributes":{"label":"optLabel","value":"optValue"}}]}';
-        $this->assertEquals($expected, json_encode($buildSelect()));
+        $expected = <<<JSON
+{
+    "element": "select",
+    "attributes": {
+        "name": "aName"
+    },
+    "children": [
+        {
+            "element": "option",
+            "attributes": {
+                "label": "optLabel",
+                "value": "optValue"
+            }
+        }
+    ]
+}
+JSON;
+        $this->assertEquals($expected, json_encode($buildSelect(), JSON_PRETTY_PRINT));
     }
 
     public function testOptGroup()
@@ -20,7 +36,23 @@ class SelectBuilderTest extends TestCase
         $buildSelect = new SelectBuilder(['name' => 'aName']);
         $buildSelect->optGroup(['label' => 'optGroupLabel']);
 
-        $expected = '{"element":"select","attributes":{"name":"aName"},"children":[{"element":"optgroup","attributes":{"label":"optGroupLabel"}}]}';
-        $this->assertEquals($expected, json_encode($buildSelect()));
+        $expected = <<<JSON
+{
+    "element": "select",
+    "attributes": {
+        "name": "aName"
+    },
+    "children": [
+        {
+            "element": "optgroup",
+            "attributes": {
+                "label": "optGroupLabel"
+            }
+        }
+    ]
+}
+JSON;
+
+        $this->assertEquals($expected, json_encode($buildSelect(), JSON_PRETTY_PRINT));
     }
 }

@@ -2,9 +2,9 @@
 
 namespace Virtue\Forms\FormBuilder;
 
-use Virtue\Forms\FormElement;
+use Virtue\Forms\FieldSetElement;
 
-class FormBuilder
+class FieldSetBuilder
 {
     private $attributes = [];
     private $children = [];
@@ -12,11 +12,6 @@ class FormBuilder
     public function __construct(array $attributes)
     {
         $this->attributes = $attributes;
-    }
-
-    public function fieldSet($attributes): FieldSetBuilder
-    {
-        return $this->children[] = new FieldSetBuilder($attributes);
     }
 
     public function input(): InputBuilder
@@ -34,9 +29,9 @@ class FormBuilder
         return $this->children[] = new TextAreaBuilder($attributes);
     }
 
-    public function __invoke(): FormElement
+    public function __invoke(): FieldSetElement
     {
-        return new FormElement(
+        return new FieldSetElement(
             $this->attributes,
             array_map(function ($child) { return $child(); }, $this->children)
         );
