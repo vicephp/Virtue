@@ -2,15 +2,18 @@
 
 namespace Virtue\Forms;
 
-class SelectElement implements HtmlElement
+use Webmozart\Assert\Assert;
+
+class OptGroupElement implements HtmlElement
 {
-    private $element = 'select';
+    private $element = 'optgroup';
     private $attributes = [];
-    /** @var array|OptionElement[] */
     private $options = [];
 
     public function __construct(array $attr, array $options = [])
     {
+        Assert::string($attr['label'] ?? null, 'A label must be provided.');
+
         $this->attributes = $attr;
         $this->options = $options;
     }

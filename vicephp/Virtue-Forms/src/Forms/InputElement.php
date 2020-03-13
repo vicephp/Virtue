@@ -4,15 +4,18 @@ namespace Virtue\Forms;
 
 use Webmozart\Assert\Assert;
 
-class InputElement implements \JsonSerializable
+class InputElement implements HtmlElement
 {
     private $element = 'input';
     private $attributes = [];
 
+    /**
+     * @param array $attr
+     */
     private function __construct(array $attr)
     {
         $attr['name'] = $attr['name'] ?? $attr['id'] ?? null;
-        Assert::notEmpty($attr['name'], 'A name or id must be provided');
+        Assert::string($attr['name'], 'A name or id must be provided');
         $this->attributes = $attr;
     }
 
@@ -28,7 +31,7 @@ class InputElement implements \JsonSerializable
         return new self (array_replace($this->attributes, $attr));
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return ['element' => $this->element, 'attributes' => $this->attributes];
     }
