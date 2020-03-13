@@ -27,6 +27,6 @@ class FormElement implements HtmlElement
 
     public function jsonSerialize(): array
     {
-        return ['element' => $this->element, 'attributes' => $this->attributes, 'inner' => $this->inner];
+        return [HtmlElement::Element => $this->element, HtmlElement::Attributes => $this->attributes, HtmlElement::Children => $this->inner];
     }
 }

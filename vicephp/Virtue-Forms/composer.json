@@ -8,6 +8,7 @@
         "sort-packages": true
     },
     "require": {
+        "ext-SimpleXML": "^7.2",
         "ext-json": "*"
     },
     "require-dev": {

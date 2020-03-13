@@ -14,11 +14,11 @@ class HtmlRenderer
     private function renderElement(\SimpleXMLElement $parent, HtmlElement $child): \SimpleXMLElement
     {
         $child = $child->jsonSerialize();
-        $node = $parent->addChild($child['element']);
-        foreach ($child['attributes'] as $attr => $val) {
+        $node = $parent->addChild($child[HtmlElement::Element]);
+        foreach ($child[HtmlElement::Attributes] as $attr => $val) {
             $node->addAttribute($attr, $val);
         }
-        foreach ($child['inner'] ?? [] as $inner) {
+        foreach ($child[HtmlElement::Children] ?? [] as $inner) {
             $this->renderElement($node, $inner);
         }
         return $node;

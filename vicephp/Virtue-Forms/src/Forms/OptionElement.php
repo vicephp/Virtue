@@ -22,6 +22,6 @@ class OptionElement implements HtmlElement
 
     public function jsonSerialize(): array
     {
-        return ['element' => $this->element, 'attributes' => $this->attributes];
+        return [HtmlElement::Element => $this->element, HtmlElement::Attributes => $this->attributes];
     }
 }

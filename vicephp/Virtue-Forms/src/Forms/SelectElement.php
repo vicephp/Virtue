@@ -17,6 +17,6 @@ class SelectElement implements HtmlElement
 
     public function jsonSerialize(): array
     {
-        return ['element' => $this->element, 'attributes' => $this->attributes, 'inner' => $this->options];
+        return [HtmlElement::Element => $this->element, HtmlElement::Attributes => $this->attributes, HtmlElement::Children => $this->options];
     }
 }
