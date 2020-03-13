@@ -1,0 +1,25 @@
+{
+    "name": "virtue/forms",
+    "description": "Making PHP more Pythonic",
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "config": {
+        "sort-packages": true
+    },
+    "require": {
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Virtue\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Virtue\\": "tests/"
+        }
+    }
+}
