@@ -4,44 +4,24 @@ namespace Virtue\Forms;
 
 class HtmlRenderer
 {
-    private $renderers = [];
-
     public function render(HtmlElement $element, $attr = []): string
     {
-        $element = $element->jsonSerialize();
+        $body = new \SimpleXMLElement("<body></body>");
+        $element = json_decode(json_encode($element), true);
+        $node = $this->renderNode($body->addChild($element['element']), $element);
 
-        $html = [$this->openingTag($element), $this->innerHtml($element), $this->closingTag($element)];
-        $html = array_filter($html);
-        return implode('', $html);
+        return $node->asXML();
     }
 
-    private function openingTag($element)
+    private function renderNode(\SimpleXMLElement $node, $element): \SimpleXMLElement
     {
-        $element['attributes'] = implode(
-            ' ',
-            array_reduce(
-                array_keys($element['attributes']),
-                function ($attribs, $key) {
-                    $attribs[$key] = sprintf('%s="%s"', $key, $attribs[$key]);
-                    return $attribs;
-                },
-                $element['attributes']
-            )
-        );
-        $element = trim("{$element['element']} {$element['attributes']}");
-        return "<{$element}>";
-    }
-
-    private function innerHtml($element): string
-    {
-        $html = '';
-        foreach ($element['inner'] ?? [] as $inner) {
-            $html .= $this->render($inner);
+        foreach ($element['attributes'] as $attr => $val) {
+            $node->addAttribute($attr, $val);
         }
-        return $html;
+        foreach ($element['inner'] ?? [] as $inner) {
+            $this->renderNode($node->addChild($inner['element']), $inner);
+        }
+        return $node;
     }
 
-    private function closingTag($element){
-        return in_array($element['element'], ['input']) ? '' : "</{$element['element']}>";
-    }
 }

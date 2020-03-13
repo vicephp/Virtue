@@ -9,9 +9,6 @@ class InputElement implements HtmlElement
     private $element = 'input';
     private $attributes = [];
 
-    /**
-     * @param array $attr
-     */
     private function __construct(array $attr)
     {
         $attr['name'] = $attr['name'] ?? $attr['id'] ?? null;
@@ -19,6 +16,11 @@ class InputElement implements HtmlElement
         $this->attributes = $attr;
     }
 
+    /**
+     * @param $type
+     * @param array $attr ['id' => 'anId' [, ...]] or ['name' => 'aName' [, ...]]
+     * @return InputElement
+     */
     public static function ofType($type, array $attr)
     {
         unset($attr['type']);

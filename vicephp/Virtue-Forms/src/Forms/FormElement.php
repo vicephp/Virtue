@@ -10,6 +10,9 @@ class FormElement implements HtmlElement
     private $attributes = [];
     private $inner = [];
 
+    /**
+     * @param array $attr ['id' => 'anId' [, ...]] or ['name' => 'aName' [, ...]]
+     */
     public function __construct(array $attr)
     {
         $attr['name'] = $attr['name'] ?? $attr['id'] ?? null;

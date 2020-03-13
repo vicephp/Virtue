@@ -10,8 +10,7 @@ class OptionElement implements HtmlElement
     private $attributes = [];
 
     /**
-     * ['value' => 'aValue', 'label' => 'aLabel']
-     * @param array $attr
+     * @param array $attr ['value' => 'aValue', 'label' => 'aLabel' [, ...]]
      */
     public function __construct(array $attr)
     {
