@@ -8,6 +8,7 @@ class FormElement implements HtmlElement
 {
     private $element = 'form';
     private $attributes = [];
+    /** @var array|HtmlElement[] */
     private $elements = [];
 
     /**
@@ -20,6 +21,20 @@ class FormElement implements HtmlElement
         Assert::string($attr['name'], 'A name or id must be provided');
         $this->attributes = $attr;
         $this->elements = $elements;
+    }
+
+    public function get(string $name): HtmlElement
+    {
+        /** @var HtmlElement $element */
+        foreach ($this->elements as $element) {
+            $lookup = $element->jsonSerialize()['attributes'];
+            $lookup = $lookup['name'] ?? $lookup['id'] ?? '';
+            if($name == $lookup) {
+                return $element;
+            }
+        }
+
+        throw new \OutOfBoundsException("Element with name {$name} not found.");
     }
 
     public function jsonSerialize(): array

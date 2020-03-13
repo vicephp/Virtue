@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class FormElementTest extends TestCase
 {
-
     public function testJsonSerialize()
     {
         $aFormElement = new FormElement(['id' => 'anId']);
@@ -17,5 +16,12 @@ class FormElementTest extends TestCase
 
         $this->expectException(\InvalidArgumentException::class);
         $cFormElement = new FormElement(['withNoIdOrName']);
+    }
+
+    public function testGet()
+    {
+        $aFormElement = new FormElement(['id' => 'anId'], [new InputElement(['type' => 'text', 'name' => 'anInput'])]);
+
+        $this->assertInstanceOf(InputElement::class, $aFormElement->get('anInput'));
     }
 }
