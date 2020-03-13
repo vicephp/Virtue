@@ -9,7 +9,7 @@ class InputElement implements HtmlElement
     private $element = 'input';
     private $attributes = [];
 
-    private function __construct(array $attr)
+    public function __construct(array $attr)
     {
         $attr['name'] = $attr['name'] ?? $attr['id'] ?? null;
         Assert::string($attr['name'], 'A name or id must be provided');
