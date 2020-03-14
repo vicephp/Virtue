@@ -2,9 +2,9 @@
 
 namespace Virtue\Forms;
 
-class TextAreaElement
+class TextAreaElement implements HtmlElement
 {
-    private $element = 'option';
+    private $element = 'textarea';
     private $attributes = [];
 
     public function __construct(array $attributes)

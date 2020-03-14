@@ -4,7 +4,7 @@ namespace Virtue\Forms\FormBuilder;
 
 use Virtue\Forms\FieldSetElement;
 
-class FieldSetBuilder
+class FieldSetBuilder implements ElementBuilder
 {
     private $attributes = [];
     private $children = [];
@@ -16,7 +16,7 @@ class FieldSetBuilder
 
     public function input(): InputBuilder
     {
-        return $this->children[] = new InputBuilder();
+        return $this->children[] = new InputBuilder($this);
     }
 
     /**

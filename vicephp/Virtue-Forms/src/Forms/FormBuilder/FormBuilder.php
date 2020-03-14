@@ -4,7 +4,7 @@ namespace Virtue\Forms\FormBuilder;
 
 use Virtue\Forms\FormElement;
 
-class FormBuilder
+class FormBuilder implements ElementBuilder
 {
     private $attributes = [];
     private $children = [];
@@ -34,7 +34,7 @@ class FormBuilder
      */
     public function input(): InputBuilder
     {
-        return $this->children[] = new InputBuilder();
+        return $this->children[] = new InputBuilder($this);
     }
 
     /**
