@@ -1,6 +1,6 @@
 {
     "name": "virtue/forms",
-    "description": "Making PHP more Pythonic",
+    "description": "Making form generation more Pythonic...",
     "type": "library",
     "license": "MIT",
     "minimum-stability": "dev",

@@ -11,8 +11,10 @@ class HtmlRendererTest extends TestCase
         $renderer = new HtmlRenderer();
         $aTextInput = InputElement::ofType('text', ['name' => 'aName', 'value' => 'aValue']);
 
-        $expected = '<input type="text" name="bName" value="aValue"/>';
-        $this->assertEquals($expected, $renderer->render($aTextInput, ['type' => 'notApplied', 'name' => 'bName']));
+        $this->assertEquals(
+            '<input type="text" name="bName" value="aValue"/>',
+            $renderer->render($aTextInput->withAttributes(['type' => 'notApplied', 'name' => 'bName']))
+        );
     }
 
     public function testRenderInput()

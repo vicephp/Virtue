@@ -4,11 +4,9 @@ namespace Virtue\Forms;
 
 class HtmlRenderer
 {
-    public function render(HtmlElement $element, $attr = []): string
+    public function render(HtmlElement $element): string
     {
-        $element = $this->renderElement(
-            new \SimpleXMLElement("<body></body>"), $element->withAttributes($attr)
-        );
+        $element = $this->renderElement(new \SimpleXMLElement("<body></body>"), $element);
 
         return $element->asXML();
     }
