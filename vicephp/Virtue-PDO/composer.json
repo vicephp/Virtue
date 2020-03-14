@@ -1,7 +1,7 @@
 {
   "name": "virtue/sql",
   "type": "library",
-  "description": "Making PHP more Pythonic",
+  "description": "Making PDO more Pythonic...",
   "license": "MIT",
   "minimum-stability": "dev",
   "prefer-stable": true,
