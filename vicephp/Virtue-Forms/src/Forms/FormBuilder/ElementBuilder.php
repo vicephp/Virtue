@@ -12,15 +12,15 @@ interface ElementBuilder
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
-     * @param $attributes
+     * @param array $attributes
      * @return SelectBuilder
      */
-    public function select($attributes): SelectBuilder;
+    public function select(array $attributes): SelectBuilder;
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea
-     * @param $attributes
+     * @param array $attributes
      * @return TextAreaBuilder
      */
-    public function textArea($attributes): TextAreaBuilder;
+    public function textArea(array $attributes): TextAreaBuilder;
 }

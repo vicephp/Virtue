@@ -20,10 +20,10 @@ class FormBuilder implements ElementBuilder
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/fieldset
-     * @param $attributes
+     * @param array $attributes
      * @return FieldSetBuilder
      */
-    public function fieldSet($attributes): FieldSetBuilder
+    public function fieldSet(array $attributes): FieldSetBuilder
     {
         return $this->children[] = new FieldSetBuilder($attributes);
     }
@@ -39,20 +39,20 @@ class FormBuilder implements ElementBuilder
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
-     * @param $attributes
+     * @param array $attributes
      * @return SelectBuilder
      */
-    public function select($attributes): SelectBuilder
+    public function select(array $attributes): SelectBuilder
     {
         return $this->children[] = new SelectBuilder($attributes);
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea
-     * @param $attributes
+     * @param array $attributes
      * @return TextAreaBuilder
      */
-    public function textArea($attributes): TextAreaBuilder
+    public function textArea(array $attributes): TextAreaBuilder
     {
         return $this->children[] = new TextAreaBuilder($attributes);
     }

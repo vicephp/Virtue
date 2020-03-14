@@ -17,11 +17,11 @@ class InputElement implements HtmlElement
     }
 
     /**
-     * @param $type
+     * @param string $type
      * @param array $attr ['id' => 'anId' [, ...]] or ['name' => 'aName' [, ...]]
      * @return InputElement
      */
-    public static function ofType($type, array $attr)
+    public static function ofType(string $type, array $attr)
     {
         unset($attr['type']);
         return new self(['type' => $type] + $attr);
