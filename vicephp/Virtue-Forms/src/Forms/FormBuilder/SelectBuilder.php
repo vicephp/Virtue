@@ -14,6 +14,11 @@ class SelectBuilder
         $this->attributes = $attributes;
     }
 
+    /**
+     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option
+     * @param array $attributes
+     * @return SelectBuilder
+     */
     public function option(array $attributes): SelectBuilder
     {
         $this->children[] = new OptionBuilder($attributes);
@@ -21,6 +26,11 @@ class SelectBuilder
         return $this;
     }
 
+    /**
+     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/optgroup
+     * @param array $attributes
+     * @return OptGroupBuilder
+     */
     public function optGroup(array $attributes): OptGroupBuilder
     {
         return $this->children[] = new OptGroupBuilder($attributes);

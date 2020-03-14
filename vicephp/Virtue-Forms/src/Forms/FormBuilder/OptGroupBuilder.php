@@ -9,11 +9,17 @@ class OptGroupBuilder
     private $attributes = [];
     private $children = [];
 
+
     public function __construct(array $attributes)
     {
         $this->attributes = $attributes;
     }
 
+    /**
+     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option
+     * @param array $attributes
+     * @return OptGroupBuilder
+     */
     public function option(array $attributes): OptGroupBuilder
     {
         $this->children[] = new OptionBuilder($attributes);

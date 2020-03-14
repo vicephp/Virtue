@@ -8,102 +8,84 @@ class InputBuilder
 {
     private $attributes = [];
 
+    /**
+     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/button
+     * @param array $attributes
+     */
     public function typeButton(array $attributes)
     {
-        $allowed = ['id', 'name', 'value'];
-        array_filter(
-            $attributes,
-            function ($attr) use ($allowed) { return in_array($attr, $allowed); },
-            ARRAY_FILTER_USE_KEY
-        );
         $this->attributes = ['type' => 'button'] + $attributes;
     }
 
+    /**
+     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox
+     * @param array $attributes
+     */
     public function typeCheckbox(array $attributes)
     {
-        $allowed = ['id', 'name', 'value', 'checked'];
-        array_filter(
-            $attributes,
-            function ($attr) use ($allowed) { return in_array($attr, $allowed); },
-            ARRAY_FILTER_USE_KEY
-        );
         $this->attributes = ['type' => 'checkbox'] + $attributes;
     }
 
+    /**
+     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/radio
+     * @param array $attributes
+     */
     public function typeRadio(array $attributes): void
     {
-        $allowed = ['id', 'name', 'value', 'checked'];
-        array_filter(
-            $attributes,
-            function ($attr) use ($allowed) { return in_array($attr, $allowed); },
-            ARRAY_FILTER_USE_KEY
-        );
         $this->attributes = ['type' => 'radio'] + $attributes;
     }
 
+    /**
+     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/search
+     * @param array $attributes
+     */
     public function typeSearch(array $attributes): void
     {
-        $allowed = ['id', 'name', 'value', 'autocomplete', 'list', 'maxlength', 'minlength', 'pattern', 'placeholder', 'required', 'size'];
-        array_filter(
-            $attributes,
-            function ($attr) use ($allowed) { return in_array($attr, $allowed); },
-            ARRAY_FILTER_USE_KEY
-        );
-        $this->attributes = ['type' => 'radio'] + $attributes;
+        $this->attributes = ['type' => 'search'] + $attributes;
     }
 
+    /**
+     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/text
+     * @param array $attributes
+     */
     public function typeText(array $attributes): void
     {
-        $allowed = ['id', 'name', 'list', 'minlength', 'maxlength', 'pattern', 'required', 'size'];
-        array_filter(
-            $attributes,
-            function ($attr) use ($allowed) { return in_array($attr, $allowed); },
-            ARRAY_FILTER_USE_KEY
-        );
         $this->attributes = ['type' => 'text'] + $attributes;
     }
 
+    /**
+     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local
+     * @param array $attributes
+     */
     public function typeDateTimeLocal(array $attributes)
     {
-        $allowed = ['id', 'name', 'value', 'min', 'max', 'step'];
-        array_filter(
-            $attributes,
-            function ($attr) use ($allowed) { return in_array($attr, $allowed); },
-            ARRAY_FILTER_USE_KEY
-        );
         $this->attributes = ['type' => 'datetime-local'] + $attributes;
     }
 
+    /**
+     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/hidden
+     * @param array $attributes
+     */
     public function typeHidden(array $attributes)
     {
-        $allowed = ['id', 'name', 'value'];
-        array_filter(
-            $attributes,
-            function ($attr) use ($allowed) { return in_array($attr, $allowed); },
-            ARRAY_FILTER_USE_KEY
-        );
         $this->attributes = ['type' => 'hidden'] + $attributes;
     }
 
+    /**
+     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/submit
+     * @param $attributes
+     */
     public function typeSubmit($attributes)
     {
-        $allowed = ['id', 'name', 'value', 'formaction', 'formenctype', 'formmethod', 'formnovalidate', 'formtarget'];
-        array_filter(
-            $attributes,
-            function ($attr) use ($allowed) { return in_array($attr, $allowed); },
-            ARRAY_FILTER_USE_KEY
-        );
         $this->attributes = ['type' => 'submit'] + $attributes;
     }
 
+    /**
+     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/password
+     * @param array $attributes
+     */
     public function typePassword(array $attributes)
     {
-        $allowed = ['id', 'name', 'minlength', 'maxlength', 'pattern', 'required', 'size'];
-        array_filter(
-            $attributes,
-            function ($attr) use ($allowed) { return in_array($attr, $allowed); },
-            ARRAY_FILTER_USE_KEY
-        );
         $this->attributes = ['type' => 'checkbox'] + $attributes;
     }
 
