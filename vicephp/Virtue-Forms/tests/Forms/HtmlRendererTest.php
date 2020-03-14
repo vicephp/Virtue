@@ -6,6 +6,15 @@ use PHPUnit\Framework\TestCase;
 
 class HtmlRendererTest extends TestCase
 {
+    public function testRenderInputWithAttributes()
+    {
+        $renderer = new HtmlRenderer();
+        $aTextInput = InputElement::ofType('text', ['name' => 'aName', 'value' => 'aValue']);
+
+        $expected = '<input type="text" name="bName" value="aValue"/>';
+        $this->assertEquals($expected, $renderer->render($aTextInput, ['type' => 'notApplied', 'name' => 'bName']));
+    }
+
     public function testRenderInput()
     {
         $renderer = new HtmlRenderer();

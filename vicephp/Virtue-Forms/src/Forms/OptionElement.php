@@ -20,6 +20,11 @@ class OptionElement implements HtmlElement
         $this->attributes = $attr;
     }
 
+    public function withAttributes(array $attr): HtmlElement
+    {
+        return new self (array_replace($this->attributes, $attr));
+    }
+
     public function jsonSerialize(): array
     {
         return [HtmlElement::Element => $this->element, HtmlElement::Attributes => $this->attributes];

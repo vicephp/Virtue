@@ -27,7 +27,7 @@ class InputElement implements HtmlElement
         return new self(['type' => $type] + $attr);
     }
 
-    public function withAttributes(array $attr): self
+    public function withAttributes(array $attr): HtmlElement
     {
         unset($attr['type']);
         return new self (array_replace($this->attributes, $attr));

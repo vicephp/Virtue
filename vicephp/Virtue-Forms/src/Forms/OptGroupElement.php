@@ -18,6 +18,11 @@ class OptGroupElement implements HtmlElement
         $this->options = $options;
     }
 
+    public function withAttributes(array $attr): HtmlElement
+    {
+        return new self(array_replace($this->attributes, $attr), $this->options);
+    }
+
     public function jsonSerialize(): array
     {
         return array_filter(

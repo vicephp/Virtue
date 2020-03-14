@@ -14,6 +14,11 @@ class FieldSetElement implements HtmlElement
         $this->elements = $elements;
     }
 
+    public function withAttributes(array $attr): HtmlElement
+    {
+        return new self(array_replace($this->attributes, $attr), $this->elements);
+    }
+
     public function jsonSerialize(): array
     {
         return array_filter(

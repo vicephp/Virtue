@@ -37,6 +37,11 @@ class FormElement implements HtmlElement
         throw new \OutOfBoundsException("Element with name {$name} not found.");
     }
 
+    public function withAttributes(array $attr): HtmlElement
+    {
+        return new self(array_replace($this->attributes, $attr), $this->elements);
+    }
+
     public function jsonSerialize(): array
     {
         return array_filter(

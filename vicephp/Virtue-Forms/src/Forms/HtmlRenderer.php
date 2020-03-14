@@ -6,7 +6,9 @@ class HtmlRenderer
 {
     public function render(HtmlElement $element, $attr = []): string
     {
-        $element = $this->renderElement(new \SimpleXMLElement("<body></body>"), $element);
+        $element = $this->renderElement(
+            new \SimpleXMLElement("<body></body>"), $element->withAttributes($attr)
+        );
 
         return $element->asXML();
     }
