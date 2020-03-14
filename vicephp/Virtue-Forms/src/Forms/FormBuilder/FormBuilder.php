@@ -38,7 +38,7 @@ class FormBuilder
     {
         return new FormElement(
             $this->attributes,
-            array_map(function ($child) { return $child(); }, $this->children)
+            array_map(function ($buildChild) { return $buildChild(); }, $this->children)
         );
     }
 }

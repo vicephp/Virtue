@@ -30,7 +30,7 @@ class SelectBuilder
     {
         return new SelectElement(
             $this->attributes,
-            array_map(function ($child) { return $child(); }, $this->children)
+            array_map(function ($buildChild) { return $buildChild(); }, $this->children)
         );
     }
 }
