@@ -11,7 +11,7 @@ class AlwaysRoot implements Access\Authenticates
 
     public function authenticate(Access\Login $login): Access\Identity
     {
-        isset($this->user) || $this->user = new Access\Identities\Root();
+        $this->user = $this->user ?? new Access\Identities\Root();
 
         return $this->user;
     }

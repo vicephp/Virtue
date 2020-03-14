@@ -11,7 +11,7 @@ class AlwaysGuest implements Access\Authenticates
 
     public function authenticate(Access\Login $login): Access\Identity
     {
-        isset($this->user) || $this->user = new Access\Identities\Guest();
+        $this->user = $this->user ?? new Access\Identities\Guest();
 
         return $this->user;
     }
