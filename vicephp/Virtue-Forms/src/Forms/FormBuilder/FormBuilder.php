@@ -28,6 +28,10 @@ class FormBuilder
         return $this->children[] = new FieldSetBuilder($attributes);
     }
 
+    /**
+     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input
+     * @return InputBuilder
+     */
     public function input(): InputBuilder
     {
         return $this->children[] = new InputBuilder();
