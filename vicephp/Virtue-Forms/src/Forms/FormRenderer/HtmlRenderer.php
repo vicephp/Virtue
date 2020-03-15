@@ -4,7 +4,7 @@ namespace Virtue\Forms\FormRenderer;
 
 use Virtue\Forms\HtmlElement;
 
-interface FormRenderer
+interface HtmlRenderer
 {
     public function render(HtmlElement $element): string;
 }
