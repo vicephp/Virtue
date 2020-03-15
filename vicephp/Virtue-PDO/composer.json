@@ -1,5 +1,5 @@
 {
-  "name": "virtue/sql",
+  "name": "vicephp/virtue-sql",
   "type": "library",
   "description": "Making PDO more Pythonic...",
   "license": "MIT",
