@@ -1,5 +1,5 @@
 {
-    "name": "virtue/forms",
+    "name": "vicephp/virtue-forms",
     "description": "Making form generation more Pythonic...",
     "type": "library",
     "license": "MIT",
