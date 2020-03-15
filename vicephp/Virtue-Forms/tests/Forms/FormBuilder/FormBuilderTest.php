@@ -8,7 +8,7 @@ class FormBuilderTest extends TestCase
 {
     public function testForm()
     {
-        $buildForm = new FormBuilder(['name' => 'aForm']);
+        $buildForm = new FormBuilder('aForm');
 
         $expected = '{"element":"form","attributes":{"name":"aForm"}}';
         $this->assertEquals($expected, json_encode($buildForm()));
@@ -16,10 +16,10 @@ class FormBuilderTest extends TestCase
 
     public function testFieldSet()
     {
-        $buildForm = new FormBuilder(['name' => 'aForm']);
+        $buildForm = new FormBuilder('aForm');
         $buildForm->fieldSet(['name' => 'aFieldSet'])
-            ->input()->typeText(['name' => 'aTextInput'])
-            ->input()->typeText(['name' => 'bTextInput']);
+            ->input()->typeText('aTextInput')
+            ->input()->typeText('bTextInput');
 
         $expected = <<<JSON
 {
@@ -58,8 +58,8 @@ JSON;
 
     public function testInput()
     {
-        $buildForm = new FormBuilder(['name' => 'aForm']);
-        $buildForm->input()->typeText(['name' => 'aTextInput']);
+        $buildForm = new FormBuilder('aForm');
+        $buildForm->input()->typeText('aTextInput');
 
         $expected = <<<JSON
 {
@@ -83,7 +83,7 @@ JSON;
 
     public function testSelect()
     {
-        $buildForm = new FormBuilder(['name' => 'aForm']);
+        $buildForm = new FormBuilder('aForm');
         $buildForm->select(['name' => 'aSelectField'])
             ->option(['label' => 'aLabel', 'value' => 'aValue'])
             ->option(['label' => 'bLabel', 'value' => 'bValue'])
@@ -133,7 +133,7 @@ JSON;
 
     public function testTextArea()
     {
-        $buildForm = new FormBuilder(['name' => 'aForm']);
+        $buildForm = new FormBuilder('aForm');
         $buildForm->textArea(['name' => 'aTextArea']);
 
         $expected = <<<JSON

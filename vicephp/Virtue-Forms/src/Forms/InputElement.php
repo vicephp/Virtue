@@ -7,12 +7,14 @@ use Webmozart\Assert\Assert;
 class InputElement implements HtmlElement
 {
     private $element = 'input';
+    /** @var array|string[] */
     private $attributes = [];
 
     public function __construct(array $attr)
     {
         $attr['name'] = $attr['name'] ?? $attr['id'] ?? null;
         Assert::string($attr['name'], 'A name or id must be provided');
+        Assert::string($attr['type'] ?? null, 'A type must be provided');
         $this->attributes = $attr;
     }
 

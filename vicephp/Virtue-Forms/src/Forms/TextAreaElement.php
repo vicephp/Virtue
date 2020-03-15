@@ -5,6 +5,7 @@ namespace Virtue\Forms;
 class TextAreaElement implements HtmlElement
 {
     private $element = 'textarea';
+    /** @var array|string[] */
     private $attributes = [];
 
     public function __construct(array $attributes)

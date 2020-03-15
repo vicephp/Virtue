@@ -7,7 +7,9 @@ use Webmozart\Assert\Assert;
 class OptGroupElement implements HtmlElement
 {
     private $element = 'optgroup';
+    /** @var array|string[] */
     private $attributes = [];
+    /** @var array|OptionElement[] */
     private $options = [];
 
     public function __construct(array $attr, array $options = [])

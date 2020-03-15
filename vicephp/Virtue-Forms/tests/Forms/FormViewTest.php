@@ -48,8 +48,8 @@ class FormViewTest extends TestCase
 
     public function testEmailInput()
     {
-        $expected = '<input type="email" name="aEmail" class="someCssClass"/>';
-        $this->assertEquals($expected, $this->formView->emailInput('aEmail', ['class' => 'someCssClass']));
+        $expected = '<input type="email" name="anEmail" class="someCssClass"/>';
+        $this->assertEquals($expected, $this->formView->emailInput('anEmail', ['class' => 'someCssClass']));
     }
 
     public function testFileInput()
@@ -66,8 +66,8 @@ class FormViewTest extends TestCase
 
     public function testImageInput()
     {
-        $expected = '<input type="image" name="aImage" class="someCssClass"/>';
-        $this->assertEquals($expected, $this->formView->imageInput('aImage', ['class' => 'someCssClass']));
+        $expected = '<input type="image" name="anImage" alt="anImage" class="someCssClass"/>';
+        $this->assertEquals($expected, $this->formView->imageInput('anImage', ['class' => 'someCssClass']));
     }
 
     public function testMonthInput()

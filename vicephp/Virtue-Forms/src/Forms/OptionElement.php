@@ -7,6 +7,7 @@ use Webmozart\Assert\Assert;
 class OptionElement implements HtmlElement
 {
     private $element = 'option';
+    /** @var array|string[] */
     private $attributes = [];
 
     /**

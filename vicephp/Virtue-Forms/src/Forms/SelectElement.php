@@ -5,8 +5,9 @@ namespace Virtue\Forms;
 class SelectElement implements HtmlElement
 {
     private $element = 'select';
+    /** @var array|string[] */
     private $attributes = [];
-    /** @var array|OptionElement[] */
+    /** @var array|OptionElement[]|OptGroupElement[] */
     private $options = [];
 
     public function __construct(array $attr, array $options = [])

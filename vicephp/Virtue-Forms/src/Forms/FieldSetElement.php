@@ -5,7 +5,9 @@ namespace Virtue\Forms;
 class FieldSetElement implements HtmlElement
 {
     private $element = 'fieldset';
+    /** @var array|string[] */
     private $attributes = [];
+    /** @var array|HtmlElement[] */
     private $elements = [];
 
     public function __construct(array $attr, array $elements = [])

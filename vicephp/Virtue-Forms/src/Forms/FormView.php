@@ -71,7 +71,7 @@ class FormView
     public function imageInput(string $name, array $attr = []): string
     {
         return $this->html->render(
-            new InputElement(['type' => 'image', 'name' => $name] + $attr)
+            new InputElement(['type' => 'image', 'name' => $name, 'alt' => $name] + $attr)
         );
     }
 

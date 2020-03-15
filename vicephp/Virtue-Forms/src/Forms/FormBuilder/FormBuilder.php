@@ -11,11 +11,12 @@ class FormBuilder implements ElementBuilder
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form
+     * @param string $name
      * @param array $attributes
      */
-    public function __construct(array $attributes)
+    public function __construct(string $name, array $attributes = [])
     {
-        $this->attributes = $attributes;
+        $this->attributes = ['name' => $name] + $attributes;
     }
 
     /**

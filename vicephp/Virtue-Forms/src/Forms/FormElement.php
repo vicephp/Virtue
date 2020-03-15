@@ -7,6 +7,7 @@ use Webmozart\Assert\Assert;
 class FormElement implements HtmlElement
 {
     private $element = 'form';
+    /** @var array|string[] */
     private $attributes = [];
     /** @var array|HtmlElement[] */
     private $elements = [];

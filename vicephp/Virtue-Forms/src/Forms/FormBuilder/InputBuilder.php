@@ -17,276 +17,299 @@ class InputBuilder
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/button
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeButton(array $attributes): ElementBuilder
+    public function typeButton(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'button'] + $attributes;
+        $this->attributes = ['type' => 'button', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeCheckbox(array $attributes): ElementBuilder
+    public function typeCheckbox(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'checkbox'] + $attributes;
+        $this->attributes = ['type' => 'checkbox', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeColor(array $attributes): ElementBuilder
+    public function typeColor(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'color'] + $attributes;
+        $this->attributes = ['type' => 'color', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeDate(array $attributes): ElementBuilder
+    public function typeDate(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'date'] + $attributes;
+        $this->attributes = ['type' => 'date', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeDatetimeLocal(array $attributes): ElementBuilder
+    public function typeDatetimeLocal(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'datetime-local'] + $attributes;
+        $this->attributes = ['type' => 'datetime-local', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeEmail(array $attributes): ElementBuilder
+    public function typeEmail(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'email'] + $attributes;
+        $this->attributes = ['type' => 'email', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeFile(array $attributes): ElementBuilder
+    public function typeFile(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'file'] + $attributes;
+        $this->attributes = ['type' => 'file', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/hidden
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeHidden(array $attributes): ElementBuilder
+    public function typeHidden(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'hidden'] + $attributes;
+        $this->attributes = ['type' => 'hidden', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/image
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeImage(array $attributes): ElementBuilder
+    public function typeImage(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'image'] + $attributes;
+        $this->attributes = ['type' => 'image', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/month
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeMonth(array $attributes): ElementBuilder
+    public function typeMonth(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'month'] + $attributes;
+        $this->attributes = ['type' => 'month', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeNumber(array $attributes): ElementBuilder
+    public function typeNumber(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'number'] + $attributes;
+        $this->attributes = ['type' => 'number', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/password
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typePassword(array $attributes): ElementBuilder
+    public function typePassword(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'password'] + $attributes;
+        $this->attributes = ['type' => 'password', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/radio
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeRadio(array $attributes): ElementBuilder
+    public function typeRadio(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'radio'] + $attributes;
+        $this->attributes = ['type' => 'radio', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeRange(array $attributes): ElementBuilder
+    public function typeRange(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'range'] + $attributes;
+        $this->attributes = ['type' => 'range', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/reset
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeReset(array $attributes): ElementBuilder
+    public function typeReset(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'reset'] + $attributes;
+        $this->attributes = ['type' => 'reset', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/search
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeSearch(array $attributes): ElementBuilder
+    public function typeSearch(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'search'] + $attributes;
+        $this->attributes = ['type' => 'search', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/submit
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeSubmit(array $attributes): ElementBuilder
+    public function typeSubmit(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'submit'] + $attributes;
+        $this->attributes = ['type' => 'submit', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/tel
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeTel(array $attributes): ElementBuilder
+    public function typeTel(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'tel'] + $attributes;
+        $this->attributes = ['type' => 'tel', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/text
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeText(array $attributes): ElementBuilder
+    public function typeText(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'text'] + $attributes;
+        $this->attributes = ['type' => 'text', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/time
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeTime(array $attributes): ElementBuilder
+    public function typeTime(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'time'] + $attributes;
+        $this->attributes = ['type' => 'time', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/url
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeUrl(array $attributes): ElementBuilder
+    public function typeUrl(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'url'] + $attributes;
+        $this->attributes = ['type' => 'url', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/week
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeWeek(array $attributes): ElementBuilder
+    public function typeWeek(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'week'] + $attributes;
+        $this->attributes = ['type' => 'week', 'name' => $name] + $attributes;
 
         return $this->parent;
     }
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime
+     * @param string $name
      * @param array $attributes
      * @return ElementBuilder
      */
-    public function typeDatetime(array $attributes): ElementBuilder
+    public function typeDatetime(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'datetime'] + $attributes;
+        $this->attributes = ['type' => 'datetime', 'name' => $name] + $attributes;
 
         return $this->parent;
     }

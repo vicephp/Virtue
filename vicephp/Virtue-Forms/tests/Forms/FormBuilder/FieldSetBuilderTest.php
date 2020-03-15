@@ -9,7 +9,7 @@ class FieldSetBuilderTest extends TestCase
     public function testInput()
     {
         $buildFieldSet = new FieldSetBuilder(['name' => 'aFieldSet']);
-        $buildFieldSet->input()->typeText(['name' => 'aTextInput']);
+        $buildFieldSet->input()->typeText('aTextInput');
 
         $expected = <<<JSON
 {
