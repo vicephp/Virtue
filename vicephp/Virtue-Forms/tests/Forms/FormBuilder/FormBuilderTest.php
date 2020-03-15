@@ -84,10 +84,10 @@ JSON;
     public function testSelect()
     {
         $buildForm = new FormBuilder('aForm');
-        $buildForm->select(['name' => 'aSelectField'])
-            ->option(['label' => 'aLabel', 'value' => 'aValue'])
-            ->option(['label' => 'bLabel', 'value' => 'bValue'])
-            ->option(['label' => 'cLabel', 'value' => 'cValue']);
+        $buildForm->select('aSelectField')
+            ->option('aValue', 'aLabel')
+            ->option('bValue', 'bLabel')
+            ->option('cValue', 'cLabel');
 
         $expected = <<<JSON
 {
@@ -105,22 +105,22 @@ JSON;
                 {
                     "element": "option",
                     "attributes": {
-                        "label": "aLabel",
-                        "value": "aValue"
+                        "value": "aValue",
+                        "label": "aLabel"
                     }
                 },
                 {
                     "element": "option",
                     "attributes": {
-                        "label": "bLabel",
-                        "value": "bValue"
+                        "value": "bValue",
+                        "label": "bLabel"
                     }
                 },
                 {
                     "element": "option",
                     "attributes": {
-                        "label": "cLabel",
-                        "value": "cValue"
+                        "value": "cValue",
+                        "label": "cLabel"
                     }
                 }
             ]
@@ -134,7 +134,7 @@ JSON;
     public function testTextArea()
     {
         $buildForm = new FormBuilder('aForm');
-        $buildForm->textArea(['name' => 'aTextArea']);
+        $buildForm->textArea('aTextArea');
 
         $expected = <<<JSON
 {

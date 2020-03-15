@@ -3,10 +3,13 @@
 namespace Virtue\Forms\FormBuilder;
 
 use Virtue\Forms\FieldSetElement;
+use Virtue\Forms\HtmlElement;
 
-class FieldSetBuilder implements ElementBuilder
+class FieldSetBuilder implements ElementBuilder, BuildsHtmlElement
 {
+    /** @var array|string[] */
     private $attributes = [];
+    /** @var array|BuildsHtmlElement[] */
     private $children = [];
 
     public function __construct(array $attributes)
@@ -20,26 +23,22 @@ class FieldSetBuilder implements ElementBuilder
     }
 
     /**
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
-     * @param array $attributes
-     * @return SelectBuilder
+     * @inheritDoc
      */
-    public function select(array $attributes): SelectBuilder
+    public function select(string $name, array $attributes = []): SelectBuilder
     {
-        return $this->children[] = new SelectBuilder($attributes);
+        return $this->children[] = new SelectBuilder($name, $attributes);
     }
 
     /**
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea
-     * @param array $attributes
-     * @return TextAreaBuilder
+     * @inheritDoc
      */
-    public function textArea(array $attributes): TextAreaBuilder
+    public function textArea(string $name, array $attributes = []): TextAreaBuilder
     {
-        return $this->children[] = new TextAreaBuilder($attributes);
+        return $this->children[] = new TextAreaBuilder($name, $attributes);
     }
 
-    public function __invoke(): FieldSetElement
+    public function __invoke(): HtmlElement
     {
         return new FieldSetElement(
             $this->attributes,

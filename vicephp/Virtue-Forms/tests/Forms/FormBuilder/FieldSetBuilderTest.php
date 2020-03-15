@@ -34,7 +34,7 @@ JSON;
     public function testSelect()
     {
         $buildFieldSet = new FieldSetBuilder(['name' => 'aFieldSet']);
-        $buildFieldSet->select(['name' => 'aSelectBox']);
+        $buildFieldSet->select('aSelectBox');
 
         $expected = <<<JSON
 {
@@ -58,7 +58,7 @@ JSON;
     public function testTextArea()
     {
         $buildFieldSet = new FieldSetBuilder(['name' => 'aFieldSet']);
-        $buildFieldSet->textArea(['name' => 'aTextArea']);
+        $buildFieldSet->textArea('aTextArea');
 
         $expected = <<<JSON
 {

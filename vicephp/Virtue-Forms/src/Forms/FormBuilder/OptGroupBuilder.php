@@ -2,13 +2,15 @@
 
 namespace Virtue\Forms\FormBuilder;
 
+use Virtue\Forms\HtmlElement;
 use Virtue\Forms\OptGroupElement;
 
-class OptGroupBuilder
+class OptGroupBuilder implements BuildsHtmlElement, BuildsOptionElement
 {
+    /** @var array|string[] */
     private $attributes = [];
+    /** @var array|BuildsHtmlElement[] */
     private $children = [];
-
 
     public function __construct(array $attributes)
     {
@@ -16,18 +18,16 @@ class OptGroupBuilder
     }
 
     /**
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option
-     * @param array $attributes
-     * @return OptGroupBuilder
+     * @inheritDoc
      */
-    public function option(array $attributes): OptGroupBuilder
+    public function option(string $value, string $label, array $attributes = []): BuildsOptionElement
     {
-        $this->children[] = new OptionBuilder($attributes);
+        $this->children[] = new OptionBuilder($value, $label, $attributes);
 
         return $this;
     }
 
-    public function __invoke(): OptGroupElement
+    public function __invoke(): HtmlElement
     {
         return new OptGroupElement(
             $this->attributes,

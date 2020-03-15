@@ -84,7 +84,7 @@ class InputBuilderTest extends TestCase
         $buildInput = new InputBuilder(new FormBuilder('aForm'));
         $buildInput->typeImage('aImage', ['value' => 'aValue']);
 
-        $expected = '{"element":"input","attributes":{"type":"image","name":"aImage","value":"aValue"}}';
+        $expected = '{"element":"input","attributes":{"type":"image","name":"aImage","alt":"aImage","value":"aValue"}}';
         $this->assertEquals($expected, json_encode($buildInput()));
     }
 

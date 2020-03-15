@@ -8,8 +8,8 @@ class SelectBuilderTest extends TestCase
 {
     public function testOption()
     {
-        $buildSelect = new SelectBuilder(['name' => 'aName']);
-        $buildSelect->option(['label' => 'optLabel', 'value' => 'optValue']);
+        $buildSelect = new SelectBuilder('aName');
+        $buildSelect->option('optValue', 'optLabel');
 
         $expected = <<<JSON
 {
@@ -21,8 +21,8 @@ class SelectBuilderTest extends TestCase
         {
             "element": "option",
             "attributes": {
-                "label": "optLabel",
-                "value": "optValue"
+                "value": "optValue",
+                "label": "optLabel"
             }
         }
     ]
@@ -33,7 +33,7 @@ JSON;
 
     public function testOptGroup()
     {
-        $buildSelect = new SelectBuilder(['name' => 'aName']);
+        $buildSelect = new SelectBuilder('aName');
         $buildSelect->optGroup(['label' => 'optGroupLabel']);
 
         $expected = <<<JSON

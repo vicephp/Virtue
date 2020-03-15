@@ -3,10 +3,13 @@
 namespace Virtue\Forms\FormBuilder;
 
 use Virtue\Forms\FormElement;
+use Virtue\Forms\HtmlElement;
 
-class FormBuilder implements ElementBuilder
+class FormBuilder implements ElementBuilder, BuildsHtmlElement
 {
+    /** @var array|string[] */
     private $attributes = [];
+    /** @var array|BuildsHtmlElement[] */
     private $children = [];
 
     /**
@@ -24,14 +27,13 @@ class FormBuilder implements ElementBuilder
      * @param array $attributes
      * @return FieldSetBuilder
      */
-    public function fieldSet(array $attributes): FieldSetBuilder
+    public function fieldSet(array $attributes = []): FieldSetBuilder
     {
         return $this->children[] = new FieldSetBuilder($attributes);
     }
 
     /**
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input
-     * @return InputBuilder
+     * @inheritDoc
      */
     public function input(): InputBuilder
     {
@@ -39,26 +41,22 @@ class FormBuilder implements ElementBuilder
     }
 
     /**
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
-     * @param array $attributes
-     * @return SelectBuilder
+     * @inheritDoc
      */
-    public function select(array $attributes): SelectBuilder
+    public function select(string $name, array $attributes = []): SelectBuilder
     {
-        return $this->children[] = new SelectBuilder($attributes);
+        return $this->children[] = new SelectBuilder($name, $attributes);
     }
 
     /**
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea
-     * @param array $attributes
-     * @return TextAreaBuilder
+     * @inheritDoc
      */
-    public function textArea(array $attributes): TextAreaBuilder
+    public function textArea(string $name, array $attributes = []): TextAreaBuilder
     {
-        return $this->children[] = new TextAreaBuilder($attributes);
+        return $this->children[] = new TextAreaBuilder($name, $attributes);
     }
 
-    public function __invoke(): FormElement
+    public function __invoke(): HtmlElement
     {
         return new FormElement(
             $this->attributes,

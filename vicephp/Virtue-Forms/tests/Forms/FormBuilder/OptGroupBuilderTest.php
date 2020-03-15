@@ -9,8 +9,7 @@ class OptGroupBuilderTest extends TestCase
     public function testOption()
     {
         $buildOptGroup = new OptGroupBuilder(['label' => 'anOptGroup']);
-        $buildOptGroup->option(['label' => 'optLabel', 'value' => 'optValue']);
-
+        $buildOptGroup->option('optValue','optLabel');
         $expected = <<<JSON
 {
     "element": "optgroup",
@@ -21,8 +20,8 @@ class OptGroupBuilderTest extends TestCase
         {
             "element": "option",
             "attributes": {
-                "label": "optLabel",
-                "value": "optValue"
+                "value": "optValue",
+                "label": "optLabel"
             }
         }
     ]

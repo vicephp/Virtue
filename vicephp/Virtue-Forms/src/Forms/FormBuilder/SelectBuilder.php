@@ -2,26 +2,27 @@
 
 namespace Virtue\Forms\FormBuilder;
 
+use Virtue\Forms\HtmlElement;
 use Virtue\Forms\SelectElement;
 
-class SelectBuilder
+class SelectBuilder implements BuildsHtmlElement, BuildsOptionElement
 {
+    /** @var array|string[]  */
     private $attributes = [];
+    /** @var array|BuildsHtmlElement[] */
     private $children = [];
 
-    public function __construct(array $attributes)
+    public function __construct(string $name, array $attributes = [])
     {
-        $this->attributes = $attributes;
+        $this->attributes = ['name' => $name] + $attributes;
     }
 
     /**
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/option
-     * @param array $attributes
-     * @return SelectBuilder
+     * @inheritDoc
      */
-    public function option(array $attributes): SelectBuilder
+    public function option(string $value, string $label, array $attributes = []): BuildsOptionElement
     {
-        $this->children[] = new OptionBuilder($attributes);
+        $this->children[] = new OptionBuilder($value, $label, $attributes);
 
         return $this;
     }
@@ -36,7 +37,7 @@ class SelectBuilder
         return $this->children[] = new OptGroupBuilder($attributes);
     }
 
-    public function __invoke(): SelectElement
+    public function __invoke(): HtmlElement
     {
         return new SelectElement(
             $this->attributes,

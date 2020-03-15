@@ -2,12 +2,14 @@
 
 namespace Virtue\Forms\FormBuilder;
 
+use Virtue\Forms\HtmlElement;
 use Virtue\Forms\InputElement;
 
-class InputBuilder
+class InputBuilder implements BuildsHtmlElement
 {
     /** @var ElementBuilder */
     private $parent;
+    /** @var array|string[] */
     private $attributes = [];
 
     public function __construct(ElementBuilder $parent)
@@ -127,7 +129,7 @@ class InputBuilder
      */
     public function typeImage(string $name, array $attributes = []): ElementBuilder
     {
-        $this->attributes = ['type' => 'image', 'name' => $name] + $attributes;
+        $this->attributes = ['type' => 'image', 'name' => $name, 'alt' => $attributes['alt'] ?? $name] + $attributes;
 
         return $this->parent;
     }
@@ -314,7 +316,7 @@ class InputBuilder
         return $this->parent;
     }
 
-    public function __invoke(): InputElement
+    public function __invoke(): HtmlElement
     {
         return new InputElement($this->attributes);
     }
