@@ -14,9 +14,9 @@ class Column
     private $name;
     /** @var string */
     private $data;
-    /** @var string */
+    /** @var bool */
     private $searchable;
-    /** @var string */
+    /** @var bool */
     private $orderable;
     /** @var Search */
     private $search;
@@ -25,8 +25,8 @@ class Column
     {
         $this->name = $data[self::name];
         $this->data = $data[self::data];
-        $this->searchable = $data[self::searchable] == 'true';
-        $this->orderable = $data[self::orderable] == 'true';
+        $this->searchable = $data[self::searchable] === 'true';
+        $this->orderable = $data[self::orderable] === 'true';
         $this->search = new Search($data[self::search]);
     }
 
