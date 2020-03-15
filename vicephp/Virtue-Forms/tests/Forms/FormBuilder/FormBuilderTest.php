@@ -85,9 +85,9 @@ JSON;
     {
         $buildForm = new FormBuilder('aForm');
         $buildForm->select('aSelectField')
-            ->option('aValue', 'aLabel')
-            ->option('bValue', 'bLabel')
-            ->option('cValue', 'cLabel');
+            ->option('aLabel', 'aValue')
+            ->option('bLabel', 'bValue')
+            ->option('cLabel', 'cValue');
 
         $expected = <<<JSON
 {

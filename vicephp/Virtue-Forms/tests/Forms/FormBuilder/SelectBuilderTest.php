@@ -9,7 +9,7 @@ class SelectBuilderTest extends TestCase
     public function testOption()
     {
         $buildSelect = new SelectBuilder('aName');
-        $buildSelect->option('optValue', 'optLabel');
+        $buildSelect->option('optLabel', 'optValue');
 
         $expected = <<<JSON
 {
