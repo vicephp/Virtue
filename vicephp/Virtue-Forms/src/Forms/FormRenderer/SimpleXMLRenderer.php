@@ -1,8 +1,10 @@
 <?php
 
-namespace Virtue\Forms;
+namespace Virtue\Forms\FormRenderer;
 
-class HtmlRenderer
+use Virtue\Forms\HtmlElement;
+
+class SimpleXMLRenderer implements FormRenderer
 {
     public function render(HtmlElement $element): string
     {

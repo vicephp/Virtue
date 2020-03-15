@@ -1,14 +1,17 @@
 <?php
 
-namespace Virtue\Forms;
+namespace Virtue\Forms\FormRenderer;
 
 use PHPUnit\Framework\TestCase;
+use Virtue\Forms\InputElement;
+use Virtue\Forms\OptionElement;
+use Virtue\Forms\SelectElement;
 
-class HtmlRendererTest extends TestCase
+class SimpleXMLRendererTest extends TestCase
 {
     public function testRenderInputWithAttributes()
     {
-        $renderer = new HtmlRenderer();
+        $renderer = new SimpleXMLRenderer();
         $aTextInput = InputElement::ofType('text', ['name' => 'aName', 'value' => 'aValue']);
 
         $this->assertEquals(
@@ -19,7 +22,7 @@ class HtmlRendererTest extends TestCase
 
     public function testRenderInput()
     {
-        $renderer = new HtmlRenderer();
+        $renderer = new SimpleXMLRenderer();
         $aTextInput = InputElement::ofType('text', ['name' => 'aName', 'value' => 'aValue']);
 
         $this->assertEquals('<input type="text" name="aName" value="aValue"/>', $renderer->render($aTextInput));
@@ -27,7 +30,7 @@ class HtmlRendererTest extends TestCase
 
     public function testRenderSelect()
     {
-        $renderer = new HtmlRenderer();
+        $renderer = new SimpleXMLRenderer();
         $aSelect = new SelectElement(['name' => 'aName']);
 
         $this->assertEquals('<select name="aName"/>', $renderer->render($aSelect));
