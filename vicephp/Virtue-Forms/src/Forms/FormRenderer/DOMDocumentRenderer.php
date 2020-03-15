@@ -11,7 +11,7 @@ class DOMDocumentRenderer implements HtmlRenderer
 
     public function render(HtmlElement $element): string
     {
-        $this->dom = new \DOMDocument(1.0);
+        $this->dom = new \DOMDocument('1.0');
         $this->dom->preserveWhiteSpace = false;
         $this->dom->formatOutput = true;
         $element = $this->renderElement($this->dom, $element);
