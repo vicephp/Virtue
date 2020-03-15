@@ -16,6 +16,19 @@ class FormViewTest extends TestCase
         $this->formView = new FormView(new SimpleXMLRenderer());
     }
 
+    public function testSelectElement()
+    {
+        $expected = '<select name="aSelectElement"/>';
+        $this->assertEquals($expected, $this->formView->selectElement('aSelectElement', []));
+
+        $expected = '<select name="aSelectElement"><option value="aValue" label="aLabel"/></select>';
+        $this->assertEquals($expected, $this->formView->selectElement('aSelectElement', ['aLabel' => 'aValue']));
+
+        $options = ['optLabel' => ['aLabel' => 'aValue', 'bLabel' => 'aValue']];
+        $expected = '<select name="aSelectElement"><optgroup label="optLabel"><option value="aValue" label="aLabel"/><option value="aValue" label="bLabel"/></optgroup></select>';
+        $this->assertEquals($expected, $this->formView->selectElement('aSelectElement', $options));
+    }
+
     public function testButtonInput()
     {
         $expected = '<input type="button" name="aButton" class="someCssClass"/>';

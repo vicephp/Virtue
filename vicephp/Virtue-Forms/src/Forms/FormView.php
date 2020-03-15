@@ -12,6 +12,25 @@ class FormView
         $this->html = $renderer;
     }
 
+    public function selectElement(string $name, array $options, array $attr = [])
+    {
+        $options = $this->buildOptions($options);
+        return $this->html->render(
+            new SelectElement(['name' => $name] + $attr, $options)
+        );
+    }
+
+    private function buildOptions($options): array
+    {
+        foreach ($options as $label => $value) {
+            $options[$label] = is_array($value) ?
+                new OptGroupElement(['label' => $label], $this->buildOptions($value)) :
+                new OptionElement(['value' => $value, 'label' => $label]);
+        }
+
+        return $options;
+    }
+
     public function buttonInput(string $name, array $attr = []): string
     {
         return $this->html->render(
