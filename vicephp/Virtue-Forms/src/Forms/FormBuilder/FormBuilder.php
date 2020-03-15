@@ -24,12 +24,12 @@ class FormBuilder implements ElementBuilder, BuildsHtmlElement
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/fieldset
-     * @param array $attributes
+     * @param array $attr
      * @return FieldSetBuilder
      */
-    public function fieldSet(array $attributes = []): FieldSetBuilder
+    public function fieldSet(array $attr = []): FieldSetBuilder
     {
-        return $this->children[] = new FieldSetBuilder($attributes);
+        return $this->children[] = new FieldSetBuilder($attr);
     }
 
     /**
@@ -43,17 +43,17 @@ class FormBuilder implements ElementBuilder, BuildsHtmlElement
     /**
      * @inheritDoc
      */
-    public function select(string $name, array $attributes = []): SelectBuilder
+    public function select(string $name, array $attr = []): SelectBuilder
     {
-        return $this->children[] = new SelectBuilder($name, $attributes);
+        return $this->children[] = new SelectBuilder($name, $attr);
     }
 
     /**
      * @inheritDoc
      */
-    public function textArea(string $name, array $attributes = []): TextAreaBuilder
+    public function textArea(string $name, array $attr = []): TextAreaBuilder
     {
-        return $this->children[] = new TextAreaBuilder($name, $attributes);
+        return $this->children[] = new TextAreaBuilder($name, $attr);
     }
 
     public function __invoke(): HtmlElement

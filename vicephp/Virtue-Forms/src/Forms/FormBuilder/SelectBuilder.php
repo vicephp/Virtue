@@ -20,9 +20,9 @@ class SelectBuilder implements BuildsHtmlElement, BuildsOptionElement
     /**
      * @inheritDoc
      */
-    public function option(string $value, string $label, array $attributes = []): BuildsOptionElement
+    public function option(string $value, string $label, array $attr = []): BuildsOptionElement
     {
-        $this->children[] = new OptionBuilder($value, $label, $attributes);
+        $this->children[] = new OptionBuilder($value, $label, $attr);
 
         return $this;
     }

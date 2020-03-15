@@ -13,16 +13,16 @@ interface ElementBuilder
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select
      * @param string $name
-     * @param array $attributes
+     * @param array $attr
      * @return SelectBuilder
      */
-    public function select(string $name, array $attributes = []): SelectBuilder;
+    public function select(string $name, array $attr = []): SelectBuilder;
 
     /**
      * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea
      * @param string $name
-     * @param array $attributes
+     * @param array $attr
      * @return TextAreaBuilder
      */
-    public function textArea(string $name, array $attributes = []): TextAreaBuilder;
+    public function textArea(string $name, array $attr = []): TextAreaBuilder;
 }

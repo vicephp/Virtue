@@ -25,17 +25,17 @@ class FieldSetBuilder implements ElementBuilder, BuildsHtmlElement
     /**
      * @inheritDoc
      */
-    public function select(string $name, array $attributes = []): SelectBuilder
+    public function select(string $name, array $attr = []): SelectBuilder
     {
-        return $this->children[] = new SelectBuilder($name, $attributes);
+        return $this->children[] = new SelectBuilder($name, $attr);
     }
 
     /**
      * @inheritDoc
      */
-    public function textArea(string $name, array $attributes = []): TextAreaBuilder
+    public function textArea(string $name, array $attr = []): TextAreaBuilder
     {
-        return $this->children[] = new TextAreaBuilder($name, $attributes);
+        return $this->children[] = new TextAreaBuilder($name, $attr);
     }
 
     public function __invoke(): HtmlElement
