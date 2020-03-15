@@ -3,6 +3,7 @@
 namespace Virtue\Forms;
 
 use PHPUnit\Framework\TestCase;
+use Virtue\Forms\FormRenderer\DOMDocumentRenderer;
 use Virtue\Forms\FormRenderer\SimpleXMLRenderer;
 
 class FormViewTest extends TestCase
@@ -13,7 +14,7 @@ class FormViewTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->formView = new FormView(new SimpleXMLRenderer());
+        $this->formView = new FormView(new DOMDocumentRenderer());
     }
 
     public function testSelectElement()
@@ -21,11 +22,22 @@ class FormViewTest extends TestCase
         $expected = '<select name="aSelectElement"/>';
         $this->assertEquals($expected, $this->formView->selectElement('aSelectElement', []));
 
-        $expected = '<select name="aSelectElement"><option value="aValue" label="aLabel"/></select>';
+        $expected = <<<HTML
+<select name="aSelectElement">
+  <option value="aValue" label="aLabel"/>
+</select>
+HTML;
         $this->assertEquals($expected, $this->formView->selectElement('aSelectElement', ['aLabel' => 'aValue']));
 
         $options = ['optLabel' => ['aLabel' => 'aValue', 'bLabel' => 'aValue']];
-        $expected = '<select name="aSelectElement"><optgroup label="optLabel"><option value="aValue" label="aLabel"/><option value="aValue" label="bLabel"/></optgroup></select>';
+        $expected = <<<HTML
+<select name="aSelectElement">
+  <optgroup label="optLabel">
+    <option value="aValue" label="aLabel"/>
+    <option value="aValue" label="bLabel"/>
+  </optgroup>
+</select>
+HTML;
         $this->assertEquals($expected, $this->formView->selectElement('aSelectElement', $options));
     }
 
