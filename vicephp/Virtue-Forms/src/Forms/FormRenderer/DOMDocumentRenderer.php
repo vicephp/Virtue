@@ -9,11 +9,18 @@ class DOMDocumentRenderer implements HtmlRenderer
     /** @var \DOMDocument */
     private $dom;
 
+    private $settings = [
+        'version' => '1.0',
+        'encoding' => 'utf-8',
+        'preserveWhiteSpace' => false,
+        'formatOutput' => true,
+    ];
+
     public function render(HtmlElement $element): string
     {
-        $this->dom = new \DOMDocument('1.0');
-        $this->dom->preserveWhiteSpace = false;
-        $this->dom->formatOutput = true;
+        $this->dom = new \DOMDocument($this->settings['version'], $this->settings['encoding']);
+        $this->dom->preserveWhiteSpace = $this->settings['preserveWhiteSpace'];
+        $this->dom->formatOutput = $this->settings['formatOutput'];
         $element = $this->renderElement($this->dom, $element);
 
         return $this->dom->saveXML($element);
@@ -30,7 +37,15 @@ class DOMDocumentRenderer implements HtmlRenderer
         foreach ($child[HtmlElement::Children] ?? [] as $inner) {
             $this->renderElement($node, $inner);
         }
+        if($node->hasChildNodes() === false && $this->childRequired($node)) {
+            $node->appendChild($this->dom->createTextNode(''));
+        }
 
         return $node;
+    }
+
+    private function childRequired(\DOMNode $node): bool
+    {
+        return in_array($node->nodeName, ['textarea', 'select', 'optgroup', 'form']);
     }
 }

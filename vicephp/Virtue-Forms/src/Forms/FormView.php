@@ -12,7 +12,14 @@ class FormView
         $this->html = $renderer;
     }
 
-    public function selectElement(string $name, array $options, array $attr = [])
+    public function textArea(string $name, array $attr = []): string
+    {
+        return $this->html->render(
+            new TextAreaElement(['name' => $name] + $attr)
+        );
+    }
+
+    public function selectElement(string $name, array $options, array $attr = []): string
     {
         $options = $this->buildOptions($options);
         return $this->html->render(

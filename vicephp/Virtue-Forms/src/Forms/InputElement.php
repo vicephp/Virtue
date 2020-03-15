@@ -12,21 +12,11 @@ class InputElement implements HtmlElement
 
     public function __construct(array $attr)
     {
+        Assert::string($attr['type'] ?? null, 'A type must be provided');
         $attr['name'] = $attr['name'] ?? $attr['id'] ?? null;
         Assert::string($attr['name'], 'A name or id must be provided');
-        Assert::string($attr['type'] ?? null, 'A type must be provided');
-        $this->attributes = $attr;
-    }
 
-    /**
-     * @param string $type
-     * @param array $attr ['id' => 'anId' [, ...]] or ['name' => 'aName' [, ...]]
-     * @return InputElement
-     */
-    public static function ofType(string $type, array $attr)
-    {
-        unset($attr['type']);
-        return new self(['type' => $type] + $attr);
+        $this->attributes = $attr;
     }
 
     public function withAttributes(array $attr): HtmlElement

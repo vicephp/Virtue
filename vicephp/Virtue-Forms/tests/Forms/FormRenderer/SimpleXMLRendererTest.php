@@ -12,7 +12,7 @@ class SimpleXMLRendererTest extends TestCase
     public function testRenderInputWithAttributes()
     {
         $renderer = new SimpleXMLRenderer();
-        $aTextInput = InputElement::ofType('text', ['name' => 'aName', 'value' => 'aValue']);
+        $aTextInput = new InputElement(['type' => 'text', 'name' => 'aName', 'value' => 'aValue']);
 
         $this->assertEquals(
             '<input type="text" name="bName" value="aValue"/>',
@@ -23,7 +23,7 @@ class SimpleXMLRendererTest extends TestCase
     public function testRenderInput()
     {
         $renderer = new SimpleXMLRenderer();
-        $aTextInput = InputElement::ofType('text', ['name' => 'aName', 'value' => 'aValue']);
+        $aTextInput = new InputElement(['type' => 'text', 'name' => 'aName', 'value' => 'aValue']);
 
         $this->assertEquals('<input type="text" name="aName" value="aValue"/>', $renderer->render($aTextInput));
     }

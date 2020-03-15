@@ -4,7 +4,6 @@ namespace Virtue\Forms;
 
 use PHPUnit\Framework\TestCase;
 use Virtue\Forms\FormRenderer\DOMDocumentRenderer;
-use Virtue\Forms\FormRenderer\SimpleXMLRenderer;
 
 class FormViewTest extends TestCase
 {
@@ -17,10 +16,16 @@ class FormViewTest extends TestCase
         $this->formView = new FormView(new DOMDocumentRenderer());
     }
 
+    public function testTextArea()
+    {
+        $expected = '<textarea name="aTextArea" class="someCssClass"></textarea>';
+        $this->assertEquals($expected, $this->formView->textArea('aTextArea', ['class' => 'someCssClass']));
+    }
+
     public function testSelectElement()
     {
-        $expected = '<select name="aSelectElement"/>';
-        $this->assertEquals($expected, $this->formView->selectElement('aSelectElement', []));
+        $expected = '<select name="aSelectElement" class="someCssClass"></select>';
+        $this->assertEquals($expected, $this->formView->selectElement('aSelectElement', [], ['class' => 'someCssClass']));
 
         $expected = <<<HTML
 <select name="aSelectElement">
@@ -31,14 +36,14 @@ HTML;
 
         $options = ['optLabel' => ['aLabel' => 'aValue', 'bLabel' => 'aValue']];
         $expected = <<<HTML
-<select name="aSelectElement">
+<select name="aSelectElement" class="someCssClass">
   <optgroup label="optLabel">
     <option value="aValue" label="aLabel"/>
     <option value="aValue" label="bLabel"/>
   </optgroup>
 </select>
 HTML;
-        $this->assertEquals($expected, $this->formView->selectElement('aSelectElement', $options));
+        $this->assertEquals($expected, $this->formView->selectElement('aSelectElement', $options, ['class' => 'someCssClass']));
     }
 
     public function testButtonInput()
