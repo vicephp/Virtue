@@ -2,8 +2,13 @@
 
 <phpunit bootstrap="./tests/bootstrap.php" colors="true">
     <testsuites>
-        <testsuite name="Virtue-Access Unit Tests">
+        <testsuite name="Virtue-Access">
             <directory>./tests</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src/*</directory>
+        </whitelist>
+    </filter>
 </phpunit>
