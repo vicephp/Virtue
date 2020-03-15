@@ -38,7 +38,8 @@ class DOMDocumentRenderer implements HtmlRenderer
             $this->renderElement($node, $inner);
         }
         if($node->hasChildNodes() === false && $this->childRequired($node)) {
-            $node->appendChild($this->dom->createTextNode(''));
+            $content = in_array($node->nodeName, ['option']) ? $node->getAttribute('label') : '';
+            $node->appendChild($this->dom->createTextNode($content));
         }
 
         return $node;
@@ -46,6 +47,6 @@ class DOMDocumentRenderer implements HtmlRenderer
 
     private function childRequired(\DOMNode $node): bool
     {
-        return in_array($node->nodeName, ['textarea', 'select', 'optgroup', 'form']);
+        return in_array($node->nodeName, ['textarea', 'select', 'optgroup', 'form', 'option']);
     }
 }

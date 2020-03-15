@@ -31,7 +31,7 @@ class DOMDocumentRendererTest extends TestCase
 
         $expected = <<<HTML
 <select name="bName">
-  <option value="aValue" label="aLabel"/>
+  <option value="aValue" label="aLabel">aLabel</option>
 </select>
 HTML;
         $this->assertEquals($expected, $renderer->render($bSelect));

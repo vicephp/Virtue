@@ -29,7 +29,7 @@ class FormViewTest extends TestCase
 
         $expected = <<<HTML
 <select name="aSelectElement">
-  <option value="aValue" label="aLabel"/>
+  <option value="aValue" label="aLabel">aLabel</option>
 </select>
 HTML;
         $this->assertEquals($expected, $this->formView->selectElement('aSelectElement', ['aLabel' => 'aValue']));
@@ -38,8 +38,8 @@ HTML;
         $expected = <<<HTML
 <select name="aSelectElement" class="someCssClass">
   <optgroup label="optLabel">
-    <option value="aValue" label="aLabel"/>
-    <option value="aValue" label="bLabel"/>
+    <option value="aValue" label="aLabel">aLabel</option>
+    <option value="aValue" label="bLabel">bLabel</option>
   </optgroup>
 </select>
 HTML;
