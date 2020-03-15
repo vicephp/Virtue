@@ -1,4 +1,4 @@
-# Virtue-SQL
+# Virtue-PDO
 
 ## Premise
 ```
