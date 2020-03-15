@@ -8,10 +8,11 @@
         "sort-packages": true
     },
     "require": {
-        "ext-SimpleXML": "^7.2",
         "ext-json": "*"
     },
     "require-dev": {
+        "ext-SimpleXML": "^7.2",
+        "ext-dom": "20031129",
         "phpstan/phpstan": "^0.12.0",
         "phpunit/phpunit": "~7.0"
     },
@@ -24,5 +25,9 @@
         "psr-4": {
             "Virtue\\": "tests/"
         }
+    },
+    "suggest": {
+        "ext-simplexml": "Needed to support SimpleXMLRenderer",
+        "ext-dom": "Needed to support DOMDocumentRenderer"
     }
 }
