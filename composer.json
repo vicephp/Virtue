@@ -1,7 +1,56 @@
 {
     "name": "vicephp/virtue",
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Virtue\\Access\\": "vicephp/Virtue-Access/src/Access/",
+            "Virtue\\Api\\": "vicephp/Virtue-Api/src/Api/",
+            "Virtue\\DataTables\\": "vicephp/Virtue-DataTables/src/DataTables/",
+            "Virtue\\Database\\": "vicephp/Virtue-PDO/src/Database/",
+            "Virtue\\Forms\\": "vicephp/Virtue-Forms/src/Forms/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Virtue\\Access\\": "vicephp/Virtue-Access/tests/Access/",
+            "Virtue\\Api\\": "vicephp/Virtue-Api/tests/Api/",
+            "Virtue\\DataTables\\": "vicephp/Virtue-DataTables/tests/DataTables/",
+            "Virtue\\Database\\": "vicephp/Virtue-PDO/tests/Database/",
+            "Virtue\\Forms\\": "vicephp/Virtue-Forms/tests/Forms/"
+        }
+    },
+    "replace": {
+        "vicephp/virtue-access": "self.version",
+        "vicephp/virtue-api": "self.version",
+        "vicephp/virtue-datatables": "self.version",
+        "vicephp/virtue-forms": "self.version",
+        "vicephp/virtue-pdo": "self.version"
+    },
     "description": "Making PHP more Pythonic...",
-    "type": "project",
     "license": "MIT",
-    "require": {}
+    "require": {
+        "php": "^7.1",
+        "ext-json": "*",
+        "ext-pdo": "*",
+        "beberlei/assert": "^2.0",
+        "psr/http-message": "^1.0",
+        "psr/http-server-handler": "^1.0",
+        "psr/http-server-middleware": "^1.0",
+        "slim/psr7": "dev-master",
+        "slim/slim": "~4.0"
+    },
+    "require-dev": {
+        "ext-SimpleXML": "^7.2",
+        "ext-dom": "20031129",
+        "mockery/mockery": "^1.2",
+        "php-di/php-di": "~6.0",
+        "phpstan/phpstan": "^0.12.0",
+        "phpunit/phpunit": "~7.0",
+        "symplify/monorepo-builder": "^7.3"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

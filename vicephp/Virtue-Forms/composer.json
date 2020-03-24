@@ -18,16 +18,16 @@
     },
     "autoload": {
         "psr-4": {
-            "Virtue\\": "src/"
+            "Virtue\\Forms\\": "src/Forms/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Virtue\\": "tests/"
+            "Virtue\\Forms\\": "tests/Forms/"
         }
     },
     "suggest": {
-        "ext-simplexml": "Needed to support SimpleXMLRenderer",
+        "ext-SimpleXML": "Needed to support SimpleXMLRenderer",
         "ext-dom": "Needed to support DOMDocumentRenderer"
     }
 }
