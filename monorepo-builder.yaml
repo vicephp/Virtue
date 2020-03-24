@@ -13,3 +13,4 @@ parameters:
         vicephp/Virtue-DataTables: 'git@github.com:vicephp/Virtue-DataTables.git'
         vicephp/Virtue-Forms: 'git@github.com:vicephp/Virtue-Forms.git'
         vicephp/Virtue-PDO: 'git@github.com:vicephp/Virtue-PDO.git'
+        vicephp/Virtue-View: 'git@github.com:vicephp/Virtue-View.git'
