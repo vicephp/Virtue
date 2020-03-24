@@ -1,7 +1,7 @@
 {
-  "name": "vicephp/virtue-access",
+  "name": "vicephp/virtue-http",
   "type": "library",
-  "description": "Making access management more Pythonic...",
+  "description": "Making HTTP more Pythonic...",
   "license": "MIT",
   "minimum-stability": "dev",
   "prefer-stable": true,
@@ -10,25 +10,24 @@
     "sort-packages": true
   },
   "require": {
-    "php": "^7.1",
-    "psr/http-message": "^1.0",
-    "psr/http-server-handler": "^1.0",
-    "psr/http-server-middleware": "^1.0",
-    "webmozart/assert": "^1.0"
+    "php": "^7.1"
   },
   "require-dev": {
-    "mockery/mockery": "^1.2",
+    "guzzlehttp/psr7": "~1.6",
     "phpstan/phpstan": "^0.12.0",
     "phpunit/phpunit": "~7.0"
   },
+  "suggest": {
+    "guzzlehttp/psr7": "PSR-7 Message Implementation"
+  },
   "autoload": {
     "psr-4": {
-      "Virtue\\Access\\": "src/Access/"
+      "Virtue\\Http\\": "src/Http/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Virtue\\Access\\": "tests/Access/"
+      "Virtue\\Http\\": "tests/Http/"
     }
   }
 }

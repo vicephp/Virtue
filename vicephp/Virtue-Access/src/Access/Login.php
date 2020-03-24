@@ -2,7 +2,7 @@
 
 namespace Virtue\Access;
 
-use Assert\Assertion as Assert;
+use Webmozart\Assert\Assert;
 
 class Login
 {
@@ -19,16 +19,9 @@ class Login
      */
     public function __construct(array $params)
     {
-        $this->assertParamsAreValid($params);
+        Assert::string($params[self::Username] ?? null);
+        Assert::string($params[self::Password] ?? null);
         $this->params = array_replace_recursive($this->params, $params);
-    }
-
-    private function assertParamsAreValid(array $params)
-    {
-        $required = [self::Username, self::Password];
-        foreach ($required as $key) {
-            Assert::keyIsset($params, $key);
-        }
     }
 
     public function getUsername()

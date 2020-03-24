@@ -2,7 +2,7 @@
 
 namespace Virtue\Database;
 
-use Assert\Assertion as Assert;
+use Webmozart\Assert\Assert;
 
 class Table
 {
@@ -27,10 +27,8 @@ class Table
 
     private function assertConfigIsValid($config)
     {
-        Assert::keyIsset($config, self::tableName, 'Table name not set. Please provide a table name.');
-        Assert::string($config[self::tableName], 'Table name has to a a string.');
-        Assert::keyIsset($config, self::primaryKey, 'Primary key not set. Please provide a primary key.');
-        Assert::isArray($config[self::primaryKey], 'Primary has to be a collection of column names.');
+        Assert::string($config[self::tableName] ?? null, 'Table name has to be a string.');
+        Assert::isArray($config[self::primaryKey] ?? null, 'Primary has to be a collection of column names.');
     }
 
     public function tableName(): string
