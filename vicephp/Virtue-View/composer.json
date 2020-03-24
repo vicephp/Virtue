@@ -1,7 +1,7 @@
 {
   "name": "vicephp/virtue-view",
   "type": "library",
-  "description": "Making PDO more Pythonic...",
+  "description": "Making views more Pythonic...",
   "license": "MIT",
   "minimum-stability": "dev",
   "prefer-stable": true,
@@ -10,11 +10,13 @@
     "sort-packages": true
   },
   "require": {
-    "php": "^7.1"
+    "php": "^7.1",
+    "guzzlehttp/psr7": "~1.6",
+    "slim/php-view": "~2.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "~7.0",
-    "phpstan/phpstan": "^0.12.0"
+    "phpstan/phpstan": "^0.12.0",
+    "phpunit/phpunit": "~7.0"
   },
   "autoload": {
     "psr-4": {
