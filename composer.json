@@ -1,0 +1,7 @@
+{
+    "name": "vicephp/virtue",
+    "description": "Making PHP more Pythonic...",
+    "type": "project",
+    "license": "MIT",
+    "require": {}
+}
