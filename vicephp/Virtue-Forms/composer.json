@@ -1,0 +1,33 @@
+{
+    "name": "vicephp/virtue-forms",
+    "description": "Making form generation more Pythonic...",
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "config": {
+        "sort-packages": true
+    },
+    "require": {
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "ext-SimpleXML": "^7.2",
+        "ext-dom": "20031129",
+        "phpstan/phpstan": "^0.12.0",
+        "phpunit/phpunit": "~7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Virtue\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Virtue\\": "tests/"
+        }
+    },
+    "suggest": {
+        "ext-simplexml": "Needed to support SimpleXMLRenderer",
+        "ext-dom": "Needed to support DOMDocumentRenderer"
+    }
+}
