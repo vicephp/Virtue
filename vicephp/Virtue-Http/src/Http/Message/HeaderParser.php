@@ -2,7 +2,7 @@
 
 namespace Virtue\Http\Message;
 
-use Psr\Http\Message\RequestInterface as Request;
+use Psr\Http\Message\ServerRequestInterface as ServerRequest;
 
 class HeaderParser
 {
@@ -19,27 +19,27 @@ class HeaderParser
         $this->forwarded = new Header\ForwardedParser();
     }
 
-    public function bestCharset(array $supported, Request $message, $default = ''): string
+    public function bestCharset(array $supported, ServerRequest $message, $default = ''): string
     {
         return $this->bestMatch('Accept-Charset', $supported, $message, $default);
     }
 
-    public function bestEncoding(array $supported, Request $message, $default = ''): string
+    public function bestEncoding(array $supported, ServerRequest $message, $default = ''): string
     {
         return $this->bestMatch('Accept-Encoding', $supported, $message, $default);
     }
 
-    public function bestLanguage(array $supported, Request $message, $default = ''): string
+    public function bestLanguage(array $supported, ServerRequest $message, $default = ''): string
     {
         return $this->bestMatch('Accept-Language', $supported, $message, $default);
     }
 
-    public function bestAccept(array $supported, Request $message, $default = ''): string
+    public function bestAccept(array $supported, ServerRequest $message, $default = ''): string
     {
         return $this->bestMatch('Accept', $supported, $message, $default);
     }
 
-    public function bestMatch(string $header, array $supported, Request $message, $default = ''): string
+    public function bestMatch(string $header, array $supported, ServerRequest $message, $default = ''): string
     {
         if ($message->hasHeader($header)) {
             $line = implode(',', $message->getHeader($header));
@@ -49,7 +49,21 @@ class HeaderParser
         return $default;
     }
 
-    public function proxiesXForwardedFor(Request $message, $version = self::IPV4): array
+    public function bestClientIp(ServerRequest $message, $version = self::IPV4): string
+    {
+        if ($message->hasHeader('X-Forwarded-For')) {
+            $byVersion = function($ip) use ($version) {
+                return filter_var($ip, FILTER_VALIDATE_IP, $version);
+            };
+            $line = implode(',', $message->getHeader('X-Forwarded-For'));
+
+            return array_filter($this->forwarded->parseXForwardedFor($line), $byVersion)[0];
+        }
+
+        return $message->getServerParams()['REMOTE_ADDR'];
+    }
+
+    public function proxiesXForwardedFor(ServerRequest $message, $version = self::IPV4): array
     {
         if ($message->hasHeader('X-Forwarded-For')) {
             $byVersion = function($ip) use ($version) {

@@ -2,7 +2,7 @@
 
 namespace Virtue\Http\Message;
 
-use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\ServerRequest as Request;
 use PHPUnit\Framework\TestCase;
 
 class HeaderParserTest extends TestCase
