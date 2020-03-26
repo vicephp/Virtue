@@ -2,8 +2,8 @@
 
 <phpunit bootstrap="./tests/bootstrap.php" colors="true">
     <testsuites>
-        <testsuite name="Virtue-SQL">
-            <directory>./tests</directory>
+        <testsuite name="Virtue-View">
+            <directory>./tests/View/</directory>
         </testsuite>
     </testsuites>
     <filter>

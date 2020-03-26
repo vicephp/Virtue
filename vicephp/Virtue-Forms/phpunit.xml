@@ -3,7 +3,7 @@
 <phpunit bootstrap="./tests/bootstrap.php" colors="true">
     <testsuites>
         <testsuite name="Virtue-Forms">
-            <directory>./tests</directory>
+            <directory>./tests/Forms/</directory>
         </testsuite>
     </testsuites>
     <filter>

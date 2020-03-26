@@ -2,13 +2,13 @@
 
 <phpunit bootstrap="./tests/bootstrap.php" colors="true">
     <testsuites>
-        <testsuite name="Virtue">
-            <directory>./vicephp/*/tests/*/</directory>
+        <testsuite name="Virtue-Session">
+            <directory>./tests/Session/</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./vicephp/*/src/*/</directory>
+            <directory suffix=".php">./src/*</directory>
         </whitelist>
     </filter>
 </phpunit>

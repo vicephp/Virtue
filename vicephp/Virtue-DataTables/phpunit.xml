@@ -3,7 +3,7 @@
 <phpunit bootstrap="./tests/bootstrap.php" colors="true">
     <testsuites>
         <testsuite name="Virtue-DataTables">
-            <directory>./tests</directory>
+            <directory>./tests/DataTables/</directory>
         </testsuite>
     </testsuites>
     <filter>
