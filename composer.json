@@ -12,7 +12,6 @@
             "Virtue\\Database\\": "vicephp/Virtue-PDO/src/Database/",
             "Virtue\\Forms\\": "vicephp/Virtue-Forms/src/Forms/",
             "Virtue\\Http\\": "vicephp/Virtue-Http/src/Http/",
-            "Virtue\\Session\\": "vicephp/Virtue-Session/src/Session/",
             "Virtue\\View\\": "vicephp/Virtue-View/src/View/"
         }
     },
@@ -24,7 +23,6 @@
             "Virtue\\Database\\": "vicephp/Virtue-PDO/tests/Database/",
             "Virtue\\Forms\\": "vicephp/Virtue-Forms/tests/Forms/",
             "Virtue\\Http\\": "vicephp/Virtue-Http/tests/Http/",
-            "Virtue\\Session\\": "vicephp/Virtue-Session/tests/Session/",
             "Virtue\\View\\": "vicephp/Virtue-View/tests/View/"
         }
     },
@@ -35,7 +33,6 @@
         "vicephp/virtue-forms": "self.version",
         "vicephp/virtue-http": "self.version",
         "vicephp/virtue-pdo": "self.version",
-        "vicephp/virtue-session": "self.version",
         "vicephp/virtue-view": "self.version"
     },
     "description": "Making PHP more Pythonic...",

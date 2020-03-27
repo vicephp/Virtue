@@ -1,6 +1,6 @@
 <?php
 
-namespace Virtue\Session;
+namespace Virtue\Http\Session;
 
 interface ControlsSession
 {
