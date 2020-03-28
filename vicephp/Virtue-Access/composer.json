@@ -21,6 +21,9 @@
         "phpstan/phpstan": "^0.12.0",
         "phpunit/phpunit": "~7.0"
     },
+    "suggest": {
+        "vicephp/virtue-http": "Needed to support StoreIdentity"
+    },
     "autoload": {
         "psr-4": {
             "Virtue\\Access\\": "src/Access/"
