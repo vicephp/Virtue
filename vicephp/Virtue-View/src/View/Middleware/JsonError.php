@@ -32,7 +32,7 @@ class JsonError implements ServerMiddleware
                 [
                     'error' => 'The server has encountered an unexpected error.',
                     'details' => [
-                        'type' => 'get_class($serverError)',
+                        'type' => get_class($serverError),
                         'code' => $serverError->getCode() ?? 'n/a',
                         'message' => $serverError->getMessage(),
                         'file' => $serverError->getFile(),
