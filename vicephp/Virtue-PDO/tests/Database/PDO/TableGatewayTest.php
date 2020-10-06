@@ -1,6 +1,6 @@
 <?php
 
-namespace VirtueTest\Database\PDO;
+namespace Virtue\Database\PDO;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Virtue\Database;

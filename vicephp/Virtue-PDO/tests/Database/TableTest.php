@@ -1,9 +1,8 @@
 <?php
 
-namespace VirtueTest\Database;
+namespace Virtue\Database;
 
 use PHPUnit\Framework\TestCase;
-use Virtue\Database\Table;
 
 class TableTest extends TestCase
 {

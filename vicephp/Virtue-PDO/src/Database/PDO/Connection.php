@@ -2,7 +2,7 @@
 
 namespace Virtue\Database\PDO;
 
-class Connection implements ExecutesStatements, ControlsTransactions
+class Connection implements ExecutesStatements, ControlsTransactions, SupportsSequence
 {
     /** @var Server */
     private $server;
@@ -38,6 +38,11 @@ class Connection implements ExecutesStatements, ControlsTransactions
     public function rollBack(): bool
     {
         return $this->pdo->rollBack();
+    }
+
+    public function lastInsertId(string $name = null): string
+    {
+        return $this->pdo->lastInsertId($name);
     }
 
     public function query(string $sql): \PDOStatement

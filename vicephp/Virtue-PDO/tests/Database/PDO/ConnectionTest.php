@@ -1,10 +1,8 @@
 <?php
 
-namespace VirtueTest\Database\PDO;
+namespace Virtue\Database\PDO;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Virtue\Database\PDO\Connection;
-use Virtue\Database\PDO\Server;
 
 class ConnectionTest extends MockeryTestCase
 {
@@ -88,5 +86,19 @@ class ConnectionTest extends MockeryTestCase
         $this->assertEquals(true, $connection->beginTransaction());
         $this->assertEquals(true, $connection->inTransaction());
         $this->assertEquals(true, $connection->rollBack());
+    }
+
+    public function testReturnLastInsertId()
+    {
+        $stmt = \Mockery::mock(\PDOStatement::class);
+        $pdo = \Mockery::mock(\PDO::class);
+        $pdo->shouldReceive('query')->with($sql = 'SQL')->andReturn($stmt)->once();
+        $pdo->shouldReceive('lastInsertId')->with(null)->andReturn($expectedLastId = '256')->once();
+        $server = \Mockery::mock(Server::class);
+        $server->shouldReceive('connect')->andReturn($pdo)->once();
+
+        $connection = new Connection($server);
+        $connection->query($sql);
+        $this->assertSame($expectedLastId, $connection->lastInsertId());
     }
 }
