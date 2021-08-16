@@ -33,19 +33,25 @@ class Request implements \JsonSerializable
     public function __construct(array $params)
     {
         $this->params = array_replace_recursive($this->params, $params);
-        $this->columns = array_map(function ($column) {
-            return new Column($column);
-        }, $this->params[self::columns]);
-        $this->order = array_map(function ($order) {
-            return new Order($order);
-        }, $this->params[self::order]);
+        $this->columns = array_map(
+            function ($column) {
+                return new Column($column);
+            },
+            $this->params[self::columns]
+        );
+        $this->order = array_map(
+            function ($order) {
+                return new Order($this->column($order[Order::column]), $order[Order::dir]);
+            },
+            $this->params[self::order]
+        );
         $this->search = new Search($this->params[self::search]);
     }
 
     /**
      * @return array|Order[]
      */
-    public function order()
+    public function order(): array
     {
         return $this->order;
     }
@@ -53,7 +59,7 @@ class Request implements \JsonSerializable
     /**
      * @return array|Column[]
      */
-    public function columns()
+    public function columns(): array
     {
         return $this->columns;
     }

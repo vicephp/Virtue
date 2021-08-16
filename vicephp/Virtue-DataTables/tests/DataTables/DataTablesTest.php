@@ -42,13 +42,23 @@ class DataTablesTest extends TestCase
     public function testOrder()
     {
         $order = new Order(
-            [
-                Order::column => 'aColumn',
-                Order::dir => 'aDirection'
-            ]
+            new Column(
+                [
+                    Column::data => 'aField',
+                    Column::name => 'aName',
+                    Column::searchable => 'true',
+                    Column::orderable => 'true',
+                    Column::search => [
+                        Search::value => 'aValue',
+                        Search::regex => 'true'
+                    ],
+                ]
+            ),
+            'aDirection'
         );
 
-        $this->assertEquals('aColumn', $order->column());
+        $this->assertEquals('aField', $order->column()->data());
+        $this->assertEquals('aName', $order->column()->name());
         $this->assertEquals('aDirection', $order->dir());
     }
 
@@ -80,7 +90,6 @@ class DataTablesTest extends TestCase
             ]
         );
 
-
         $this->assertEquals(1, $request->draw());
         $this->assertEquals('aField', $request->column(0)->data());
         $this->assertEquals('aName', $request->column(0)->name());
@@ -91,6 +100,8 @@ class DataTablesTest extends TestCase
         $this->assertEquals(false, $request->column(0)->search()->regex());
         $this->assertEquals(1, count($request->columns()));
         $this->assertEquals(1, count($request->order()));
+        $this->assertEquals('aField', $request->order()[0]->column()->data());
+        $this->assertEquals('aName', $request->order()[0]->column()->name());
         $this->assertEquals(0, $request->start());
         $this->assertEquals(10, $request->length());
         $this->assertEquals(false, $request->search()->notEmpty());

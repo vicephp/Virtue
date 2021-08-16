@@ -7,17 +7,18 @@ class Order
     const column = 'column';
     const dir = 'dir';
 
+    /** @var Column */
     private $column;
     /** @var string */
     private $dir;
 
-    public function __construct($params)
+    public function __construct(Column $column, string $dir)
     {
-        $this->column = $params[self::column];
-        $this->dir = $params[self::dir];
+        $this->column = $column;
+        $this->dir = $dir;
     }
 
-    public function column(): string
+    public function column(): Column
     {
         return $this->column;
     }
