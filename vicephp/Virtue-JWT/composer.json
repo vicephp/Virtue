@@ -1,31 +1,34 @@
 {
-    "name": "vicephp/virtue-view",
+    "name": "vicephp/virtue-jwt",
+    "description": "Making JWT more Pythonic...",
     "type": "library",
-    "description": "Making views more Pythonic...",
     "license": "MIT",
     "minimum-stability": "dev",
-    "prefer-stable": true,
     "config": {
         "optimize-autoloader": true,
         "sort-packages": true
     },
     "require": {
-        "php": "^7.3",
-        "guzzlehttp/psr7": "^1.6",
-        "slim/php-view": "^2.0"
+        "ext-openssl": "*"
     },
     "require-dev": {
+        "ext-SimpleXML": "*",
+        "ext-dom": "20031129",
         "phpstan/phpstan": "^0.12.0",
         "phpunit/phpunit": "^8.0 | ^9.0"
     },
     "autoload": {
         "psr-4": {
-            "Virtue\\View\\": "src/View/"
+            "Virtue\\JWT\\": "src/JWT/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Virtue\\View\\": "tests/View/"
+            "Virtue\\JWT\\": "tests/JWT/"
         }
+    },
+    "suggest": {
+        "ext-SimpleXML": "Needed to support SimpleXMLRenderer",
+        "ext-dom": "Needed to support DOMDocumentRenderer"
     }
 }

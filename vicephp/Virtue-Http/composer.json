@@ -10,12 +10,12 @@
         "sort-packages": true
     },
     "require": {
-        "php": "^7.1"
+        "php": "^7.3"
     },
     "require-dev": {
-        "guzzlehttp/psr7": "~1.6",
+        "guzzlehttp/psr7": "^1.6",
         "phpstan/phpstan": "^0.12.0",
-        "phpunit/phpunit": "~7.0"
+        "phpunit/phpunit": "^8.0 | ^9.0"
     },
     "suggest": {
         "guzzlehttp/psr7": "PSR-7 Message Implementation"

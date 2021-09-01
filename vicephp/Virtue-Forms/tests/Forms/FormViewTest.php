@@ -10,7 +10,7 @@ class FormViewTest extends TestCase
     /** @var FormView */
     private $formView;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->formView = new FormView(new DOMDocumentRenderer());

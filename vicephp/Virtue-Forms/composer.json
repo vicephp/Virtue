@@ -12,10 +12,10 @@
         "ext-json": "*"
     },
     "require-dev": {
-        "ext-SimpleXML": "^7.1",
+        "ext-SimpleXML": "*",
         "ext-dom": "20031129",
         "phpstan/phpstan": "^0.12.0",
-        "phpunit/phpunit": "~7.0"
+        "phpunit/phpunit": "^8.0 | ^9.0"
     },
     "autoload": {
         "psr-4": {
