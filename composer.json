@@ -41,11 +41,11 @@
     "description": "Making PHP more Pythonic...",
     "license": "MIT",
     "require": {
-        "php": "^7.3",
+        "php": ">=7.3",
         "ext-json": "*",
         "ext-openssl": "*",
         "ext-pdo": "*",
-        "guzzlehttp/psr7": "^1.6",
+        "guzzlehttp/psr7": ">=1.6",
         "psr/http-message": "^1.0",
         "psr/http-server-handler": "^1.0",
         "psr/http-server-middleware": "^1.0",
@@ -55,14 +55,14 @@
     },
     "require-dev": {
         "ext-SimpleXML": "*",
-        "ext-dom": "20031129",
+        "ext-dom": "*",
         "http-interop/http-factory-guzzle": "^1.0",
         "mockery/mockery": "^1.2",
         "php-di/php-di": "^6.0",
         "phpstan/phpstan": "^0.12.0",
         "phpunit/phpunit": "^8.0 | ^9.0",
         "psr/log": "^1.1",
-        "symplify/monorepo-builder": "^7.3"
+        "symplify/monorepo-builder": "^8.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

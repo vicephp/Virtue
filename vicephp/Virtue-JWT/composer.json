@@ -13,7 +13,7 @@
     },
     "require-dev": {
         "ext-SimpleXML": "*",
-        "ext-dom": "20031129",
+        "ext-dom": "*",
         "phpstan/phpstan": "^0.12.0",
         "phpunit/phpunit": "^8.0 | ^9.0"
     },
