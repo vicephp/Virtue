@@ -35,7 +35,7 @@ class Response implements \JsonSerializable
         return new self([self::error => $message]);
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->result;
     }

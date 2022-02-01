@@ -35,7 +35,10 @@ class OpenSSLSign extends Algorithm implements SignsToken
         }
         $signature = '';
         $success = \openssl_sign($msg, $signature, $private, $this->supported[$this->name]);
-        \openssl_pkey_free($private);
+        //TODO remove together with the support of PHP versions < 8.0
+        if (version_compare(PHP_VERSION, '8.0.0') < 0) {
+            \openssl_pkey_free($private);
+        }
         if (!$success) {
             throw new SignFailed('OpenSSL error: ' . \openssl_error_string());
         } else {

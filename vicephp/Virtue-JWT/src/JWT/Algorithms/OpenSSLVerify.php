@@ -32,7 +32,10 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
         }
         // returns 1 on success, 0 on failure, -1 on error.
         $success = \openssl_verify($msg, $sig, $public, $this->supported[$this->name]);
-        \openssl_pkey_free($public);
+        //TODO remove together with the support of PHP versions < 8.0
+        if (version_compare(PHP_VERSION, '8.0.0') < 0) {
+            \openssl_pkey_free($public);
+        }
         if ($success === 1) {
             return;
         } elseif ($success === 0) {
