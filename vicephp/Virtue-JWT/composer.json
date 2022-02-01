@@ -15,7 +15,9 @@
         "ext-SimpleXML": "*",
         "ext-dom": "*",
         "phpstan/phpstan": "^0.12.0",
-        "phpunit/phpunit": "^8.0 | ^9.0"
+        "phpunit/phpunit": "^8.0 | ^9.0",
+        "mockery/mockery": "^1.2",
+        "aws/aws-sdk-php": "^3.200"
     },
     "autoload": {
         "psr-4": {
@@ -29,6 +31,7 @@
     },
     "suggest": {
         "ext-SimpleXML": "Needed to support SimpleXMLRenderer",
-        "ext-dom": "Needed to support DOMDocumentRenderer"
+        "ext-dom": "Needed to support DOMDocumentRenderer",
+        "aws/aws-sdk-php": "Needed for AwsKmsSign algorithm"
     }
 }

@@ -56,6 +56,7 @@
     "require-dev": {
         "ext-SimpleXML": "*",
         "ext-dom": "*",
+        "aws/aws-sdk-php": "^3.200",
         "http-interop/http-factory-guzzle": "^1.0",
         "mockery/mockery": "^1.2",
         "php-di/php-di": "^6.0",
