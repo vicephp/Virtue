@@ -2,6 +2,9 @@
 
 namespace Virtue\JWT\Algorithms;
 
+use Aws\CommandInterface;
+use Aws\MockHandler;
+use Aws\Result;
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
 use Virtue\Aws\KmsClient;
@@ -31,15 +34,19 @@ class AwsKmsSignTest extends TestCase
     {
         $message = str_repeat('a', 4096);
 
-        $client = M::mock(KmsClient::class);
-        $client->shouldReceive('sign')
-            ->with([
-                'Message'          => $message,
-                'MessageType'      => 'RAW',
-                'SigningAlgorithm' => 'RSASSA_PKCS1_V1_5_SHA_256'
-            ])
-            ->andReturn(['Signature' => '<signature>'])
-            ->once();
+        $handler = new MockHandler();
+        $handler->append(function (CommandInterface $cmd) {
+            $this->assertEquals('key/alias', $cmd->offsetGet('KeyId'));
+
+            return new Result(['Signature' => '<signature>']);
+        });
+
+        $client = new KmsClient('key/alias', [
+            'version'     => 'latest',
+            'region'      => 'eu-west-1',
+            'handler'     => $handler,
+            'credentials' => ['key' => '', 'secret' => '']
+        ]);
 
         $signer = new AwsKmsSign('RS256', $client);
         $signature = $signer->sign($message);
