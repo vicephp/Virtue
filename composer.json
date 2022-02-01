@@ -8,6 +8,7 @@
         "psr-4": {
             "Virtue\\Access\\": "vicephp/Virtue-Access/src/Access/",
             "Virtue\\Api\\": "vicephp/Virtue-Api/src/Api/",
+            "Virtue\\Aws\\": "vicephp/Virtue-JWT/src/Aws/",
             "Virtue\\DataTables\\": "vicephp/Virtue-DataTables/src/DataTables/",
             "Virtue\\Database\\": "vicephp/Virtue-PDO/src/Database/",
             "Virtue\\Forms\\": "vicephp/Virtue-Forms/src/Forms/",

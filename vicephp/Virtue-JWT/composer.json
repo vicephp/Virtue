@@ -21,7 +21,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Virtue\\JWT\\": "src/JWT/"
+            "Virtue\\JWT\\": "src/JWT/",
+            "Virtue\\Aws\\": "src/Aws/"
         }
     },
     "autoload-dev": {
