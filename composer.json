@@ -21,6 +21,7 @@
         "psr-4": {
             "Virtue\\Access\\": "vicephp/Virtue-Access/tests/Access/",
             "Virtue\\Api\\": "vicephp/Virtue-Api/tests/Api/",
+            "Virtue\\Aws\\": "vicephp/Virtue-JWT/tests/Aws/",
             "Virtue\\DataTables\\": "vicephp/Virtue-DataTables/tests/DataTables/",
             "Virtue\\Database\\": "vicephp/Virtue-PDO/tests/Database/",
             "Virtue\\Forms\\": "vicephp/Virtue-Forms/tests/Forms/",
