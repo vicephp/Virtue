@@ -1,9 +1,11 @@
 <?php
 
-namespace Aws;
+namespace Virtue\Aws;
 
+use Aws\CommandInterface;
+use Aws\MockHandler;
+use Aws\Result;
 use PHPUnit\Framework\TestCase;
-use Virtue\Aws\KmsClient;
 
 class KmsClientTest extends TestCase
 {
