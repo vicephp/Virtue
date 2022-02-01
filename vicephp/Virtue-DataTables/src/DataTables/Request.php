@@ -74,7 +74,7 @@ class Request implements \JsonSerializable
         return $this->search;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->params;
     }
