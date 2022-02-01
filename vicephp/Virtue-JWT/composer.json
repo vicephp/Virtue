@@ -27,7 +27,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Virtue\\JWT\\": "tests/JWT/"
+            "Virtue\\JWT\\": "tests/JWT/",
+            "Virtue\\Aws\\": "tests/Aws/"
         }
     },
     "suggest": {
