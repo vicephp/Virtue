@@ -5,7 +5,7 @@ namespace Virtue\JWT;
 class Token
 {
     private $headers = [
-        'alg' => '',
+        'alg' => 'none',
         'typ' => 'JWT'
     ];
     private $payload = [];
