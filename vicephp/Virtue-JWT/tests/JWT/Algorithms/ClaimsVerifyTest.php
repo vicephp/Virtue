@@ -104,4 +104,40 @@ class ClaimsVerifyTest extends TestCase
         $this->expectExceptionMessage('Subject is not allowed');
         $token->verifyWith(new ClaimsVerify(['subjects' => [ 'bar' ]]));
     }
+
+    public function testVerifyExpWithLeeway()
+    {
+        $token = new Token([], ['exp' => time() - 10]);
+        $token->verifyWith(new ClaimsVerify(['leeway' => 20]));
+        $this->expectException(VerificationFailed::class);
+        $this->expectExceptionMessage('Token has expired');
+        $token->verifyWith(new ClaimsVerify(['leeway' => 5]));
+    }
+
+    public function testVerifyNbfWithLeeway()
+    {
+        $token = new Token([], ['nbf' => time() + 10]);
+        $token->verifyWith(new ClaimsVerify(['leeway' => 20]));
+        $this->expectException(VerificationFailed::class);
+        $this->expectExceptionMessage('Token is not yet valid');
+        $token->verifyWith(new ClaimsVerify(['leeway' => 5]));
+    }
+
+    public function testVerifyIatBeforeWithLeeway()
+    {
+        $token = new Token([], ['iat' => time()]);
+        $token->verifyWith(new ClaimsVerify(['leeway' => 20, 'iat' => [ 'before' => time() - 10 ]]));
+        $this->expectException(VerificationFailed::class);
+        $this->expectExceptionMessage('Token was issued after expected time');
+        $token->verifyWith(new ClaimsVerify(['leeway' => 5, 'iat' => [ 'before' => time() - 10 ]]));
+    }
+
+    public function testVerifyIatAfterWithLeeway()
+    {
+        $token = new Token([], ['iat' => time()]);
+        $token->verifyWith(new ClaimsVerify(['leeway' => 20, 'iat' => [ 'after' => time() + 10 ]]));
+        $this->expectException(VerificationFailed::class);
+        $this->expectExceptionMessage('Token was issued before expected time');
+        $token->verifyWith(new ClaimsVerify(['leeway' => 5, 'iat' => [ 'after' => time() + 10 ]]));
+    }
 }
