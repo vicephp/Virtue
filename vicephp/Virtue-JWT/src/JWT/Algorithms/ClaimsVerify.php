@@ -28,24 +28,26 @@ class ClaimsVerify implements VerifiesToken
         $iat = $token->payload('iat') ?: $now;
         $nbf = $token->payload('nbf') ?: $now;
 
+        $leeway = $this->settings['leeway'] ?? 0;
+
         $issuer = $token->payload('iss');
         $audience = $token->payload('aud');
         $subject = $token->payload('sub');
 
-        if ($now > $exp) {
+        if ($now > $exp + $leeway) {
             throw new VerificationFailed('Token has expired');
         }
 
         if (isset($this->settings['iat'])) {
-            if (isset($this->settings['iat']['before']) && $iat > $this->settings['iat']['before']) {
+            if (isset($this->settings['iat']['before']) && $iat > $this->settings['iat']['before'] + $leeway) {
                 throw new VerificationFailed('Token was issued after expected time');
             }
-            if (isset($this->settings['iat']['after']) && $iat < $this->settings['iat']['after']) {
+            if (isset($this->settings['iat']['after']) && $iat < $this->settings['iat']['after'] - $leeway) {
                 throw new VerificationFailed('Token was issued before expected time');
             }
         }
 
-        if ($now < $nbf) {
+        if ($now < $nbf - $leeway) {
             throw new VerificationFailed('Token is not yet valid');
         }
 
