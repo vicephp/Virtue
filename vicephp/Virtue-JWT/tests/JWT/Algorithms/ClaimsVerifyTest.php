@@ -36,6 +36,7 @@ class ClaimsVerifyTest extends TestCase
     {
         $token = new Token([], ['exp' => time() - 3600]);
         $this->expectException(VerificationFailed::class);
+        $this->expectExceptionMessage('Token has expired');
         $token->verifyWith(new ClaimsVerify());
     }
 
@@ -43,6 +44,7 @@ class ClaimsVerifyTest extends TestCase
     {
         $token = new Token([], ['nbf' => time() + 3600]);
         $this->expectException(VerificationFailed::class);
+        $this->expectExceptionMessage('Token is not yet valid');
         $token->verifyWith(new ClaimsVerify());
     }
 
@@ -50,6 +52,7 @@ class ClaimsVerifyTest extends TestCase
     {
         $token = new Token([], ['iss' => 'https://foo.com']);
         $this->expectException(VerificationFailed::class);
+        $this->expectExceptionMessage('Issuer is not allowed');
         $token->verifyWith(new ClaimsVerify(['issuers' => ['https://bar.com']]));
     }
 
@@ -57,6 +60,7 @@ class ClaimsVerifyTest extends TestCase
     {
         $token = new Token([], ['aud' => 'https://foo.com']);
         $this->expectException(VerificationFailed::class);
+        $this->expectExceptionMessage('Audience is not allowed');
         $token->verifyWith(new ClaimsVerify(['audience' => 'https://bar.com']));
     }
 
@@ -65,7 +69,39 @@ class ClaimsVerifyTest extends TestCase
         $token = new Token([], []);
         $signed = $token->signWith(new HMAC('HS256', 'secret'));
         $this->expectException(VerificationFailed::class);
+        $this->expectExceptionMessage('Algorithm is not allowed');
         $signed->verifyWith(new ClaimsVerify(['algorithms' => ['HS512']]));
     }
 
+    public function testVerifyWrongType()
+    {
+        $token = new Token(['typ' => 'foo'], []);
+        $this->expectException(VerificationFailed::class);
+        $this->expectExceptionMessage('Only JWT tokens are allowed');
+        $token->verifyWith(new ClaimsVerify());
+    }
+
+    public function testVerifyIatBefore()
+    {
+        $token = new Token([], ['iat' => time()]);
+        $this->expectException(VerificationFailed::class);
+        $this->expectExceptionMessage('Token was issued after expected time');
+        $token->verifyWith(new ClaimsVerify(['iat' => [ 'before' => time() - 3600 ]]));
+    }
+
+    public function testVerifyIatAfter()
+    {
+        $token = new Token([], ['iat' => time()]);
+        $this->expectException(VerificationFailed::class);
+        $this->expectExceptionMessage('Token was issued before expected time');
+        $token->verifyWith(new ClaimsVerify(['iat' => [ 'after' => time() + 3600 ]]));
+    }
+
+    public function testVerifySubject()
+    {
+        $token = new Token([], ['sub' => 'foo']);
+        $this->expectException(VerificationFailed::class);
+        $this->expectExceptionMessage('Subject is not allowed');
+        $token->verifyWith(new ClaimsVerify(['subjects' => [ 'bar' ]]));
+    }
 }
