@@ -140,4 +140,12 @@ class ClaimsVerifyTest extends TestCase
         $this->expectExceptionMessage('Token was issued before expected time');
         $token->verifyWith(new ClaimsVerify(['leeway' => 5, 'iat' => [ 'after' => time() + 10 ]]));
     }
+
+    public function testVerifyRequiredClaims()
+    {
+        $token = new Token([], []);
+        $this->expectException(VerificationFailed::class);
+        $this->expectExceptionMessage("Required claim 'sub' is missing");
+        $token->verifyWith(new ClaimsVerify(['required' => [ 'sub' ]]));
+    }
 }

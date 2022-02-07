@@ -23,6 +23,12 @@ class ClaimsVerify implements VerifiesToken
             throw new VerificationFailed('Only JWT tokens are allowed');
         }
 
+        foreach($this->settings['required'] ?? [] as $claim) {
+            if (!$token->payload($claim)) {
+                throw new VerificationFailed("Required claim '$claim' is missing");
+            }
+        }
+
         $now = time();
         $exp = $token->payload('exp') ?: $now;
         $iat = $token->payload('iat') ?: $now;
