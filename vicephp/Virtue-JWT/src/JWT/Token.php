@@ -44,7 +44,7 @@ class Token
         return $this->signature;
     }
 
-    private function withoutSig(): string
+    public function withoutSig(): string
     {
         return Base64Url::encode(json_encode($this->headers)) . '.' . Base64Url::encode(json_encode($this->payload));
     }
@@ -62,7 +62,7 @@ class Token
 
     public function verifyWith(VerifiesToken $alg): void
     {
-        $alg->verify($this->withoutSig(), $this->signature);
+        $alg->verify($this);
     }
 
     public function __toString(): string

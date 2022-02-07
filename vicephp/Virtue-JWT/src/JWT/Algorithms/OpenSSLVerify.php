@@ -3,6 +3,7 @@
 namespace Virtue\JWT\Algorithms;
 
 use Virtue\JWT\Algorithm;
+use Virtue\JWT\Token;
 use Virtue\JWT\VerificationFailed;
 use Virtue\JWT\VerifiesToken;
 
@@ -25,11 +26,13 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
         $this->public = $public;
     }
 
-    public function verify(string $msg, string $sig): void
+    public function verify(Token $token): void
     {
         if(! $public = \openssl_pkey_get_public($this->public)) {
             throw new VerificationFailed('Key is invalid.');
         }
+        $msg = $token->withoutSig();
+        $sig = $token->signature();
         // returns 1 on success, 0 on failure, -1 on error.
         $success = \openssl_verify($msg, $sig, $public, $this->supported[$this->name]);
         //TODO remove together with the support of PHP versions < 8.0
