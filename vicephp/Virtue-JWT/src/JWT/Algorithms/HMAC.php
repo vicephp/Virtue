@@ -4,6 +4,7 @@ namespace Virtue\JWT\Algorithms;
 
 use Virtue\JWT\Algorithm;
 use Virtue\JWT\SignsToken;
+use Virtue\JWT\Token;
 use Virtue\JWT\VerificationFailed;
 use Virtue\JWT\VerifiesToken;
 
@@ -27,9 +28,9 @@ class HMAC extends Algorithm implements SignsToken, VerifiesToken
         return \hash_hmac($this->supported[$this->name], $msg, $this->secret, true);
     }
 
-    public function verify(string $msg, string $sig): void
+    public function verify(Token $token): void
     {
-        if(\hash_equals($this->sign($msg), $sig)) {
+        if(\hash_equals($this->sign($token->withoutSig()), $token->signature())) {
             return;
         }
 
