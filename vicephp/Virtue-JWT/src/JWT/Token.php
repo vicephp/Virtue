@@ -10,6 +10,7 @@ class Token
     ];
     private $payload = [];
     private $signature = '';
+    private $msg = '';
 
     public function __construct(array $headers, array $payload)
     {
@@ -20,11 +21,17 @@ class Token
     public static function ofString(string $token): Token
     {
         list($header, $payload, $signature) = explode('.', $token);
-        $header = json_decode(Base64Url::decode($header), true);
-        $payload = json_decode(Base64Url::decode($payload), true);
 
-        $token = new self($header, $payload);
+        $token = new self(
+            json_decode(Base64Url::decode($header), true),
+            json_decode(Base64Url::decode($payload), true)
+        );
+
         $token->signature = Base64Url::decode($signature);
+
+        // Preserve the original token string, since json_encode can change the order of the keys
+        // and thus the payload will be different from the original.
+        $token->msg = $header . '.' . $payload;
 
         return $token;
     }
@@ -46,7 +53,8 @@ class Token
 
     public function withoutSig(): string
     {
-        return Base64Url::encode(json_encode($this->headers)) . '.' . Base64Url::encode(json_encode($this->payload));
+        return $this->msg ?:
+            $this->msg = Base64Url::encode(json_encode($this->headers)) . '.' . Base64Url::encode(json_encode($this->payload));
     }
 
     public function signWith(SignsToken $alg): Token

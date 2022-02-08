@@ -31,4 +31,10 @@ class TokenTest extends TestCase
         $token->verifyWith($hmac256);
         $this->assertNotEmpty($token->signature());
     }
+
+    public function testPayloadIsPreserved()
+    {
+        $token = Token::ofString('eyJraWQiOiJraWQtMSIsInR5cCI6IkpXVCIsImFsZyI6IkhTMjU2In0.e30.q8fjb85nnNWUoeW4NNXuwWKvFYJ4sjMCA1XJvdOCcsg');
+        $this->assertEquals('eyJraWQiOiJraWQtMSIsInR5cCI6IkpXVCIsImFsZyI6IkhTMjU2In0.e30', $token->withoutSig());
+    }
 }
