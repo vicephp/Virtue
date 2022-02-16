@@ -12,7 +12,7 @@ class JWKS implements VerifiesToken
     /** @var VerifiesToken[] */
     private $verifiers = [];
 
-    private $supportedKeyTypes = [ 'RSA' ];
+    private $supportedKeyTypes = ['RSA'];
 
     public function __construct(array $jwks)
     {
@@ -40,7 +40,6 @@ class JWKS implements VerifiesToken
         }
     }
 
-
     public function verify(Token $token): void
     {
         $kid = $token->header('kid');
@@ -56,12 +55,11 @@ class JWKS implements VerifiesToken
      */
     private function getPemKey(string $n, string $e): string
     {
-
         $modulus = "\x00" . Base64Url::decode($n);
         $exponent = Base64Url::decode($e);
 
         $components = [
-            'modulus' => \pack('Ca*a*', 2, $this->encodeLength(\strlen($modulus)), $modulus),
+            'modulus'  => \pack('Ca*a*', 2, $this->encodeLength(\strlen($modulus)), $modulus),
             'exponent' => \pack('Ca*a*', 2, $this->encodeLength(\strlen($exponent)), $exponent),
         ];
 
@@ -92,6 +90,7 @@ class JWKS implements VerifiesToken
         }
 
         $temp = ltrim(\pack('N', $length), "\x00");
+
         return \pack('Ca*', 0x80 | \strlen($temp), $temp);
     }
 }
