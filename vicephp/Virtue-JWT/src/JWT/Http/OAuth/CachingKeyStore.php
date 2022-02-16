@@ -6,7 +6,7 @@ use Psr\SimpleCache\CacheInterface;
 use Virtue\JWT\Http\OAuthCachingKeysStore;
 use Virtue\JWT\Http\OAuthKeysStore;
 
-class CachingClient implements OAuthCachingKeysStore
+class CachingKeyStore implements OAuthCachingKeysStore
 {
     private $keysStore;
     private $cache;
