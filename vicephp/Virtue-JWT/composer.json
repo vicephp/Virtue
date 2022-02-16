@@ -37,7 +37,7 @@
         "ext-SimpleXML": "Needed to support SimpleXMLRenderer",
         "ext-dom": "Needed to support DOMDocumentRenderer",
         "aws/aws-sdk-php": "Needed for AwsKmsSign algorithm",
-        "psr/simple-cache": "Needed for OAuth HTTP client",
-        "guzzlehttp/guzzle": "Needed for OAuth HTTP client"
+        "guzzlehttp/guzzle": "Needed for OAuth KeysStore",
+        "psr/simple-cache": "Needed for OAuth Caching KeysStore"
     }
 }
