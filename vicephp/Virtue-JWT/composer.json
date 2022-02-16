@@ -17,7 +17,9 @@
         "phpstan/phpstan": "^0.12.0",
         "phpunit/phpunit": "^8.0 | ^9.0",
         "mockery/mockery": "^1.2",
-        "aws/aws-sdk-php": "^3.200"
+        "aws/aws-sdk-php": "^3.200",
+        "psr/simple-cache": "^1.0 || ^2.0 || ^3.0",
+        "guzzlehttp/guzzle": "^6.0 || ^7.0"
     },
     "autoload": {
         "psr-4": {
@@ -34,6 +36,8 @@
     "suggest": {
         "ext-SimpleXML": "Needed to support SimpleXMLRenderer",
         "ext-dom": "Needed to support DOMDocumentRenderer",
-        "aws/aws-sdk-php": "Needed for AwsKmsSign algorithm"
+        "aws/aws-sdk-php": "Needed for AwsKmsSign algorithm",
+        "psr/simple-cache": "Needed for OAuth HTTP client",
+        "guzzlehttp/guzzle": "Needed for OAuth HTTP client"
     }
 }
