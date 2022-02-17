@@ -2,6 +2,8 @@
 
 namespace Virtue\JWT\Algorithms;
 
+use Virtue\JWK\Key;
+use Virtue\JWK\Key\RSA\PublicKey;
 use Virtue\JWT\Algorithm;
 use Virtue\JWT\Token;
 use Virtue\JWT\VerificationFailed;
@@ -9,28 +11,30 @@ use Virtue\JWT\VerifiesToken;
 
 class OpenSSLVerify extends Algorithm implements VerifiesToken
 {
-    private $public;
+    private $publicKey;
 
     private $supported = [
-       'RS256' => OPENSSL_ALGO_SHA256,
-       'RS384' => OPENSSL_ALGO_SHA384,
-       'RS512' => OPENSSL_ALGO_SHA512,
+        'RS256' => OPENSSL_ALGO_SHA256,
+        'RS384' => OPENSSL_ALGO_SHA384,
+        'RS512' => OPENSSL_ALGO_SHA512,
     ];
 
-    public function __construct(
-        string $name,
-        string $public
-    )
+    public function __construct(PublicKey $publicKey)
     {
-        parent::__construct($name);
-        $this->public = $public;
+        parent::__construct($publicKey->alg());
+        $this->publicKey = $publicKey;
     }
 
     public function verify(Token $token): void
     {
-        if(! $public = \openssl_pkey_get_public($this->public)) {
+        if (!isset($this->supported[$this->name])) {
+            throw new VerificationFailed("Algorithm {$this->name} is not supported");
+        }
+
+        if (!$public = \openssl_pkey_get_public($this->publicKey->asPem())) {
             throw new VerificationFailed('Key is invalid.');
         }
+
         $msg = $token->withoutSig();
         $sig = $token->signature();
         // returns 1 on success, 0 on failure, -1 on error.

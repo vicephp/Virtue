@@ -2,16 +2,16 @@
 
 namespace Virtue\JWT\Algorithms;
 
-use Virtue\JWT\Http\OAuthKeysStore;
+use Virtue\JWK\KeyStore;
 use Virtue\JWT\Token;
 use Virtue\JWT\VerifiesToken;
 
-class OAuth implements VerifiesToken
+class OpenId implements VerifiesToken
 {
     private $keysStore;
     private $claimsVerifier;
 
-    public function __construct(OAuthKeysStore $keysStore, ClaimsVerify $claimsVerifier)
+    public function __construct(KeyStore $keysStore, ClaimsVerify $claimsVerifier)
     {
         $this->keysStore = $keysStore;
         $this->claimsVerifier = $claimsVerifier;
@@ -21,8 +21,7 @@ class OAuth implements VerifiesToken
     {
         $this->claimsVerifier->verify($token);
 
-        $keys = $this->keysStore->get($token->payload('iss'));
-
-        (new JWKS($keys))->verify($token);
+        $keySet = $this->keysStore->getFor($token);
+        (new JWKS($keySet))->verify($token);
     }
 }
