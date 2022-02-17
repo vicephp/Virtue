@@ -8,6 +8,7 @@ use Aws\Result;
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
 use Virtue\Aws\KmsClient;
+use Virtue\JWT\SignFailed;
 
 class AwsKmsSignTest extends TestCase
 {
@@ -15,15 +16,16 @@ class AwsKmsSignTest extends TestCase
 
     public function testUnsupportedAlgorithm()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(SignFailed::class);
         $this->expectExceptionMessage('Algorithm FOO256 is not supported');
 
-        new AwsKmsSign('FOO256', M::mock(KmsClient::class));
+        $signer = new AwsKmsSign('FOO256', M::mock(KmsClient::class));
+        $signer->sign('message');
     }
 
     public function testMessageTooLong()
     {
-        $this->expectException(\LengthException::class);
+        $this->expectException(SignFailed::class);
         $this->expectExceptionMessage('Message length must be less than 4096 bytes');
 
         $signer = new AwsKmsSign('RS256', M::mock(KmsClient::class));

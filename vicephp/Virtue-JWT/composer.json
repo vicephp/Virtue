@@ -19,11 +19,13 @@
         "mockery/mockery": "^1.2",
         "aws/aws-sdk-php": "^3.200",
         "psr/simple-cache": "^1.0 || ^2.0 || ^3.0",
-        "guzzlehttp/guzzle": "^6.0 || ^7.0"
+        "guzzlehttp/guzzle": "^6.0 || ^7.0",
+        "webmozart/assert": "^1.0"
     },
     "autoload": {
         "psr-4": {
             "Virtue\\JWT\\": "src/JWT/",
+            "Virtue\\JWK\\": "src/JWK/",
             "Virtue\\Aws\\": "src/Aws/"
         }
     },

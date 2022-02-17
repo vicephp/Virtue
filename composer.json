@@ -13,6 +13,7 @@
             "Virtue\\Database\\": "vicephp/Virtue-PDO/src/Database/",
             "Virtue\\Forms\\": "vicephp/Virtue-Forms/src/Forms/",
             "Virtue\\Http\\": "vicephp/Virtue-Http/src/Http/",
+            "Virtue\\JWK\\": "vicephp/Virtue-JWT/src/JWK/",
             "Virtue\\JWT\\": "vicephp/Virtue-JWT/src/JWT/",
             "Virtue\\View\\": "vicephp/Virtue-View/src/View/"
         }

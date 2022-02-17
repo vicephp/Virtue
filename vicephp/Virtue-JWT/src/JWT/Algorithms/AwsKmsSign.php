@@ -4,6 +4,7 @@ namespace Virtue\JWT\Algorithms;
 
 use Virtue\Aws\KmsClient;
 use Virtue\JWT\Algorithm;
+use Virtue\JWT\SignFailed;
 use Virtue\JWT\SignsToken;
 
 class AwsKmsSign extends Algorithm implements SignsToken
@@ -21,14 +22,17 @@ class AwsKmsSign extends Algorithm implements SignsToken
     public function __construct(string $name, KmsClient $client)
     {
         parent::__construct($name);
-        $this->validate($name);
         $this->client = $client;
     }
 
     public function sign(string $msg): string
     {
         if (mb_strlen($msg, '8bit') > self::MaxMessageLengthBytes) {
-            throw new \LengthException(sprintf('Message length must be less than %d bytes', self::MaxMessageLengthBytes));
+            throw new SignFailed(sprintf('Message length must be less than %d bytes', self::MaxMessageLengthBytes));
+        }
+
+        if (empty($this->signingAlgorithms[$this->name])) {
+            throw new SignFailed("Algorithm {$this->name} is not supported");
         }
 
         $result = $this->client->sign([
@@ -38,12 +42,5 @@ class AwsKmsSign extends Algorithm implements SignsToken
         ]);
 
         return $result['Signature'];
-    }
-
-    private function validate(string $name)
-    {
-        if (empty($this->signingAlgorithms[$this->name])) {
-            throw new \InvalidArgumentException("Algorithm $name is not supported");
-        }
     }
 }
