@@ -2,7 +2,7 @@
 
 namespace Virtue\JWK;
 
-interface AsymmetricKey
+interface AsymmetricKey extends \JsonSerializable
 {
     public function asPem(): string;
 

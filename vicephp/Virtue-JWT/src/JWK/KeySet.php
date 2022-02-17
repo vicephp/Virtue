@@ -6,11 +6,11 @@ use _HumbugBox58fd4d9e2a25\OutOfBoundsException;
 use Virtue\JWK\Key\RSA\PublicKey;
 use Webmozart\Assert\Assert;
 
-class KeySet
+class KeySet implements \JsonSerializable
 {
     /** @var PublicKey[] */
     private $keys = [];
-    private $supportedKeyTypes = ['RSA'];
+    private static $supportedKeyTypes = ['RSA'];
 
     /**
      * @param PublicKey[] $keys
@@ -45,7 +45,7 @@ class KeySet
         $this->keys[$key->id()] = $key;
     }
 
-    public function fromArray(array $keys): self
+    public static function fromArray(array $keys): self
     {
         $keySet = [];
         foreach ($keys as $key) {
@@ -55,7 +55,7 @@ class KeySet
             }
 
             // Skip unsupported key types
-            if (!in_array($key['kty'] ?? '', $this->supportedKeyTypes)) {
+            if (!in_array($key['kty'] ?? '', self::$supportedKeyTypes)) {
                 continue;
             }
 
@@ -64,9 +64,19 @@ class KeySet
                 continue;
             }
 
-            $keySet[] = new PublicKey($key['id'], $key['alg'], $key['n'], $key['e']);
+            $keySet[] = new PublicKey($key['kid'], $key['alg'], $key['n'], $key['e']);
         }
 
         return new KeySet($keySet);
+    }
+
+    public function jsonSerialize(): array
+    {
+        $keys = [];
+        foreach ($this->keys as $key) {
+            $keys[] = array_merge($key->jsonSerialize(), ['use' => 'sig']);
+        }
+
+        return $keys;
     }
 }
