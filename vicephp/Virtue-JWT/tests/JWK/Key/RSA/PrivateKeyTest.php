@@ -1,9 +1,8 @@
 <?php
 
-namespace JWK\Key\RSA;
+namespace Virtue\JWK\Key\RSA;
 
 use PHPUnit\Framework\TestCase;
-use Virtue\JWK\Key\RSA\PrivateKey;
 
 class PrivateKeyTest extends TestCase
 {
