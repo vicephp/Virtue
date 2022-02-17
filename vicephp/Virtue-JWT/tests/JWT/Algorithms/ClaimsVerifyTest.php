@@ -3,6 +3,7 @@
 namespace Virtue\JWT\Algorithms;
 
 use PHPUnit\Framework\TestCase;
+use Virtue\JWK\Key\HMAC\Key;
 use Virtue\JWT\ClaimSet;
 use Virtue\JWT\Token;
 use Virtue\JWT\VerificationFailed;
@@ -21,10 +22,10 @@ class ClaimsVerifyTest extends TestCase
         $claims->audience('https://audience.com');
 
         $token = new Token([], $claims->asArray());
-        $signed = $token->signWith(new HMAC('HS256', 'secret'));
+        $signed = $token->signWith(new HMAC(new Key('HS256', 'secret')));
         $signed->verifyWith(new ClaimsVerify([
-            'audience' => 'https://audience.com',
-            'issuers' => ['https://issuer.com'],
+            'audience'   => 'https://audience.com',
+            'issuers'    => ['https://issuer.com'],
             'algorithms' => ['HS256'],
         ]));
 
@@ -67,7 +68,7 @@ class ClaimsVerifyTest extends TestCase
     public function testVerifyAlg()
     {
         $token = new Token([], []);
-        $signed = $token->signWith(new HMAC('HS256', 'secret'));
+        $signed = $token->signWith(new HMAC(new Key('HS256', 'secret')));
         $this->expectException(VerificationFailed::class);
         $this->expectExceptionMessage('Algorithm is not allowed');
         $signed->verifyWith(new ClaimsVerify(['algorithms' => ['HS512']]));
@@ -86,7 +87,7 @@ class ClaimsVerifyTest extends TestCase
         $token = new Token([], ['iat' => time()]);
         $this->expectException(VerificationFailed::class);
         $this->expectExceptionMessage('Token was issued after expected time');
-        $token->verifyWith(new ClaimsVerify(['iat' => [ 'before' => time() - 3600 ]]));
+        $token->verifyWith(new ClaimsVerify(['iat' => ['before' => time() - 3600]]));
     }
 
     public function testVerifyIatAfter()
@@ -94,7 +95,7 @@ class ClaimsVerifyTest extends TestCase
         $token = new Token([], ['iat' => time()]);
         $this->expectException(VerificationFailed::class);
         $this->expectExceptionMessage('Token was issued before expected time');
-        $token->verifyWith(new ClaimsVerify(['iat' => [ 'after' => time() + 3600 ]]));
+        $token->verifyWith(new ClaimsVerify(['iat' => ['after' => time() + 3600]]));
     }
 
     public function testVerifySubject()
@@ -102,7 +103,7 @@ class ClaimsVerifyTest extends TestCase
         $token = new Token([], ['sub' => 'foo']);
         $this->expectException(VerificationFailed::class);
         $this->expectExceptionMessage('Subject is not allowed');
-        $token->verifyWith(new ClaimsVerify(['subjects' => [ 'bar' ]]));
+        $token->verifyWith(new ClaimsVerify(['subjects' => ['bar']]));
     }
 
     public function testVerifyExpWithLeeway()
@@ -126,19 +127,19 @@ class ClaimsVerifyTest extends TestCase
     public function testVerifyIatBeforeWithLeeway()
     {
         $token = new Token([], ['iat' => time()]);
-        $token->verifyWith(new ClaimsVerify(['leeway' => 20, 'iat' => [ 'before' => time() - 10 ]]));
+        $token->verifyWith(new ClaimsVerify(['leeway' => 20, 'iat' => ['before' => time() - 10]]));
         $this->expectException(VerificationFailed::class);
         $this->expectExceptionMessage('Token was issued after expected time');
-        $token->verifyWith(new ClaimsVerify(['leeway' => 5, 'iat' => [ 'before' => time() - 10 ]]));
+        $token->verifyWith(new ClaimsVerify(['leeway' => 5, 'iat' => ['before' => time() - 10]]));
     }
 
     public function testVerifyIatAfterWithLeeway()
     {
         $token = new Token([], ['iat' => time()]);
-        $token->verifyWith(new ClaimsVerify(['leeway' => 20, 'iat' => [ 'after' => time() + 10 ]]));
+        $token->verifyWith(new ClaimsVerify(['leeway' => 20, 'iat' => ['after' => time() + 10]]));
         $this->expectException(VerificationFailed::class);
         $this->expectExceptionMessage('Token was issued before expected time');
-        $token->verifyWith(new ClaimsVerify(['leeway' => 5, 'iat' => [ 'after' => time() + 10 ]]));
+        $token->verifyWith(new ClaimsVerify(['leeway' => 5, 'iat' => ['after' => time() + 10]]));
     }
 
     public function testVerifyRequiredClaims()
@@ -146,6 +147,6 @@ class ClaimsVerifyTest extends TestCase
         $token = new Token([], []);
         $this->expectException(VerificationFailed::class);
         $this->expectExceptionMessage("Required claim 'sub' is missing");
-        $token->verifyWith(new ClaimsVerify(['required' => [ 'sub' ]]));
+        $token->verifyWith(new ClaimsVerify(['required' => ['sub']]));
     }
 }
