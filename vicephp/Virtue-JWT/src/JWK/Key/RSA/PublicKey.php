@@ -73,4 +73,15 @@ class PublicKey implements AsymmetricKey
 
         return \pack('Ca*', 0x80 | \strlen($temp), $temp);
     }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'kty' => 'RSA',
+            'kid' => $this->id,
+            'alg' => $this->alg,
+            'n'   => $this->modulus,
+            'e'   => $this->exponent,
+        ];
+    }
 }

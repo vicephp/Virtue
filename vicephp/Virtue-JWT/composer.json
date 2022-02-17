@@ -32,6 +32,7 @@
     "autoload-dev": {
         "psr-4": {
             "Virtue\\JWT\\": "tests/JWT/",
+            "Virtue\\JWK\\": "tests/JWK/",
             "Virtue\\Aws\\": "tests/Aws/"
         }
     },

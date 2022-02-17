@@ -11,7 +11,7 @@ use Virtue\JWT\VerifiesToken;
 
 class OpenSSLVerify extends Algorithm implements VerifiesToken
 {
-    private $publicKey;
+    private $public;
 
     private $supported = [
         'RS256' => OPENSSL_ALGO_SHA256,
@@ -19,10 +19,10 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
         'RS512' => OPENSSL_ALGO_SHA512,
     ];
 
-    public function __construct(PublicKey $publicKey)
+    public function __construct(PublicKey $public)
     {
-        parent::__construct($publicKey->alg());
-        $this->publicKey = $publicKey;
+        parent::__construct($public->alg());
+        $this->public = $public;
     }
 
     public function verify(Token $token): void
@@ -31,7 +31,7 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
             throw new VerificationFailed("Algorithm {$this->name} is not supported");
         }
 
-        if (!$public = \openssl_pkey_get_public($this->publicKey->asPem())) {
+        if (!$public = \openssl_pkey_get_public($this->public->asPem())) {
             throw new VerificationFailed('Key is invalid.');
         }
 

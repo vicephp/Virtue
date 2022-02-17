@@ -27,6 +27,7 @@
             "Virtue\\Database\\": "vicephp/Virtue-PDO/tests/Database/",
             "Virtue\\Forms\\": "vicephp/Virtue-Forms/tests/Forms/",
             "Virtue\\Http\\": "vicephp/Virtue-Http/tests/Http/",
+            "Virtue\\JWK\\": "vicephp/Virtue-JWT/tests/JWK/",
             "Virtue\\JWT\\": "vicephp/Virtue-JWT/tests/JWT/",
             "Virtue\\View\\": "vicephp/Virtue-View/tests/View/"
         }

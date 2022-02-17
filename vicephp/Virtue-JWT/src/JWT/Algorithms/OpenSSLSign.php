@@ -9,7 +9,7 @@ use Virtue\JWT\SignsToken;
 
 class OpenSSLSign extends Algorithm implements SignsToken
 {
-    private $privateKey;
+    private $private;
 
     private $supported = [
         'RS256' => OPENSSL_ALGO_SHA256,
@@ -17,15 +17,15 @@ class OpenSSLSign extends Algorithm implements SignsToken
         'RS512' => OPENSSL_ALGO_SHA512,
     ];
 
-    public function __construct(PrivateKey $privateKey)
+    public function __construct(PrivateKey $private)
     {
-        parent::__construct($privateKey->alg());
-        $this->privateKey = $privateKey;
+        parent::__construct($private->alg());
+        $this->private = $private;
     }
 
     public function sign(string $msg): string
     {
-        if (!$private = \openssl_pkey_get_private($this->privateKey->asPem(), $this->privateKey->passphrase())) {
+        if (!$private = \openssl_pkey_get_private($this->private->asPem(), $this->private->passphrase())) {
             throw new SignFailed('Key or passphrase are invalid.');
         }
 

@@ -38,4 +38,12 @@ class PrivateKey implements AsymmetricKey
     {
         return $this->passphrase;
     }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'alg' => $this->alg,
+            'pem' => $this->pem,
+        ];
+    }
 }
