@@ -2,7 +2,6 @@
 
 namespace Virtue\JWT\Algorithms;
 
-use Virtue\JWT\Base64Url;
 use Virtue\JWT\Token;
 use Virtue\JWT\VerificationFailed;
 use Virtue\JWT\VerifiesToken;
@@ -23,7 +22,7 @@ class ClaimsVerify implements VerifiesToken
             throw new VerificationFailed('Only JWT tokens are allowed');
         }
 
-        foreach($this->settings['required'] ?? [] as $claim) {
+        foreach ($this->settings['required'] ?? [] as $claim) {
             if (!$token->payload($claim)) {
                 throw new VerificationFailed("Required claim '$claim' is missing");
             }

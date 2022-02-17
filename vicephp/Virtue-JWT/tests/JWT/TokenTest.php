@@ -3,6 +3,7 @@
 namespace Virtue\JWT;
 
 use PHPUnit\Framework\TestCase;
+use Virtue\JWK\Key\HMAC\Key;
 
 class TokenTest extends TestCase
 {
@@ -25,7 +26,7 @@ class TokenTest extends TestCase
         $claims->issuedAt($now);
         $claims->expirationTime($now + 300);
 
-        $hmac256 = new Algorithms\HMAC('HS256', 'your-256-bit-secret');
+        $hmac256 = new Algorithms\HMAC(new Key('HS256', 'your-256-bit-secret'));
         $token = new Token(['kid' => 'pkey_'], $claims->asArray());
         $token = $token->signWith($hmac256);
         $token->verifyWith($hmac256);
