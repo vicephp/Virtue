@@ -29,13 +29,12 @@ class OpenSSLSign extends Algorithm implements SignsToken
             throw new SignFailed('Key or passphrase are invalid.');
         }
 
-        $alg = $this->privateKey->alg();
-        if (!isset($this->supported[$alg])) {
-            throw new SignFailed("Algorithm $alg is not supported");
+        if (!isset($this->supported[$this->name])) {
+            throw new SignFailed("Algorithm {$this->name} is not supported");
         }
 
         $signature = '';
-        $success = \openssl_sign($msg, $signature, $private, $this->supported[$alg]);
+        $success = \openssl_sign($msg, $signature, $private, $this->supported[$this->name]);
         //TODO remove together with the support of PHP versions < 8.0
         if (version_compare(PHP_VERSION, '8.0.0') < 0) {
             \openssl_pkey_free($private);
