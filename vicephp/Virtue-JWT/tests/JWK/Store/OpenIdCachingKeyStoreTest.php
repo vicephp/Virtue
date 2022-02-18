@@ -9,7 +9,7 @@ use Virtue\JWK\KeySet;
 use Virtue\JWK\KeyStore;
 use Virtue\JWT\Token;
 
-class OpenIdCachingStoreTest extends TestCase
+class OpenIdCachingKeyStoreTest extends TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -26,7 +26,7 @@ class OpenIdCachingStoreTest extends TestCase
         $cache->shouldReceive('has')->with('issuer')->andReturn(true)->once();
         $cache->shouldReceive('get')->with('issuer')->andReturn([$key])->once();
 
-        $store = new OpenIdCachingStore($keyStore, $cache);
+        $store = new OpenIdCachingKeyStore($keyStore, $cache);
         $keySet = $store->getFor($token);
         $this->assertCount(1, $keySet->getKeys());
     }
@@ -45,7 +45,7 @@ class OpenIdCachingStoreTest extends TestCase
         $keyStore = M::mock(KeyStore::class);
         $keyStore->shouldReceive('getFor')->with($token)->andReturn($keySet)->once();
 
-        $store = new OpenIdCachingStore($keyStore, $cache);
+        $store = new OpenIdCachingKeyStore($keyStore, $cache);
         $keySet = $store->getFor($token);
         $this->assertCount(1, $keySet->getKeys());
     }
@@ -60,7 +60,7 @@ class OpenIdCachingStoreTest extends TestCase
         $cache = M::mock(CacheInterface::class);
         $cache->shouldReceive('delete')->with('issuer')->once();
 
-        $store = new OpenIdCachingStore($keyStore, $cache);
+        $store = new OpenIdCachingKeyStore($keyStore, $cache);
         $store->refresh($token);
     }
 }

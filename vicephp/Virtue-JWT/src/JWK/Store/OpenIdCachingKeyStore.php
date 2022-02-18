@@ -8,7 +8,7 @@ use Virtue\JWK\KeySet;
 use Virtue\JWK\KeyStore;
 use Virtue\JWT\Token;
 
-class OpenIdCachingStore implements KeyCachingStore
+class OpenIdCachingKeyStore implements KeyCachingStore
 {
     private $keyStore;
     private $cache;

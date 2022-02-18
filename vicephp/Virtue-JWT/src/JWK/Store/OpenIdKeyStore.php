@@ -7,7 +7,7 @@ use Virtue\JWK\KeySet;
 use Virtue\JWK\KeyStore;
 use Virtue\JWT\Token;
 
-class OpenIdStore implements KeyStore
+class OpenIdKeyStore implements KeyStore
 {
     private $client;
 

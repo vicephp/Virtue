@@ -8,7 +8,7 @@ use Mockery as M;
 use Virtue\Api\TestCase;
 use Virtue\JWT\Token;
 
-class OpenIdStoreTest extends TestCase
+class OpenIdKeyStoreTest extends TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -30,7 +30,7 @@ class OpenIdStoreTest extends TestCase
             ->andReturn($response)
             ->once();
 
-        $store = new OpenIdStore($client);
+        $store = new OpenIdKeyStore($client);
         $keySet = $store->getFor($token);
         $this->assertCount(1, $keySet->getKeys());
     }
@@ -49,7 +49,7 @@ class OpenIdStoreTest extends TestCase
             ->andReturn($response)
             ->once();
 
-        $store = new OpenIdStore($client);
+        $store = new OpenIdKeyStore($client);
         $store->getFor($token);
     }
 
@@ -73,7 +73,7 @@ class OpenIdStoreTest extends TestCase
             ->andReturn($response)
             ->once();
 
-        $store = new OpenIdStore($client);
+        $store = new OpenIdKeyStore($client);
         $store->getFor($token);
     }
 }

@@ -8,13 +8,13 @@ use Virtue\JWT\VerifiesToken;
 
 class OpenIdCaching implements VerifiesToken
 {
-    private $keysStore;
+    private $keyStore;
     private $openId;
 
-    public function __construct(KeyCachingStore $keysStore, ClaimsVerify $claimsVerify)
+    public function __construct(KeyCachingStore $keyStore, ClaimsVerify $claimsVerify)
     {
-        $this->keysStore = $keysStore;
-        $this->openId = new OpenId($keysStore, $claimsVerify);
+        $this->keyStore = $keyStore;
+        $this->openId = new OpenId($keyStore, $claimsVerify);
     }
 
     public function verify(Token $token): void
@@ -23,7 +23,7 @@ class OpenIdCaching implements VerifiesToken
             $this->openId->verify($token);
         } catch (\Throwable $throwable) {
             // One more try with freshly loaded KeySet
-            $this->keysStore->refresh($token);
+            $this->keyStore->refresh($token);
             $this->openId->verify($token);
         }
     }
