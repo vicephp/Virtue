@@ -8,20 +8,19 @@ use Virtue\JWT\VerifiesToken;
 
 class OpenId implements VerifiesToken
 {
-    private $keysStore;
+    private $keyStore;
     private $claimsVerifier;
 
-    public function __construct(KeyStore $keysStore, ClaimsVerify $claimsVerifier)
+    public function __construct(KeyStore $keyStore, ClaimsVerify $claimsVerifier)
     {
-        $this->keysStore = $keysStore;
+        $this->keyStore = $keyStore;
         $this->claimsVerifier = $claimsVerifier;
     }
 
     public function verify(Token $token): void
     {
         $this->claimsVerifier->verify($token);
-
-        $keySet = $this->keysStore->getFor($token);
+        $keySet = $this->keyStore->getFor($token);
         (new JWKS($keySet))->verify($token);
     }
 }
