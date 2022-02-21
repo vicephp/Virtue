@@ -23,9 +23,7 @@ class OpenIdCachingKeyStore implements KeyCachingStore
     {
         $key = sha1($token->payload('iss'));
         if ($this->cache->has($key)) {
-            $keySet = $this->cache->get($key);
-
-            return KeySet::fromArray($keySet);
+            return $this->cache->get($key);
         }
 
         $keySet = $this->keyStore->getFor($token);

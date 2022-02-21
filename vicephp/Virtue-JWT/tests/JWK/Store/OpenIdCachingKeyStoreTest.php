@@ -18,13 +18,14 @@ class OpenIdCachingKeyStoreTest extends TestCase
         $token = new Token([], ['iss' => 'issuer']);
 
         $key = ['use' => 'sig', 'kty' => 'RSA', 'alg' => 'RS256', 'kid' => 'key id', 'n' => 'modulus', 'e' => 'exponent'];
+        $keySet = KeySet::fromArray([$key]);
 
         $keyStore = M::mock(KeyStore::class);
         $keyStore->shouldNotHaveBeenCalled();
 
         $cache = M::mock(CacheInterface::class);
         $cache->shouldReceive('has')->andReturn(true)->once();
-        $cache->shouldReceive('get')->andReturn([$key])->once();
+        $cache->shouldReceive('get')->andReturn($keySet)->once();
 
         $store = new OpenIdCachingKeyStore($keyStore, $cache);
         $keySet = $store->getFor($token);
