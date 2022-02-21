@@ -36,6 +36,6 @@ class OpenIdCachingKeyStore implements KeyCachingStore
 
     public function refresh(Token $token): void
     {
-        $this->cache->delete($token->payload('iss'));
+        $this->cache->delete(sha1($token->payload('iss')));
     }
 }
