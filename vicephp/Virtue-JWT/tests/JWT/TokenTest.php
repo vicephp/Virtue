@@ -17,6 +17,25 @@ class TokenTest extends TestCase
         $this->assertEquals(1516239022, $token->payload('iat'));
     }
 
+    /**
+     * @dataProvider malformedToken
+     */
+    public function testParseMalformedToken($token)
+    {
+        $token = Token::ofString($token);
+
+        $this->assertEquals('malformed', $token->header('alg'));
+        $this->assertEquals('malformed', $token->header('typ'));
+        $this->assertEmpty($token->signature());
+    }
+
+    public function malformedToken(): \Generator
+    {
+        yield 'empty token' => [''];
+        yield 'invalid token' => ['invalid toke'];
+        yield 'not readable token' => ['a.b.c'];
+    }
+
     public function testSignature()
     {
         $now = time();

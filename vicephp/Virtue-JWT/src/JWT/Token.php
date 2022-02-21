@@ -20,18 +20,27 @@ class Token
 
     public static function ofString(string $token): Token
     {
-        list($header, $payload, $signature) = explode('.', $token);
+        $token = explode('.', $token);
+        count($token) != 3 && $token = ['', '', ''];
+        [$header, $payload, $signature] = $token;
+        $msg = $header . '.' . $payload;
 
-        $token = new self(
-            json_decode(Base64Url::decode($header), true),
-            json_decode(Base64Url::decode($payload), true)
-        );
+        $header = json_decode(Base64Url::decode($header), true);
+        $payload = json_decode(Base64Url::decode($payload), true);
+        $signature = Base64Url::decode($signature);
 
-        $token->signature = Base64Url::decode($signature);
+        if (!$header || !$payload || !$signature) {
+            $header = ['alg' => 'malformed', 'typ' => 'malformed'];
+            $payload = [];
+            $signature = '';
+        }
+
+        $token = new self($header, $payload);
+        $token->signature = $signature;
 
         // Preserve the original token string, since json_encode can change the order of the keys
         // and thus the payload will be different from the original.
-        $token->msg = $header . '.' . $payload;
+        $token->msg = $msg;
 
         return $token;
     }
