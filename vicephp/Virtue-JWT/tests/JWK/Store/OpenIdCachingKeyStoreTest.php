@@ -40,7 +40,7 @@ class OpenIdCachingKeyStoreTest extends TestCase
 
         $cache = M::mock(CacheInterface::class);
         $cache->shouldReceive('has')->andReturn(false)->once();
-        $cache->shouldReceive('set')->with(sha1('issuer'), $keySet)->once();
+        $cache->shouldReceive('set')->with('9cf32721ebab5d715f51669cbe62b023851870b8', $keySet)->once();
 
         $keyStore = M::mock(KeyStore::class);
         $keyStore->shouldReceive('getFor')->with($token)->andReturn($keySet)->once();
@@ -58,7 +58,7 @@ class OpenIdCachingKeyStoreTest extends TestCase
         $keyStore->shouldNotHaveBeenCalled();
 
         $cache = M::mock(CacheInterface::class);
-        $cache->shouldReceive('delete')->with('issuer')->once();
+        $cache->shouldReceive('delete')->with('9cf32721ebab5d715f51669cbe62b023851870b8')->once();
 
         $store = new OpenIdCachingKeyStore($keyStore, $cache);
         $store->refresh($token);
