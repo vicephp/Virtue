@@ -46,7 +46,7 @@ class OpenIdCachingTest extends TestCase
         $keyCachingStore = new OpenIdCachingKeyStore($keyStore, $cache);
         $keyStore->shouldNotHaveBeenCalled();
         $cache->shouldReceive('has')->andReturn(true)->once();
-        $cache->shouldReceive('get')->andReturn($keySet->jsonSerialize())->once();
+        $cache->shouldReceive('get')->andReturn($keySet)->once();
 
         $signed = $token->signWith(new OpenSSLSign($private));
         $signed->verifyWith(new OpenIdCaching($keyCachingStore, $claimsVerifier));
