@@ -21,15 +21,15 @@ class OpenIdCachingKeyStore implements KeyCachingStore
 
     public function getFor(Token $token): KeySet
     {
-        $issuer = $token->payload('iss');
-        if ($this->cache->has($issuer)) {
-            $keySet = $this->cache->get($issuer);
+        $key = sha1($token->payload('iss'));
+        if ($this->cache->has($key)) {
+            $keySet = $this->cache->get($key);
 
             return KeySet::fromArray($keySet);
         }
 
         $keySet = $this->keyStore->getFor($token);
-        $this->cache->set($issuer, $keySet);
+        $this->cache->set($key, $keySet);
 
         return $keySet;
     }
