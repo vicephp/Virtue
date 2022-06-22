@@ -45,14 +45,22 @@ class Token
         return $token;
     }
 
+    /**
+     * @deprecated please use headers()
+     */
     public function header($name)
     {
-        return $this->headers[$name] ?? '';
+        return $this->headers($name);
     }
 
-    public function payload($name)
+    public function headers(string $name = '', $default = null)
     {
-        return $this->payload[$name] ?? '';
+        return $name ? $this->headers[$name] ?? $default : $this->headers;
+    }
+
+    public function payload(string $name = '', $default = null)
+    {
+        return $name ? $this->payload[$name] ?? $default : $this->payload;
     }
 
     public function signature(): string

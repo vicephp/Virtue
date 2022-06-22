@@ -21,7 +21,7 @@ class JWKS implements VerifiesToken
 
     public function verify(Token $token): void
     {
-        $kid = $token->header('kid');
+        $kid = $token->headers('kid');
         if (!isset($this->verifiers[$kid])) {
             throw new VerificationFailed('No key found for kid: ' . $kid);
         }

@@ -17,7 +17,7 @@ class ClaimsVerify implements VerifiesToken
 
     public function verify(Token $token): void
     {
-        $typ = $token->header('typ');
+        $typ = $token->headers('typ');
         if ($typ !== 'JWT') {
             throw new VerificationFailed('Only JWT tokens are allowed');
         }
@@ -68,7 +68,7 @@ class ClaimsVerify implements VerifiesToken
             throw new VerificationFailed('Subject is not allowed');
         }
 
-        $alg = $token->header('alg') ?: 'none';
+        $alg = $token->headers('alg', 'none');
         if (isset($this->settings['algorithms']) && !in_array($alg, $this->settings['algorithms'])) {
             throw new VerificationFailed('Algorithm is not allowed');
         }
