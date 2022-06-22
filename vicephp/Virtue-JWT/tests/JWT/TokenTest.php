@@ -11,8 +11,8 @@ class TokenTest extends TestCase
     {
         $token = Token::ofString('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c');
 
-        $this->assertEquals('HS256', $token->header('alg'));
-        $this->assertEquals('JWT', $token->header('typ'));
+        $this->assertEquals('HS256', $token->headers('alg'));
+        $this->assertEquals('JWT', $token->headers('typ'));
         $this->assertEquals('1234567890', $token->payload('sub'));
         $this->assertEquals(1516239022, $token->payload('iat'));
     }
@@ -24,8 +24,8 @@ class TokenTest extends TestCase
     {
         $token = Token::ofString($token);
 
-        $this->assertEquals('malformed', $token->header('alg'));
-        $this->assertEquals('malformed', $token->header('typ'));
+        $this->assertEquals('malformed', $token->headers('alg'));
+        $this->assertEquals('malformed', $token->headers('typ'));
         $this->assertEmpty($token->signature());
     }
 
@@ -56,5 +56,25 @@ class TokenTest extends TestCase
     {
         $token = Token::ofString('eyJraWQiOiJraWQtMSIsInR5cCI6IkpXVCIsImFsZyI6IkhTMjU2In0.e30.q8fjb85nnNWUoeW4NNXuwWKvFYJ4sjMCA1XJvdOCcsg');
         $this->assertEquals('eyJraWQiOiJraWQtMSIsInR5cCI6IkpXVCIsImFsZyI6IkhTMjU2In0.e30', $token->withoutSig());
+    }
+
+    public function testAccessHeaders()
+    {
+        $token = Token::ofString('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c');
+
+        $this->assertEquals(['alg' => 'HS256', 'typ' => 'JWT'], $token->headers());
+        $this->assertEquals('JWT', $token->headers('typ'));
+        $this->assertNull($token->headers('not_exist'));
+        $this->assertEquals('<default>', $token->headers('not_exist', '<default>'));
+    }
+
+    public function testAccessPayload()
+    {
+        $token = Token::ofString('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c');
+
+        $this->assertEquals(['sub' => '1234567890', 'iat' => 1516239022, 'name' => 'John Doe'], $token->payload());
+        $this->assertEquals('1234567890', $token->payload('sub'));
+        $this->assertNull($token->payload('not_exist'));
+        $this->assertEquals('<default>', $token->payload('not_exist', '<default>'));
     }
 }

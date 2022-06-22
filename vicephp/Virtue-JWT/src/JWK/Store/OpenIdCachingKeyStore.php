@@ -21,7 +21,7 @@ class OpenIdCachingKeyStore implements KeyCachingStore
 
     public function getFor(Token $token): KeySet
     {
-        $key = sha1($token->payload('iss'));
+        $key = sha1($token->payload('iss', ''));
         if ($this->cache->has($key)) {
             return $this->cache->get($key);
         }
@@ -34,6 +34,6 @@ class OpenIdCachingKeyStore implements KeyCachingStore
 
     public function refresh(Token $token): void
     {
-        $this->cache->delete(sha1($token->payload('iss')));
+        $this->cache->delete(sha1($token->payload('iss', '')));
     }
 }
