@@ -9,7 +9,7 @@ use Virtue\JWT\Token;
 use Virtue\JWT\ChainOfVerifiers;
 use Virtue\JWT\VerifiesToken;
 
-class ChainofVerifiersTest extends TestCase
+class ChainOfVerifiersTest extends TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
