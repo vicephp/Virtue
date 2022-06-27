@@ -6,7 +6,7 @@ use Webmozart\Assert\Assert;
 
 class ChainOfVerifiers implements VerifiesToken
 {
-    /** @var \Virtue\JWT\VerifiesToken[] */
+    /** @var VerifiesToken[] */
     private $verifiers;
 
     public function __construct(array $verifiers)
