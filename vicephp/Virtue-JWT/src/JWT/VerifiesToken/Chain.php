@@ -1,10 +1,12 @@
 <?php
 
-namespace Virtue\JWT;
+namespace Virtue\JWT\VerifiesToken;
 
+use Virtue\JWT\Token;
+use Virtue\JWT\VerifiesToken;
 use Webmozart\Assert\Assert;
 
-class ChainOfVerifiers implements VerifiesToken
+class Chain implements VerifiesToken
 {
     /** @var VerifiesToken[] */
     private $verifiers;
@@ -14,7 +16,6 @@ class ChainOfVerifiers implements VerifiesToken
         Assert::allIsInstanceOf($verifiers, VerifiesToken::class);
         $this->verifiers = $verifiers;
     }
-
 
     public function verify(Token $token): void
     {
