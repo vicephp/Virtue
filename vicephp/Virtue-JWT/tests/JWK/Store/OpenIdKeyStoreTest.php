@@ -12,6 +12,24 @@ class OpenIdKeyStoreTest extends TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+    public function testRemoveTrailingSlashFromIssuer()
+    {
+        $token = new Token([], ['iss' => 'https://issuer.ggs-ps.com/']);
+
+        $response = new Response(200, [], json_encode(['jwks_uri' => 'https://issuer.ggs-ps.com/keys']));
+        $client = M::mock(Client::class);
+        $client->shouldReceive('get')
+            ->with('https://issuer.ggs-ps.com/.well-known/openid-configuration')
+            ->andReturn($response)
+            ->once();
+
+        $response = new Response(200, [], json_encode(['keys' => [[]]]));
+        $client->shouldReceive('get')->andReturn($response)->once();
+
+        $store = new OpenIdKeyStore($client);
+        $store->getFor($token);
+    }
+
     public function testGetKeySet()
     {
         $token = new Token([], ['iss' => 'https://issuer.ggs-ps.com']);
