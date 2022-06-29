@@ -15,6 +15,9 @@ class ChainTest extends TestCase
         new Chain([new \stdClass()]);
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testAllTheChainWentSuccessfullyThrough()
     {
         $chain = new Chain([new AlwaysSucceeds(), new AlwaysSucceeds()]);
