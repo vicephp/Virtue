@@ -18,7 +18,7 @@ class OpenIdKeyStore implements KeyStore
 
     public function getFor(Token $token): KeySet
     {
-        $response = $this->client->get($token->payload('iss') . '/.well-known/openid-configuration');
+        $response = $this->client->get(rtrim($token->payload('iss'), '/') . '/.well-known/openid-configuration');
         $config = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
         if (!filter_var($config['jwks_uri'] ?? '', FILTER_VALIDATE_URL)) {
