@@ -37,6 +37,7 @@ class ClaimsVerify implements VerifiesToken
 
         $issuer = $token->payload('iss');
         $audience = $token->payload('aud');
+        $audience = is_string($audience) ? [$audience] : $audience;
         $subject = $token->payload('sub');
 
         if ($now > $exp + $leeway) {
@@ -60,7 +61,7 @@ class ClaimsVerify implements VerifiesToken
             throw new VerificationFailed('Issuer is not allowed');
         }
 
-        if (isset($this->settings['audience']) && $audience !== $this->settings['audience']) {
+        if (isset($this->settings['audience']) && !in_array($this->settings['audience'], $audience)) {
             throw new VerificationFailed('Audience is not allowed');
         }
 

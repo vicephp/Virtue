@@ -10,27 +10,38 @@ use Virtue\JWT\VerificationFailed;
 
 class ClaimsVerifyTest extends TestCase
 {
-
-    public function testVerifyValid()
+    /**
+     * @dataProvider claims
+     */
+    public function testVerifyValid(ClaimSet $claims)
     {
-        $claims = new ClaimSet();
+        $token = new Token([], $claims->asArray());
+        $signed = $token->signWith(new HMAC(new Key('HS256', 'secret')));
+        $signed->verifyWith(
+            new ClaimsVerify([
+                'audience' => 'https://audience.com',
+                'issuers' => ['https://issuer.com'],
+                'algorithms' => ['HS256'],
+            ])
+        );
+
+        // Pass test if no exception is thrown
+        $this->addToAssertionCount(1);
+    }
+
+    public function claims(): \Generator
+    {
         $now = time();
+        $claims = new ClaimSet();
         $claims->expirationTime($now + 3600);
         $claims->notBefore($now - 3600);
         $claims->issuedAt($now);
         $claims->issuer('https://issuer.com');
         $claims->audience('https://audience.com');
+        yield [$claims];
 
-        $token = new Token([], $claims->asArray());
-        $signed = $token->signWith(new HMAC(new Key('HS256', 'secret')));
-        $signed->verifyWith(new ClaimsVerify([
-            'audience'   => 'https://audience.com',
-            'issuers'    => ['https://issuer.com'],
-            'algorithms' => ['HS256'],
-        ]));
-
-        // Pass test if no exception is thrown
-        $this->addToAssertionCount(1);
+        $claims->audience(['https://audience.com', 'https://altenative.audience.com']);
+        yield [$claims];
     }
 
     public function testVerifyExp()
