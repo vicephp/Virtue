@@ -36,7 +36,7 @@ class ClaimsVerify implements VerifiesToken
         $leeway = $this->settings['leeway'] ?? 0;
 
         $issuer = $token->payload('iss');
-        $audience = $token->payload('aud');
+        $audience = $token->payload('aud', []);
         $audience = is_string($audience) ? [$audience] : $audience;
         $subject = $token->payload('sub');
 
