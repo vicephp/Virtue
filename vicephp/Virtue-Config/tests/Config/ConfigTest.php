@@ -47,4 +47,13 @@ class ConfigTest extends TestCase
         $this->assertEquals('value', $config->get('key'));
         $this->assertEquals('baz', $config->get('foo.bar'));
     }
+
+    /** @test */
+    public function providesArrayAccess()
+    {
+        $config = Config::fromArray(['key' => 'value']);
+        $this->assertEquals('value', $config['key']);
+        $this->assertTrue(isset($config['key']));
+        $this->assertFalse(isset($config['missing']));
+    }
 }

@@ -21,15 +21,23 @@ class Config implements \ArrayAccess
     public static function fromEnv(array $env = null, string $prefix = 'VIRTUE_CONFIG')
     {
         $env = $env ?: $_ENV;
-        return self::fromArray(array_reduce(
-            array_filter(array_keys($env), fn(string $key) => strpos($key, "{$prefix}_") === 0),
-            fn(array $config, string $key) => array_replace_recursive($config, array_reduce(
-                array_reverse(explode('_', strtolower(substr($key, strlen("{$prefix}_"))))),
-                fn($value, $key) => [$key => $value],
-                json_decode($env[$key], true) ?: $env[$key]
-            )),
-            json_decode($env[$prefix] ?? null, true) ?: ($env[$prefix] ?? [])
-        ));
+        return self::fromArray(
+            array_reduce(
+                array_filter(array_keys($env), function (string $key) use ($prefix) {
+                    return strpos($key, "{$prefix}_") === 0;
+                }),
+                function (array $config, string $key) use ($env, $prefix) {
+                    return array_replace_recursive($config, array_reduce(
+                        array_reverse(explode('_', strtolower(substr($key, strlen("{$prefix}_"))))),
+                        function ($value, $key) {
+                            return [$key => $value];
+                        },
+                        json_decode($env[$key], true) ?: $env[$key]
+                    ));
+                },
+                json_decode($env[$prefix] ?? null, true) ?: ($env[$prefix] ?? [])
+            ),
+        );
     }
 
     public function get(string $path, $default = null)
@@ -58,19 +66,21 @@ class Config implements \ArrayAccess
 
     public function offsetExists($offset)
     {
-        return false;
+        return $this->get($offset) !== null;
     }
 
-    public function offsetGet(mixed $offset)
+    public function offsetGet($offset)
     {
-        return null;
+        return $this->get($offset);
     }
 
     public function offsetSet($offset, $value)
     {
+        throw new \RuntimeException(__METHOD__ . ' not allowed');
     }
 
     public function offsetUnset($offset)
     {
+        throw new \RuntimeException(__METHOD__ . ' not allowed');
     }
 }
