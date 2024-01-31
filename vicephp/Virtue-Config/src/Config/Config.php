@@ -2,7 +2,7 @@
 
 namespace Virtue\Config;
 
-class Config implements \ArrayAccess
+class Config implements \ArrayAccess, Dictionary
 {
     private $values = [];
 
