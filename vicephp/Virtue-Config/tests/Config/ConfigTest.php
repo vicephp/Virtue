@@ -25,7 +25,7 @@ class ConfigTest extends TestCase
     public function getByPath()
     {
         $config = Config::fromArray(['key' => ['subkey' => 'value']]);
-        $this->assertEquals('value', $config->get('key.subkey'));
+        $this->assertEquals('value', $config->get('key/subkey'));
     }
 
     /** @test */
@@ -45,7 +45,7 @@ class ConfigTest extends TestCase
         ]);
 
         $this->assertEquals('value', $config->get('key'));
-        $this->assertEquals('baz', $config->get('foo.bar'));
+        $this->assertEquals('baz', $config->get('foo/bar'));
     }
 
     /** @test */

@@ -43,7 +43,7 @@ class Config implements \ArrayAccess, Dictionary
     public function get(string $path, $default = null)
     {
         return array_reduce(
-            explode('.', $path),
+            explode('/', $path),
             function ($value, $key) {
                 return is_array($value) ? $value[$key] ?? null : $value;
             },
