@@ -15,7 +15,8 @@
             "Virtue\\Http\\": "vicephp/Virtue-Http/src/Http/",
             "Virtue\\JWK\\": "vicephp/Virtue-JWT/src/JWK/",
             "Virtue\\JWT\\": "vicephp/Virtue-JWT/src/JWT/",
-            "Virtue\\View\\": "vicephp/Virtue-View/src/View/"
+            "Virtue\\View\\": "vicephp/Virtue-View/src/View/",
+            "Virtue\\Config\\": "vicephp/Virtue-Config/src/Config/"
         }
     },
     "autoload-dev": {
@@ -29,7 +30,8 @@
             "Virtue\\Http\\": "vicephp/Virtue-Http/tests/Http/",
             "Virtue\\JWK\\": "vicephp/Virtue-JWT/tests/JWK/",
             "Virtue\\JWT\\": "vicephp/Virtue-JWT/tests/JWT/",
-            "Virtue\\View\\": "vicephp/Virtue-View/tests/View/"
+            "Virtue\\View\\": "vicephp/Virtue-View/tests/View/",
+            "Virtue\\Config\\": "vicephp/Virtue-COnfig/tests/Config/"
         }
     },
     "replace": {
