@@ -1,0 +1,38 @@
+name: 'Distribute Packages'
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
+jobs:
+  packages_split:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - Virtue-Access
+          - Virtue-Api
+          - Virtue-Config
+          - Virtue-DataTables
+          - Virtue-Forms
+          - Virtue-Http
+          - Virtue-JWT
+          - Virtue-PDO
+          - Virtue-View
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: symplify/monorepo-split-github-action@v2.3.0
+        with:
+          package_directory: 'vicephp/${{ matrix.package }}'
+          repository_organization: 'vicephp'
+          repository_name: '${{ matrix.package }}'
+          user_name: vicephp
+          user_email: vicephp@users.noreply.github.com
