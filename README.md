@@ -23,9 +23,3 @@ If the implementation is easy to explain, it may be a good idea.
 Namespaces are one honking great idea -- let's do more of those!
 ```
 [The Zen Of Python](https://www.python.org/dev/peps/pep-0020/)
-
-## Release
-
-We are using [Symplify/MonorepoBuilder](https://github.com/symplify/monorepobuilder) to maintain all modules in a monorepo.
-Use `vendor/bin/monorepo-builder release <version>` to release a new version followed by `vendor/bin/monorepo-builder split` 
-to update the single-repos.
