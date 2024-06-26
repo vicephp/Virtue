@@ -54,7 +54,9 @@ class PublicKey implements AsymmetricKey
     /**
      * @inheritDoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
+        // TODO: Impelment key serialization for JWKS
+        return [];
     }
 }
