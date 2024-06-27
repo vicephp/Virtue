@@ -44,8 +44,7 @@ class ECDSAVerify extends Algorithm implements VerifiesToken
         $sig = $token->signature();
         $der = join(array_map(
             function ($v) {
-                $str = trim($v, "\x00");
-                $str = $str[0] > 0x7f ? "\x00$str" : $str;
+                $str = rtrim(ord($v[0]) > 0x7f ? "\x00$v" : $v, "\x00");
                 return pack('CCa*', self::DER_INT, strlen($str), $str);
             },
             str_split($sig, max(1, intdiv(strlen($sig), 2)))
