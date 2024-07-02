@@ -6,10 +6,23 @@ use Virtue\JWT\Token;
 use Virtue\JWT\VerificationFailed;
 use Virtue\JWT\VerifiesToken;
 
+/**
+ * @phpstan-type ClaimsVerifySettings array{
+ *   required?: string[],
+ *   issuers?: string[],
+ *   audience?: string,
+ *   subjects?: string[],
+ *   leeway?: int,
+ *   iat?: array{before?: int, after?: int},
+ *   algorithms?: string[]
+ * }
+ */
 class ClaimsVerify implements VerifiesToken
 {
+    /** @var ClaimsVerifySettings */
     private $settings;
 
+    /** @param ClaimsVerifySettings $settings */
     public function __construct(array $settings = [])
     {
         $this->settings = $settings;
@@ -74,5 +87,4 @@ class ClaimsVerify implements VerifiesToken
             throw new VerificationFailed('Algorithm is not allowed');
         }
     }
-
 }

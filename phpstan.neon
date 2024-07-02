@@ -1,5 +1,7 @@
+includes:
+    - vendor/phpstan/phpstan-mockery/extension.neon
 parameters:
-	level: 1
+	level: 2
 	excludePaths:
 		- vendor/*
 	paths:
