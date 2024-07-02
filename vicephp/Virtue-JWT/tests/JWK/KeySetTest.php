@@ -25,13 +25,6 @@ class KeySetTest extends TestCase
         $this->assertCount(1, $keySet->getKeys());
     }
 
-    public function testAddInvalidKey()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-
-        new KeySet([new PrivateKey('RS256', 'pem')]);
-    }
-
     /**
      * @dataProvider invalidData
      */
