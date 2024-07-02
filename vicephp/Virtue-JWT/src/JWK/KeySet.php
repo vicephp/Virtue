@@ -2,7 +2,7 @@
 
 namespace Virtue\JWK;
 
-use _HumbugBox58fd4d9e2a25\OutOfBoundsException;
+use OutOfBoundsException;
 use Virtue\JWK\Key\RSA\PublicKey;
 use Webmozart\Assert\Assert;
 

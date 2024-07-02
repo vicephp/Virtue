@@ -1,0 +1,9 @@
+parameters:
+	level: 1
+	excludePaths:
+		- vendor/*
+	paths:
+		- vicephp/Virtue-JWT/src/
+		- vicephp/Virtue-JWT/tests/
+	scanDirectories:
+		- vicephp/Virtue-JWT/vendor
