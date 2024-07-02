@@ -6,11 +6,11 @@ namespace Virtue\JWT;
  * @phpstan-import-type Alg from Algorithm
  * @phpstan-import-type Claims from ClaimSet
  * @phpstan-type TokenType = 'JWT'
- * @phpstan-type TokenHeader = array{alg: Alg, typ: TokenType, ...}
+ * @phpstan-type TokenHeader = array{alg: Alg, typ: TokenType}
  */
 class Token
 {
-    /** @var TokenHeader */
+    /** @var TokenHeader&array<string,mixed> */
     private $headers = [
         'alg' => 'none',
         'typ' => 'JWT'
@@ -28,7 +28,9 @@ class Token
      */
     public function __construct(array $headers, array $payload)
     {
-        $this->headers = array_replace($this->headers, $headers);
+        /** @var TokenHeader&array<string,mixed> $tokenHeaders */
+        $tokenHeaders = array_replace($this->headers, $headers);
+        $this->headers = $tokenHeaders;
         $this->payload = $payload;
     }
 
@@ -94,7 +96,8 @@ class Token
     public function withoutSig(): string
     {
         return $this->msg ?:
-            $this->msg = Base64Url::encode(json_encode($this->headers)) . '.' . Base64Url::encode(json_encode($this->payload));
+            $this->msg = Base64Url::encode(json_encode($this->headers, JSON_THROW_ON_ERROR)) . '.' .
+                Base64Url::encode(json_encode($this->payload, JSON_THROW_ON_ERROR));
     }
 
     public function signWith(SignsToken $alg): Token

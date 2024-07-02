@@ -21,11 +21,13 @@ class OpenIdTest extends TestCase
     public function testVerify(): void
     {
         $key = \openssl_pkey_new();
+        $this->assertNotFalse($key);
         $private = '';
         \openssl_pkey_export($key, $private);
         $private = new PrivateKey('RS256', $private);
 
         $details = \openssl_pkey_get_details($key);
+        $this->assertNotFalse($details);
         $public = new PublicKey(
             'key-1',
             'RS256',

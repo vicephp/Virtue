@@ -16,11 +16,13 @@ class OpenSSLTest extends TestCase
     public function testSign(): void
     {
         $key = \openssl_pkey_new();
+        $this->assertNotFalse($key);
         $private = '';
         \openssl_pkey_export($key, $private);
         $private = new PrivateKey('RS256', $private);
 
         $details = \openssl_pkey_get_details($key);
+        $this->assertNotFalse($details);
         $public = new PublicKey(
             'key-1',
             'RS256',
@@ -52,6 +54,7 @@ class OpenSSLTest extends TestCase
         $this->expectExceptionMessage('Could not verify signature.');
 
         $key = \openssl_pkey_new();
+        $this->assertNotFalse($key);
         $private = '';
         \openssl_pkey_export($key, $private);
         $private = new PrivateKey('RS256', $private);
@@ -83,6 +86,7 @@ class OpenSSLTest extends TestCase
         $this->expectExceptionMessage('Algorithm EC is not supported');
 
         $key = \openssl_pkey_new();
+        $this->assertNotFalse($key);
         $private = '';
         \openssl_pkey_export($key, $private);
         $private = new PrivateKey('EC', $private);
