@@ -10,6 +10,7 @@ namespace Virtue\JWT;
  *   exp?: int,
  *   nbf?: int,
  *   iat?: int,
+ *   ...
  * }
  */
 class ClaimSet

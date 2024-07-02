@@ -61,11 +61,12 @@ class KeySet implements \JsonSerializable
         $this->keys[$key->id()] = $key;
     }
 
-    /** @param Key[] $keys */
+    /** @param array<string,mixed>[] $keys */
     public static function fromArray(array $keys): self
     {
         $keySet = [];
         foreach ($keys as $key) {
+            Assert::isArray($key, 'Invalid key');
             //Skip keys not intended for signing
             if (($key['use'] ?? '') !== 'sig') {
                 continue;
@@ -80,6 +81,11 @@ class KeySet implements \JsonSerializable
             if (!isset($key['kid']) || !isset($key['n']) || !isset($key['e']) || isset($key['d'])) {
                 continue;
             }
+
+            Assert::string($key['kid'], 'Key ID must be a string');
+            Assert::string($key['alg'], 'Algorithm must be a string');
+            Assert::string($key['n'], 'Modulus must be a string');
+            Assert::string($key['e'], 'Exponent must be a string');
 
             $keySet[] = new PublicKey($key['kid'], $key['alg'], $key['n'], $key['e']);
         }

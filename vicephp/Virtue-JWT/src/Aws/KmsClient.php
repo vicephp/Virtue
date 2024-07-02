@@ -33,7 +33,7 @@ class KmsClient extends \Aws\Kms\KmsClient
      *  MessageType?: string,
      *  SigningAlgorithm?: string
      * } $args
-     * @return Result<'Signature',string>
+     * @return Result<string,mixed>
      */
     public function sign(array $args = []): Result
     {

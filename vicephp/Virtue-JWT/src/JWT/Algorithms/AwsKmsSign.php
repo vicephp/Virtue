@@ -6,6 +6,7 @@ use Virtue\Aws\KmsClient;
 use Virtue\JWT\Algorithm;
 use Virtue\JWT\SignFailed;
 use Virtue\JWT\SignsToken;
+use Webmozart\Assert\Assert;
 
 /**
  * @phpstan-import-type Alg from \Virtue\JWT\Algorithm
@@ -46,6 +47,7 @@ class AwsKmsSign extends Algorithm implements SignsToken
             'SigningAlgorithm' => $this->signingAlgorithms[$this->name]
         ]);
 
+        Assert::string($result['Signature'], 'Issue when signing the message');
         return $result['Signature'];
     }
 }

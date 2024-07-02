@@ -2,11 +2,13 @@
 
 namespace Virtue\JWT;
 
+use Webmozart\Assert\Assert;
+
 /**
  * @phpstan-import-type Alg from Algorithm
  * @phpstan-import-type Claims from ClaimSet
  * @phpstan-type TokenType = 'JWT'
- * @phpstan-type TokenHeader = array{alg: Alg, typ: TokenType}
+ * @phpstan-type TokenHeader = array{alg: Alg, typ: TokenType, ...}
  */
 class Token
 {
@@ -24,7 +26,7 @@ class Token
 
     /**
      * @param array<string,mixed> $headers
-     * @param Claims & array<string,mixed> $payload
+     * @param array<string,mixed> $payload
      */
     public function __construct(array $headers, array $payload)
     {
@@ -45,7 +47,7 @@ class Token
         $payload = json_decode(Base64Url::decode($payload), true);
         $signature = Base64Url::decode($signature);
 
-        if (!$header || !$payload || !$signature) {
+        if (!is_array($header) || !is_array($payload) || !$signature) {
             $header = ['alg' => 'malformed', 'typ' => 'malformed'];
             $payload = [];
             $signature = '';

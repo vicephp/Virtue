@@ -50,7 +50,7 @@ class ClaimsVerify implements VerifiesToken
 
         $issuer = $token->payload('iss');
         $audience = $token->payload('aud');
-        $audience = is_string($audience) ? [$audience] : $audience;
+        $audience = is_string($audience) ? [$audience] : (is_array($audience) ? $audience : []);
         $subject = $token->payload('sub');
 
         if ($now > $exp + $leeway) {

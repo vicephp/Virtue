@@ -160,4 +160,16 @@ class ClaimsVerifyTest extends TestCase
         $this->expectExceptionMessage("Required claim 'sub' is missing");
         $token->verifyWith(new ClaimsVerify(['required' => ['sub']]));
     }
+
+    public function testInvalidAudience(): void
+    {
+        /**
+         * @var array<string, mixed> $payload
+         */
+        $payload = ['aud' => true];
+        $token = new Token([], $payload);
+        $this->expectException(VerificationFailed::class);
+        $this->expectExceptionMessage('Audience is not allowed');
+        $token->verifyWith(new ClaimsVerify(['required' => ['aud'], 'audience' => 'https://audience.com']));
+    }
 }
