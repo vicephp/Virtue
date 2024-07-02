@@ -32,7 +32,9 @@ class OpenIdKeyStore implements KeyStore
 
         $response = $this->client->get($config['jwks_uri']);
         $keySet = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        Assert::isArray($keySet, 'Invalid key set');
+        if (!is_array($keySet)) {
+            $keySet = [];
+        }
 
         if (empty($keySet['keys'])) {
             throw new \OutOfBoundsException('JWKS must have at least one key');

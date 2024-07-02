@@ -66,7 +66,10 @@ class KeySet implements \JsonSerializable
     {
         $keySet = [];
         foreach ($keys as $key) {
-            Assert::isArray($key, 'Invalid key');
+            if (!is_array($key)) {
+                continue;
+            }
+
             //Skip keys not intended for signing
             if (($key['use'] ?? '') !== 'sig') {
                 continue;
