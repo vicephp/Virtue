@@ -10,7 +10,9 @@ use Virtue\JWT\Token;
 
 class OpenIdCachingKeyStore implements KeyCachingStore
 {
+    /** @var KeyStore */
     private $keyStore;
+    /** @var CacheInterface */
     private $cache;
 
     public function __construct(KeyStore $keyStore, CacheInterface $cache)

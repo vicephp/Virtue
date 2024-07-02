@@ -13,7 +13,7 @@ use Mockery as M;
 
 class OpenSSLTest extends TestCase
 {
-    public function testSign()
+    public function testSign(): void
     {
         $key = \openssl_pkey_new();
         $private = '';
@@ -35,7 +35,7 @@ class OpenSSLTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    public function testSignFailed()
+    public function testSignFailed(): void
     {
         $this->expectException(SignFailed::class);
         $this->expectExceptionMessage('Key or passphrase are invalid.');
@@ -46,7 +46,7 @@ class OpenSSLTest extends TestCase
         $sslVerify->sign('a-message');
     }
 
-    public function testVerificationFailed()
+    public function testVerificationFailed(): void
     {
         $this->expectException(VerificationFailed::class);
         $this->expectExceptionMessage('Could not verify signature.');
@@ -64,7 +64,7 @@ class OpenSSLTest extends TestCase
         $sslVerify->verify($token);
     }
 
-    public function testKeyIsInvalid()
+    public function testKeyIsInvalid(): void
     {
         $this->expectException(VerificationFailed::class);
         $this->expectExceptionMessage('Key is invalid.');
@@ -77,7 +77,7 @@ class OpenSSLTest extends TestCase
         $sslVerify->verify(new Token([], []));
     }
 
-    public function testAlgorithmNotSupportedBySigner()
+    public function testAlgorithmNotSupportedBySigner(): void
     {
         $this->expectException(SignFailed::class);
         $this->expectExceptionMessage('Algorithm EC is not supported');
@@ -91,7 +91,7 @@ class OpenSSLTest extends TestCase
         $sslVerify->sign(new Token([], []));
     }
 
-    public function testAlgorithmNotSupportedByVerifier()
+    public function testAlgorithmNotSupportedByVerifier(): void
     {
         $this->expectException(VerificationFailed::class);
         $this->expectExceptionMessage('Algorithm EC is not supported');

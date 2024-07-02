@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class KmsClientTest extends TestCase
 {
-    public function testSign1()
+    public function testSign1(): void
     {
         $handler = new MockHandler();
         $handler->append(function (CommandInterface $cmd) {

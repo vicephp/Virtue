@@ -9,6 +9,7 @@ use Virtue\JWT\Token;
 
 class OpenIdKeyStore implements KeyStore
 {
+    /** @var Client */
     private $client;
 
     public function __construct(Client $client)

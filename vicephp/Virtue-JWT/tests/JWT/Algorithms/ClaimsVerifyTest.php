@@ -13,7 +13,7 @@ class ClaimsVerifyTest extends TestCase
     /**
      * @dataProvider claims
      */
-    public function testVerifyValid(ClaimSet $claims)
+    public function testVerifyValid(ClaimSet $claims): void
     {
         $token = new Token([], $claims->asArray());
         $signed = $token->signWith(new HMAC(new Key('HS256', 'secret')));
@@ -44,7 +44,7 @@ class ClaimsVerifyTest extends TestCase
         yield [$claims];
     }
 
-    public function testVerifyExp()
+    public function testVerifyExp(): void
     {
         $token = new Token([], ['exp' => time() - 3600]);
         $this->expectException(VerificationFailed::class);
@@ -52,7 +52,7 @@ class ClaimsVerifyTest extends TestCase
         $token->verifyWith(new ClaimsVerify());
     }
 
-    public function testVerifyNbf()
+    public function testVerifyNbf(): void
     {
         $token = new Token([], ['nbf' => time() + 3600]);
         $this->expectException(VerificationFailed::class);
@@ -60,7 +60,7 @@ class ClaimsVerifyTest extends TestCase
         $token->verifyWith(new ClaimsVerify());
     }
 
-    public function testVerifyIss()
+    public function testVerifyIss(): void
     {
         $token = new Token([], ['iss' => 'https://foo.com']);
         $this->expectException(VerificationFailed::class);
@@ -68,7 +68,7 @@ class ClaimsVerifyTest extends TestCase
         $token->verifyWith(new ClaimsVerify(['issuers' => ['https://bar.com']]));
     }
 
-    public function testVerifyAud()
+    public function testVerifyAud(): void
     {
         $token = new Token([], ['aud' => 'https://foo.com']);
         $this->expectException(VerificationFailed::class);
@@ -76,7 +76,7 @@ class ClaimsVerifyTest extends TestCase
         $token->verifyWith(new ClaimsVerify(['audience' => 'https://bar.com']));
     }
 
-    public function testVerifyAlg()
+    public function testVerifyAlg(): void
     {
         $token = new Token([], []);
         $signed = $token->signWith(new HMAC(new Key('HS256', 'secret')));
@@ -85,7 +85,7 @@ class ClaimsVerifyTest extends TestCase
         $signed->verifyWith(new ClaimsVerify(['algorithms' => ['HS512']]));
     }
 
-    public function testVerifyWrongType()
+    public function testVerifyWrongType(): void
     {
         $token = new Token(['typ' => 'foo'], []);
         $this->expectException(VerificationFailed::class);
@@ -93,7 +93,7 @@ class ClaimsVerifyTest extends TestCase
         $token->verifyWith(new ClaimsVerify());
     }
 
-    public function testVerifyIatBefore()
+    public function testVerifyIatBefore(): void
     {
         $token = new Token([], ['iat' => time()]);
         $this->expectException(VerificationFailed::class);
@@ -101,7 +101,7 @@ class ClaimsVerifyTest extends TestCase
         $token->verifyWith(new ClaimsVerify(['iat' => ['before' => time() - 3600]]));
     }
 
-    public function testVerifyIatAfter()
+    public function testVerifyIatAfter(): void
     {
         $token = new Token([], ['iat' => time()]);
         $this->expectException(VerificationFailed::class);
@@ -109,7 +109,7 @@ class ClaimsVerifyTest extends TestCase
         $token->verifyWith(new ClaimsVerify(['iat' => ['after' => time() + 3600]]));
     }
 
-    public function testVerifySubject()
+    public function testVerifySubject(): void
     {
         $token = new Token([], ['sub' => 'foo']);
         $this->expectException(VerificationFailed::class);
@@ -117,7 +117,7 @@ class ClaimsVerifyTest extends TestCase
         $token->verifyWith(new ClaimsVerify(['subjects' => ['bar']]));
     }
 
-    public function testVerifyExpWithLeeway()
+    public function testVerifyExpWithLeeway(): void
     {
         $token = new Token([], ['exp' => time() - 10]);
         $token->verifyWith(new ClaimsVerify(['leeway' => 20]));
@@ -126,7 +126,7 @@ class ClaimsVerifyTest extends TestCase
         $token->verifyWith(new ClaimsVerify(['leeway' => 5]));
     }
 
-    public function testVerifyNbfWithLeeway()
+    public function testVerifyNbfWithLeeway(): void
     {
         $token = new Token([], ['nbf' => time() + 10]);
         $token->verifyWith(new ClaimsVerify(['leeway' => 20]));
@@ -135,7 +135,7 @@ class ClaimsVerifyTest extends TestCase
         $token->verifyWith(new ClaimsVerify(['leeway' => 5]));
     }
 
-    public function testVerifyIatBeforeWithLeeway()
+    public function testVerifyIatBeforeWithLeeway(): void
     {
         $token = new Token([], ['iat' => time()]);
         $token->verifyWith(new ClaimsVerify(['leeway' => 20, 'iat' => ['before' => time() - 10]]));
@@ -144,7 +144,7 @@ class ClaimsVerifyTest extends TestCase
         $token->verifyWith(new ClaimsVerify(['leeway' => 5, 'iat' => ['before' => time() - 10]]));
     }
 
-    public function testVerifyIatAfterWithLeeway()
+    public function testVerifyIatAfterWithLeeway(): void
     {
         $token = new Token([], ['iat' => time()]);
         $token->verifyWith(new ClaimsVerify(['leeway' => 20, 'iat' => ['after' => time() + 10]]));
@@ -153,7 +153,7 @@ class ClaimsVerifyTest extends TestCase
         $token->verifyWith(new ClaimsVerify(['leeway' => 5, 'iat' => ['after' => time() + 10]]));
     }
 
-    public function testVerifyRequiredClaims()
+    public function testVerifyRequiredClaims(): void
     {
         $token = new Token([], []);
         $this->expectException(VerificationFailed::class);

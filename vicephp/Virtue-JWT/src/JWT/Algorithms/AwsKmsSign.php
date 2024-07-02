@@ -7,16 +7,21 @@ use Virtue\JWT\Algorithm;
 use Virtue\JWT\SignFailed;
 use Virtue\JWT\SignsToken;
 
+/**
+ * @phpstan-import-type Alg from \Virtue\JWT\Algorithm
+ */
 class AwsKmsSign extends Algorithm implements SignsToken
 {
     private const MaxMessageLengthBytes = 4096;
 
+    /** @var array<Alg,string|int> */
     private $signingAlgorithms = [
         'RS256' => 'RSASSA_PKCS1_V1_5_SHA_256',
         'RS384' => 'RSASSA_PKCS1_V1_5_SHA_384',
         'RS512' => 'RSASSA_PKCS1_V1_5_SHA_512',
     ];
 
+    /** @var KmsClient */
     private $client;
 
     public function __construct(string $name, KmsClient $client)

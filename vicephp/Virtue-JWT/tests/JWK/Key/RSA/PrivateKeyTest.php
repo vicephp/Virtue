@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class PrivateKeyTest extends TestCase
 {
-    public function testCreateKey()
+    public function testCreateKey(): void
     {
         $key = new PrivateKey('RS256', 'pem');
         $this->assertEquals('RS256', $key->alg());

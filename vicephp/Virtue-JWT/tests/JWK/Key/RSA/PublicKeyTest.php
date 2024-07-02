@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class PublicKeyTest extends TestCase
 {
-    public function testCreateKey()
+    public function testCreateKey(): void
     {
         $key = new PublicKey('key-id', 'RS256', 'modulus', 'exponent');
         $this->assertEquals('key-id', $key->id());
@@ -17,7 +17,7 @@ class PublicKeyTest extends TestCase
         );
     }
 
-    public function testAsPem()
+    public function testAsPem(): void
     {
         $key = new PublicKey('key-id', 'RS256', 'modulus', 'exponent');
         $this->assertStringStartsWith('-----BEGIN PUBLIC KEY-----', $key->asPem());

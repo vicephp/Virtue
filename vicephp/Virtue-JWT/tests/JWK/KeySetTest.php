@@ -3,12 +3,14 @@
 namespace Virtue\JWK;
 
 use PHPUnit\Framework\TestCase;
-use Virtue\JWK\Key\RSA\PrivateKey;
 use Virtue\JWK\Key\RSA\PublicKey;
 
+/**
+ * @phpstan-import-type Key from KeySet
+ */
 class KeySetTest extends TestCase
 {
-    public function testFromArray()
+    public function testFromArray(): void
     {
         $key = ['use' => 'sig', 'kty' => 'RSA', 'alg' => 'RS256', 'kid' => 'key id', 'n' => 'modulus', 'e' => 'exponent'];
         $keySet = KeySet::fromArray([$key]);
@@ -17,7 +19,7 @@ class KeySetTest extends TestCase
         $this->assertEquals([$key], $keySet->jsonSerialize());
     }
 
-    public function testAddKey()
+    public function testAddKey(): void
     {
         $keySet = new KeySet();
         $this->assertEmpty($keySet->getKeys());
@@ -27,8 +29,9 @@ class KeySetTest extends TestCase
 
     /**
      * @dataProvider invalidData
+     * @param Key[] $keys
      */
-    public function testInvalidData(array $keys)
+    public function testInvalidData(array $keys): void
     {
         $keySet = KeySet::fromArray($keys);
         $this->assertEmpty($keySet->getKeys());

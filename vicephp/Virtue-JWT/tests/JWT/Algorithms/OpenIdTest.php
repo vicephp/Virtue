@@ -18,7 +18,7 @@ class OpenIdTest extends TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testVerify()
+    public function testVerify(): void
     {
         $key = \openssl_pkey_new();
         $private = '';
@@ -30,7 +30,8 @@ class OpenIdTest extends TestCase
             'key-1',
             'RS256',
             Base64Url::encode($details['rsa']['n']),
-            Base64Url::encode($details['rsa']['e']));
+            Base64Url::encode($details['rsa']['e'])
+        );
         $keySet = new KeySet([$public]);
 
         $token = new Token(['kid' => 'key-1'], []);

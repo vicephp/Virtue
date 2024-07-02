@@ -4,6 +4,7 @@ namespace Virtue\JWK\Key\RSA;
 
 use Virtue\JWK\AsymmetricKey;
 
+/** @phpstan-import-type Key from \Virtue\JWK\KeySet */
 class PrivateKey implements AsymmetricKey
 {
     /** @var string */
@@ -39,6 +40,7 @@ class PrivateKey implements AsymmetricKey
         return $this->passphrase;
     }
 
+    /** @return Key */
     public function jsonSerialize(): array
     {
         return [

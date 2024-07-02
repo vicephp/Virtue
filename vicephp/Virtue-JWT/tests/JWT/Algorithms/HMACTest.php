@@ -9,7 +9,7 @@ use Virtue\JWT\VerificationFailed;
 
 class HMACTest extends TestCase
 {
-    public function testSign()
+    public function testSign(): void
     {
         $token = Token::ofString('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c');
         $hmac = new HMAC(new Key('HS256', 'your-256-bit-secret'));
@@ -18,7 +18,7 @@ class HMACTest extends TestCase
         $this->assertEquals('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c', (string) $token);
     }
 
-    public function testVerify()
+    public function testVerify(): void
     {
         $token = Token::ofString('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c');
         $hmac = new HMAC(new Key('HS256', 'your-256-bit-secret'));
@@ -27,7 +27,7 @@ class HMACTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function testVerificationFailed()
+    public function testVerificationFailed(): void
     {
         $this->expectException(VerificationFailed::class);
         $this->expectExceptionMessage('Could not verify signature.');

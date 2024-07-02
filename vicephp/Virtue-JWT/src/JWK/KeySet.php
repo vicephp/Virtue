@@ -6,10 +6,26 @@ use OutOfBoundsException;
 use Virtue\JWK\Key\RSA\PublicKey;
 use Webmozart\Assert\Assert;
 
+/**
+ * @phpstan-type KeyType = 'RSA'
+ * @phpstan-type KeyUse = 'sig'
+ * @phpstan-import-type Alg from \Virtue\JWT\Algorithm
+ * @phpstan-type Key = array{
+ *    use?: KeyUse,
+ *    kty?: KeyType,
+ *    alg: Alg,
+ *    kid?: string,
+ *    n?: string,
+ *    e?: string,
+ *    d?: string,
+ * }
+ */
 class KeySet implements \JsonSerializable
 {
     /** @var PublicKey[] */
     private $keys = [];
+
+    /** @var KeyType[] */
     private static $supportedKeyTypes = ['RSA'];
 
     /**
@@ -45,6 +61,7 @@ class KeySet implements \JsonSerializable
         $this->keys[$key->id()] = $key;
     }
 
+    /** @param Key[] $keys */
     public static function fromArray(array $keys): self
     {
         $keySet = [];
@@ -70,6 +87,7 @@ class KeySet implements \JsonSerializable
         return new KeySet($keySet);
     }
 
+    /** @return Key[] */
     public function jsonSerialize(): array
     {
         $keys = [];

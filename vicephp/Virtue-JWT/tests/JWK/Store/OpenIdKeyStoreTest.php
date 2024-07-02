@@ -12,7 +12,7 @@ class OpenIdKeyStoreTest extends TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testRemoveTrailingSlashFromIssuer()
+    public function testRemoveTrailingSlashFromIssuer(): void
     {
         $token = new Token([], ['iss' => 'https://issuer.ggs-ps.com/']);
 
@@ -30,7 +30,7 @@ class OpenIdKeyStoreTest extends TestCase
         $store->getFor($token);
     }
 
-    public function testGetKeySet()
+    public function testGetKeySet(): void
     {
         $token = new Token([], ['iss' => 'https://issuer.ggs-ps.com']);
 
@@ -53,7 +53,7 @@ class OpenIdKeyStoreTest extends TestCase
         $this->assertCount(1, $keySet->getKeys());
     }
 
-    public function testInvalidJwksUri()
+    public function testInvalidJwksUri(): void
     {
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('The value of jwks_uri must be a valid URI');
@@ -71,7 +71,7 @@ class OpenIdKeyStoreTest extends TestCase
         $store->getFor($token);
     }
 
-    public function testEmptyKeys()
+    public function testEmptyKeys(): void
     {
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('JWKS must have at least one key');

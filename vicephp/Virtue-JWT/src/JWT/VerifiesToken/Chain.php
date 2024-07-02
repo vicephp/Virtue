@@ -11,6 +11,7 @@ class Chain implements VerifiesToken
     /** @var VerifiesToken[] */
     private $verifiers;
 
+    /** @param VerifiesToken[] $verifiers */
     public function __construct(array $verifiers)
     {
         Assert::allIsInstanceOf($verifiers, VerifiesToken::class);
