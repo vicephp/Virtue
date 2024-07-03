@@ -15,6 +15,7 @@ class PrivateKey implements AsymmetricKey
     /** @var string */
     private $passphrase = '';
 
+    /** @param \Virtue\JWT\Algorithm::RS* $alg */
     public function __construct(string $alg, string $pem)
     {
         $this->alg = $alg;

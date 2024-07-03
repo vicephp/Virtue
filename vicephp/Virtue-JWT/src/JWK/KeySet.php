@@ -5,6 +5,7 @@ namespace Virtue\JWK;
 use OutOfBoundsException;
 use Virtue\JWK\AsymmetricKey;
 use Virtue\JWK\Key\RSA;
+use Virtue\JWT\Algorithm;
 use Webmozart\Assert\Assert;
 
 /**
@@ -81,15 +82,19 @@ class KeySet implements \JsonSerializable
 
             Assert::string($key['kid'], 'Key ID must be a string');
             Assert::string($key['alg'], 'Algorithm must be a string');
-            Assert::string($key['n'], 'Modulus must be a string');
-            Assert::string($key['e'], 'Exponent must be a string');
-
-
-            $keySet->addKey(
-                $key['kid'],
-                new RSA\PublicKey($key['alg'], $key['n'], $key['e']),
-                $key['use']
-            );
+            switch ($key['alg']) {
+                case Algorithm::RS256:
+                case Algorithm::RS384:
+                case Algorithm::RS512:
+                    Assert::string($key['n'], 'Modulus must be a string');
+                    Assert::string($key['e'], 'Exponent must be a string');
+                    $keySet->addKey(
+                        $key['kid'],
+                        new RSA\PublicKey($key['alg'], $key['n'], $key['e']),
+                        $key['use']
+                    );
+                    break;
+            }
         }
 
         return $keySet;

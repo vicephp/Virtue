@@ -16,11 +16,14 @@ class AwsKmsSignTest extends TestCase
 
     public function testUnsupportedAlgorithm(): void
     {
-        $this->expectException(SignFailed::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Algorithm FOO256 is not supported');
 
-        /** @var string $alg */
         $alg = 'FOO256';
+        /**
+         * Ignore to test behavior on systems without phpstan
+         * @phpstan-ignore argument.type
+         * */
         $signer = new AwsKmsSign($alg, M::mock(KmsClient::class));
         $signer->sign('message');
     }

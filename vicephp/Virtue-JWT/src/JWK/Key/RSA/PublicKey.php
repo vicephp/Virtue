@@ -15,6 +15,7 @@ class PublicKey implements AsymmetricKey
     /** @var string */
     private $exponent;
 
+    /** @param \Virtue\JWT\Algorithm::RS* $alg */
     public function __construct(string $alg, string $modulus, string $exponent)
     {
         $this->alg = $alg;
