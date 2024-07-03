@@ -8,8 +8,5 @@ jobs:
                 php-version: "latest"
             - uses: actions/checkout@v4
             - uses: ramsey/composer-install@v3
-            - uses: ramsey/composer-install@v3
-              with:
-                working-directory: vicephp/Virtue-JWT
             - run: composer exec phpstan analyse
             - run: composer exec phpunit
