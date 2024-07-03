@@ -3,7 +3,8 @@
 namespace Virtue\JWK;
 
 use OutOfBoundsException;
-use Virtue\JWK\Key\RSA\PublicKey;
+use Virtue\JWK\AsymmetricKey;
+use Virtue\JWK\Key\RSA;
 use Webmozart\Assert\Assert;
 
 /**
@@ -20,7 +21,7 @@ use Webmozart\Assert\Assert;
  */
 class KeySet implements \JsonSerializable
 {
-    /** @var array{use: KeyUse::*, key: PublicKey, kid: string}[] */
+    /** @var array{use: KeyUse::*, key: AsymmetricKey, kid: string}[] */
     private $keys = [];
 
     /** @var KeyType::*[] */
@@ -29,7 +30,7 @@ class KeySet implements \JsonSerializable
     /**
      * @param KeyUse::* $for
      */
-    public function getKey(string $id, string $for = KeyUse::Signature): PublicKey
+    public function getKey(string $id, string $for = KeyUse::Signature): AsymmetricKey
     {
         foreach ($this->keys as $key) {
             if ($key['kid'] === $id && $key['use'] === $for) {
@@ -41,7 +42,7 @@ class KeySet implements \JsonSerializable
     }
 
     /**
-     * @return PublicKey[]
+     * @return AsymmetricKey[]
      */
     public function getKeys(): array
     {
@@ -49,7 +50,7 @@ class KeySet implements \JsonSerializable
     }
 
     /** @param KeyUse::* $use */
-    public function addKey(string $id, PublicKey $key, string $use = KeyUse::Signature): void
+    public function addKey(string $id, AsymmetricKey $key, string $use = KeyUse::Signature): void
     {
         $this->keys[] = ['use' => $use, 'key' => $key, 'kid' => $id];
     }
@@ -86,7 +87,7 @@ class KeySet implements \JsonSerializable
 
             $keySet->addKey(
                 $key['kid'],
-                new PublicKey($key['alg'], $key['n'], $key['e']),
+                new RSA\PublicKey($key['alg'], $key['n'], $key['e']),
                 $key['use']
             );
         }
