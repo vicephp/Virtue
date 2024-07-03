@@ -5,9 +5,7 @@ namespace Virtue\JWK\Key\RSA;
 use Virtue\JWK\AsymmetricKey;
 use Virtue\JWT\Base64Url;
 
-/** @phpstan-import-type Key from \Virtue\JWK\KeySet
- * @phpstan-import-type Alg from \Virtue\JWT\Algorithm
- */
+/** @phpstan-import-type Alg from \Virtue\JWT\Algorithm */
 class PublicKey implements AsymmetricKey
 {
     /** @var string */
@@ -77,7 +75,9 @@ class PublicKey implements AsymmetricKey
         return \pack('Ca*', 0x80 | \strlen($temp), $temp);
     }
 
-    /** @return Key */
+    /**
+     * @return array{ kty: \Virtue\JWK\KeyType::*, kid: string, alg: Alg, n: string, e: string }
+     */
     public function jsonSerialize(): array
     {
         return [

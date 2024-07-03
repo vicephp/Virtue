@@ -7,14 +7,12 @@ use Virtue\JWK\Key\RSA\PublicKey;
 use Webmozart\Assert\Assert;
 
 /**
- * @phpstan-type KeyType = 'RSA'
- * @phpstan-type KeyUse = 'sig'
  * @phpstan-import-type Alg from \Virtue\JWT\Algorithm
- * @phpstan-type Key = array{
- *    use?: KeyUse,
- *    kty?: KeyType,
+ * @phpstan-type KeySetEntry = array{
+ *    use: KeyUse::*,
+ *    kty: KeyType::*,
  *    alg: Alg,
- *    kid?: string,
+ *    kid: string,
  *    n?: string,
  *    e?: string,
  *    d?: string,
@@ -25,8 +23,8 @@ class KeySet implements \JsonSerializable
     /** @var PublicKey[] */
     private $keys = [];
 
-    /** @var KeyType[] */
-    private static $supportedKeyTypes = ['RSA'];
+    /** @var KeyType::*[] */
+    private static $supportedKeyTypes = [KeyType::RSA];
 
     /**
      * @param PublicKey[] $keys
@@ -71,7 +69,7 @@ class KeySet implements \JsonSerializable
             }
 
             //Skip keys not intended for signing
-            if (($key['use'] ?? '') !== 'sig') {
+            if (($key['use'] ?? '') !== KeyUse::Signature) {
                 continue;
             }
 
@@ -96,12 +94,14 @@ class KeySet implements \JsonSerializable
         return new KeySet($keySet);
     }
 
-    /** @return Key[] */
+    /** @return KeySetEntry[] */
     public function jsonSerialize(): array
     {
         $keys = [];
         foreach ($this->keys as $key) {
-            $keys[] = array_merge($key->jsonSerialize(), ['use' => 'sig']);
+            /** @var KeySetEntry $entry */
+            $entry = array_merge($key->jsonSerialize(), ['use' => 'sig']);
+            $keys[] = $entry;
         }
 
         return $keys;

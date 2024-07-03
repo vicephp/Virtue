@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Virtue\JWK\Key\RSA\PublicKey;
 
 /**
- * @phpstan-import-type Key from KeySet
+ * @phpstan-import-type KeySetEntry from KeySet
  */
 class KeySetTest extends TestCase
 {
@@ -36,7 +36,7 @@ class KeySetTest extends TestCase
 
     /**
      * @dataProvider invalidData
-     * @param Key[] $keys
+     * @param KeySetEntry[] $keys
      */
     public function testInvalidData(array $keys): void
     {
