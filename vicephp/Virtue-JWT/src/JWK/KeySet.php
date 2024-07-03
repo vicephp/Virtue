@@ -3,18 +3,18 @@
 namespace Virtue\JWK;
 
 use OutOfBoundsException;
-use Virtue\JWK\Key\RSA\PublicKey;
+use Virtue\JWK\AsymmetricKey;
+use Virtue\JWK\Key\RSA;
+use Virtue\JWT\Algorithm;
 use Webmozart\Assert\Assert;
 
 /**
- * @phpstan-type KeyType = 'RSA'
- * @phpstan-type KeyUse = 'sig'
  * @phpstan-import-type Alg from \Virtue\JWT\Algorithm
- * @phpstan-type Key = array{
- *    use?: KeyUse,
- *    kty?: KeyType,
+ * @phpstan-type KeySetEntry = array{
+ *    use: KeyUse::*,
+ *    kty: KeyType::*,
  *    alg: Alg,
- *    kid?: string,
+ *    kid: string,
  *    n?: string,
  *    e?: string,
  *    d?: string,
@@ -22,56 +22,51 @@ use Webmozart\Assert\Assert;
  */
 class KeySet implements \JsonSerializable
 {
-    /** @var PublicKey[] */
+    /** @var array{use: KeyUse::*, key: AsymmetricKey, kid: string}[] */
     private $keys = [];
 
-    /** @var KeyType[] */
-    private static $supportedKeyTypes = ['RSA'];
+    /** @var KeyType::*[] */
+    private static $supportedKeyTypes = [KeyType::RSA];
 
     /**
-     * @param PublicKey[] $keys
+     * @param KeyUse::* $for
      */
-    public function __construct(array $keys = [])
+    public function getKey(string $id, string $for = KeyUse::Signature): AsymmetricKey
     {
-        Assert::allIsInstanceOf($keys, PublicKey::class);
-        foreach ($keys as $key) {
-            $this->keys[$key->id()] = $key;
-        }
-    }
-
-    public function getKey(string $id): PublicKey
-    {
-        if (!isset($this->keys[$id])) {
-            throw new OutOfBoundsException("Kei with id $id not found in key set");
+        foreach ($this->keys as $key) {
+            if ($key['kid'] === $id && $key['use'] === $for) {
+                return $key['key'];
+            }
         }
 
-        return $this->keys[$id];
+        throw new OutOfBoundsException("Kei with id $id not found in key set");
     }
 
     /**
-     * @return PublicKey[]
+     * @return AsymmetricKey[]
      */
     public function getKeys(): array
     {
-        return $this->keys;
+        return array_column($this->keys, 'key', 'kid');
     }
 
-    public function addKey(PublicKey $key): void
+    /** @param KeyUse::* $use */
+    public function addKey(string $id, AsymmetricKey $key, string $use = KeyUse::Signature): void
     {
-        $this->keys[$key->id()] = $key;
+        $this->keys[] = ['use' => $use, 'key' => $key, 'kid' => $id];
     }
 
     /** @param array<string,mixed>[] $keys */
     public static function fromArray(array $keys): self
     {
-        $keySet = [];
+        $keySet = new self();
         foreach ($keys as $key) {
             if (!is_array($key)) {
                 continue;
             }
 
             //Skip keys not intended for signing
-            if (($key['use'] ?? '') !== 'sig') {
+            if (($key['use'] ?? '') !== KeyUse::Signature) {
                 continue;
             }
 
@@ -87,21 +82,32 @@ class KeySet implements \JsonSerializable
 
             Assert::string($key['kid'], 'Key ID must be a string');
             Assert::string($key['alg'], 'Algorithm must be a string');
-            Assert::string($key['n'], 'Modulus must be a string');
-            Assert::string($key['e'], 'Exponent must be a string');
-
-            $keySet[] = new PublicKey($key['kid'], $key['alg'], $key['n'], $key['e']);
+            switch ($key['alg']) {
+                case Algorithm::RS256:
+                case Algorithm::RS384:
+                case Algorithm::RS512:
+                    Assert::string($key['n'], 'Modulus must be a string');
+                    Assert::string($key['e'], 'Exponent must be a string');
+                    $keySet->addKey(
+                        $key['kid'],
+                        new RSA\PublicKey($key['alg'], $key['n'], $key['e']),
+                        $key['use']
+                    );
+                    break;
+            }
         }
 
-        return new KeySet($keySet);
+        return $keySet;
     }
 
-    /** @return Key[] */
+    /** @return KeySetEntry[] */
     public function jsonSerialize(): array
     {
         $keys = [];
         foreach ($this->keys as $key) {
-            $keys[] = array_merge($key->jsonSerialize(), ['use' => 'sig']);
+            /** @var KeySetEntry $entry */
+            $entry = array_merge($key['key']->jsonSerialize(), ['use' => 'sig']);
+            $keys[] = $entry;
         }
 
         return $keys;

@@ -3,6 +3,7 @@
 namespace Virtue\JWT\Algorithms;
 
 use PHPUnit\Framework\TestCase;
+use Virtue\JWK\AsymmetricKey;
 use Virtue\JWK\Key\RSA\PrivateKey;
 use Virtue\JWK\Key\RSA\PublicKey;
 use Virtue\JWT\Base64Url;
@@ -24,7 +25,6 @@ class OpenSSLTest extends TestCase
         $details = \openssl_pkey_get_details($key);
         $this->assertNotFalse($details);
         $public = new PublicKey(
-            'key-1',
             'RS256',
             Base64Url::encode($details['rsa']['n']),
             Base64Url::encode($details['rsa']['e'])
@@ -58,7 +58,7 @@ class OpenSSLTest extends TestCase
         $private = '';
         \openssl_pkey_export($key, $private);
         $private = new PrivateKey('RS256', $private);
-        $public = new PublicKey('key-1', 'RS256', 'wrong', 'wrong');
+        $public = new PublicKey('RS256', 'wrong', 'wrong');
 
         $sslSign = new OpenSSLSign($private);
         $sslVerify = new OpenSSLVerify($public);
@@ -87,9 +87,13 @@ class OpenSSLTest extends TestCase
 
         $key = \openssl_pkey_new();
         $this->assertNotFalse($key);
-        $private = '';
-        \openssl_pkey_export($key, $private);
-        $private = new PrivateKey('EC', $private);
+        $pem = '';
+        \openssl_pkey_export($key, $pem);
+
+        $private = M::mock(PrivateKey::class);
+        $private->allows('alg')->andReturn('EC');
+        $private->allows('asPem')->andReturn($pem);
+        $private->allows('passphrase')->andReturn('');
 
         $sslVerify = new OpenSSLSign($private);
         $sslVerify->sign(new Token([], []));
@@ -100,7 +104,8 @@ class OpenSSLTest extends TestCase
         $this->expectException(VerificationFailed::class);
         $this->expectExceptionMessage('Algorithm EC is not supported');
 
-        $public = new PublicKey('key-1', 'EC', 'modules', 'exponent');
+        $public = M::mock(AsymmetricKey::class);
+        $public->allows('alg')->andReturn('EC');
 
         $sslVerify = new OpenSSLVerify($public);
         $sslVerify->verify(new Token([], []));

@@ -2,8 +2,8 @@
 
 namespace Virtue\JWT\Algorithms;
 
-use Virtue\JWK\Key;
 use Virtue\JWK\Key\RSA\PublicKey;
+use Virtue\JWK\AsymmetricKey;
 use Virtue\JWT\Algorithm;
 use Virtue\JWT\Token;
 use Virtue\JWT\VerificationFailed;
@@ -12,7 +12,7 @@ use Virtue\JWT\VerifiesToken;
 /** @phpstan-import-type Alg from \Virtue\JWT\Algorithm */
 class OpenSSLVerify extends Algorithm implements VerifiesToken
 {
-    /** @var PublicKey */
+    /** @var AsymmetricKey */
     private $public;
 
     /** @var array<Alg,int|string> */
@@ -22,7 +22,7 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
         'RS512' => OPENSSL_ALGO_SHA512,
     ];
 
-    public function __construct(PublicKey $public)
+    public function __construct(AsymmetricKey $public)
     {
         parent::__construct($public->alg());
         $this->public = $public;

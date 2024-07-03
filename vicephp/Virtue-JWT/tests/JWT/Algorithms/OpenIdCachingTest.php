@@ -31,12 +31,12 @@ class OpenIdCachingTest extends TestCase
         $details = \openssl_pkey_get_details($key);
         $this->assertNotFalse($details);
         $public = new PublicKey(
-            'key-1',
             'RS256',
             Base64Url::encode($details['rsa']['n']),
             Base64Url::encode($details['rsa']['e'])
         );
-        $keySet = new KeySet([$public]);
+        $keySet = new KeySet();
+        $keySet->addKey('key-1', $public);
 
         $token = new Token(['kid' => 'key-1'], []);
 
@@ -66,12 +66,12 @@ class OpenIdCachingTest extends TestCase
         $details = \openssl_pkey_get_details($key);
         $this->assertNotFalse($details);
         $public = new PublicKey(
-            'key-1',
             'RS256',
             Base64Url::encode($details['rsa']['n']),
             Base64Url::encode($details['rsa']['e'])
         );
-        $keySet = new KeySet([$public]);
+        $keySet = new KeySet();
+        $keySet->addKey('key-1', $public);
 
         $token = new Token(['kid' => 'key-1'], []);
 
@@ -101,12 +101,12 @@ class OpenIdCachingTest extends TestCase
         $details = \openssl_pkey_get_details($key);
         $this->assertNotFalse($details);
         $public = new PublicKey(
-            'key-1',
             'RS256',
             Base64Url::encode($details['rsa']['n']),
             Base64Url::encode($details['rsa']['e'])
         );
-        $keySet = new KeySet([$public]);
+        $keySet = new KeySet();
+        $keySet->addKey('key-1', $public);
 
         $token = new Token(['kid' => 'key-1'], []);
 

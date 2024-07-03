@@ -3,11 +3,9 @@
 namespace Virtue\JWK\Key\RSA;
 
 use Virtue\JWK\AsymmetricKey;
+use Virtue\JWK\KeyType;
 
-/**
- * @phpstan-import-type Key from \Virtue\JWK\KeySet
- * @phpstan-import-type Alg from \Virtue\JWT\Algorithm
- */
+/** @phpstan-import-type Alg from \Virtue\JWT\Algorithm */
 class PrivateKey implements AsymmetricKey
 {
     /** @var Alg */
@@ -17,6 +15,7 @@ class PrivateKey implements AsymmetricKey
     /** @var string */
     private $passphrase = '';
 
+    /** @param \Virtue\JWT\Algorithm::RS* $alg */
     public function __construct(string $alg, string $pem)
     {
         $this->alg = $alg;
@@ -43,11 +42,12 @@ class PrivateKey implements AsymmetricKey
         return $this->passphrase;
     }
 
-    /** @return Key */
+    /** @return array{alg: Alg, kty: KeyType::*, pem: string} */
     public function jsonSerialize(): array
     {
         return [
             'alg' => $this->alg,
+            'kty' => KeyType::RSA,
             'pem' => $this->pem,
         ];
     }

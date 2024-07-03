@@ -6,30 +6,41 @@ use PHPUnit\Framework\TestCase;
 use Virtue\JWK\Key\RSA\PublicKey;
 
 /**
- * @phpstan-import-type Key from KeySet
+ * @phpstan-import-type KeySetEntry from KeySet
  */
 class KeySetTest extends TestCase
 {
     public function testFromArray(): void
     {
-        $key = ['use' => 'sig', 'kty' => 'RSA', 'alg' => 'RS256', 'kid' => 'key id', 'n' => 'modulus', 'e' => 'exponent'];
+        $key = [
+            'use' => 'sig',
+            'kty' => 'RSA',
+            'alg' => 'RS256',
+            'kid' => 'key id',
+            'n' => 'modulus',
+            'e' => 'exponent'
+        ];
         $keySet = KeySet::fromArray([$key]);
         $this->assertCount(1, $keySet->getKeys());
-        $this->assertEquals('key id', $keySet->getKey('key id')->id());
-        $this->assertEquals([$key], $keySet->jsonSerialize());
+        $this->assertEquals([
+            'kty' => 'RSA',
+            'alg' => 'RS256',
+            'n' => 'modulus',
+            'e' => 'exponent'
+        ], $keySet->getKey('key id')->jsonSerialize());
     }
 
     public function testAddKey(): void
     {
         $keySet = new KeySet();
         $this->assertEmpty($keySet->getKeys());
-        $keySet->addKey(new PublicKey('id', 'RS256', 'modulus', 'exponent'));
+        $keySet->addKey('id', new PublicKey('RS256', 'modulus', 'exponent'));
         $this->assertCount(1, $keySet->getKeys());
     }
 
     /**
      * @dataProvider invalidData
-     * @param Key[] $keys
+     * @param KeySetEntry[] $keys
      */
     public function testInvalidData(array $keys): void
     {
