@@ -30,7 +30,7 @@ class KeySetTest extends TestCase
     {
         $keySet = new KeySet();
         $this->assertEmpty($keySet->getKeys());
-        $keySet->addKey(new PublicKey('id', 'RS256', 'modulus', 'exponent'));
+        $keySet->addKey('id', new PublicKey('id', 'RS256', 'modulus', 'exponent'));
         $this->assertCount(1, $keySet->getKeys());
     }
 

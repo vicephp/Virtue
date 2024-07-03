@@ -20,30 +20,24 @@ use Webmozart\Assert\Assert;
  */
 class KeySet implements \JsonSerializable
 {
-    /** @var PublicKey[] */
+    /** @var array{use: KeyUse::*, key: PublicKey, kid: string}[] */
     private $keys = [];
 
     /** @var KeyType::*[] */
     private static $supportedKeyTypes = [KeyType::RSA];
 
     /**
-     * @param PublicKey[] $keys
+     * @param KeyUse::* $for
      */
-    public function __construct(array $keys = [])
+    public function getKey(string $id, string $for = KeyUse::Signature): PublicKey
     {
-        Assert::allIsInstanceOf($keys, PublicKey::class);
-        foreach ($keys as $key) {
-            $this->keys[$key->id()] = $key;
-        }
-    }
-
-    public function getKey(string $id): PublicKey
-    {
-        if (!isset($this->keys[$id])) {
-            throw new OutOfBoundsException("Kei with id $id not found in key set");
+        foreach ($this->keys as $key) {
+            if ($key['kid'] === $id && $key['use'] === $for) {
+                return $key['key'];
+            }
         }
 
-        return $this->keys[$id];
+        throw new OutOfBoundsException("Kei with id $id not found in key set");
     }
 
     /**
@@ -51,18 +45,19 @@ class KeySet implements \JsonSerializable
      */
     public function getKeys(): array
     {
-        return $this->keys;
+        return array_column($this->keys, 'key', 'kid');
     }
 
-    public function addKey(PublicKey $key): void
+    /** @param KeyUse::* $use */
+    public function addKey(string $id, PublicKey $key, string $use = KeyUse::Signature): void
     {
-        $this->keys[$key->id()] = $key;
+        $this->keys[] = ['use' => $use, 'key' => $key, 'kid' => $id];
     }
 
     /** @param array<string,mixed>[] $keys */
     public static function fromArray(array $keys): self
     {
-        $keySet = [];
+        $keySet = new self();
         foreach ($keys as $key) {
             if (!is_array($key)) {
                 continue;
@@ -88,10 +83,15 @@ class KeySet implements \JsonSerializable
             Assert::string($key['n'], 'Modulus must be a string');
             Assert::string($key['e'], 'Exponent must be a string');
 
-            $keySet[] = new PublicKey($key['kid'], $key['alg'], $key['n'], $key['e']);
+
+            $keySet->addKey(
+                $key['kid'],
+                new PublicKey($key['kid'], $key['alg'], $key['n'], $key['e']),
+                $key['use']
+            );
         }
 
-        return new KeySet($keySet);
+        return $keySet;
     }
 
     /** @return KeySetEntry[] */
@@ -100,7 +100,7 @@ class KeySet implements \JsonSerializable
         $keys = [];
         foreach ($this->keys as $key) {
             /** @var KeySetEntry $entry */
-            $entry = array_merge($key->jsonSerialize(), ['use' => 'sig']);
+            $entry = array_merge($key['key']->jsonSerialize(), ['use' => 'sig']);
             $keys[] = $entry;
         }
 

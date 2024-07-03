@@ -34,7 +34,8 @@ class OpenIdTest extends TestCase
             Base64Url::encode($details['rsa']['n']),
             Base64Url::encode($details['rsa']['e'])
         );
-        $keySet = new KeySet([$public]);
+        $keySet = new KeySet();
+        $keySet->addKey('key-1', $public);
 
         $token = new Token(['kid' => 'key-1'], []);
 
