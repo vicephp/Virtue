@@ -8,8 +8,6 @@ use Virtue\JWT\Base64Url;
 /** @phpstan-import-type Alg from \Virtue\JWT\Algorithm */
 class PublicKey implements AsymmetricKey
 {
-    /** @var string */
-    private $id;
     /** @var Alg */
     private $alg;
     /** @var string */
@@ -17,17 +15,11 @@ class PublicKey implements AsymmetricKey
     /** @var string */
     private $exponent;
 
-    public function __construct(string $id, string $alg, string $modulus, string $exponent)
+    public function __construct(string $alg, string $modulus, string $exponent)
     {
-        $this->id = $id;
         $this->alg = $alg;
         $this->modulus = $modulus;
         $this->exponent = $exponent;
-    }
-
-    public function id(): string
-    {
-        return $this->id;
     }
 
     public function alg(): string
@@ -76,13 +68,12 @@ class PublicKey implements AsymmetricKey
     }
 
     /**
-     * @return array{ kty: \Virtue\JWK\KeyType::*, kid: string, alg: Alg, n: string, e: string }
+     * @return array{ kty: \Virtue\JWK\KeyType::*, alg: Alg, n: string, e: string }
      */
     public function jsonSerialize(): array
     {
         return [
             'kty' => 'RSA',
-            'kid' => $this->id,
             'alg' => $this->alg,
             'n'   => $this->modulus,
             'e'   => $this->exponent,

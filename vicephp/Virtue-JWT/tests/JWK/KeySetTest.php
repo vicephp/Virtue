@@ -22,15 +22,19 @@ class KeySetTest extends TestCase
         ];
         $keySet = KeySet::fromArray([$key]);
         $this->assertCount(1, $keySet->getKeys());
-        $this->assertEquals('key id', $keySet->getKey('key id')->id());
-        $this->assertEquals([$key], $keySet->jsonSerialize());
+        $this->assertEquals([
+            'kty' => 'RSA',
+            'alg' => 'RS256',
+            'n' => 'modulus',
+            'e' => 'exponent'
+        ], $keySet->getKey('key id')->jsonSerialize());
     }
 
     public function testAddKey(): void
     {
         $keySet = new KeySet();
         $this->assertEmpty($keySet->getKeys());
-        $keySet->addKey('id', new PublicKey('id', 'RS256', 'modulus', 'exponent'));
+        $keySet->addKey('id', new PublicKey('RS256', 'modulus', 'exponent'));
         $this->assertCount(1, $keySet->getKeys());
     }
 

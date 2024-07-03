@@ -86,7 +86,7 @@ class KeySet implements \JsonSerializable
 
             $keySet->addKey(
                 $key['kid'],
-                new PublicKey($key['kid'], $key['alg'], $key['n'], $key['e']),
+                new PublicKey($key['alg'], $key['n'], $key['e']),
                 $key['use']
             );
         }

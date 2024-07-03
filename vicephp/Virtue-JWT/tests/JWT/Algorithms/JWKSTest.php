@@ -23,7 +23,6 @@ class JWKSTest extends TestCase
         $details = \openssl_pkey_get_details($key);
         $this->assertNotFalse($details);
         $public = new PublicKey(
-            'key-1',
             'RS256',
             Base64Url::encode($details['rsa']['n']),
             Base64Url::encode($details['rsa']['e'])
@@ -59,7 +58,7 @@ class JWKSTest extends TestCase
         \openssl_pkey_export($key, $private);
 
         $private = new PrivateKey('RS256', $private);
-        $public = new PublicKey('key-1', 'RS256', 'wrong', 'wrong');
+        $public = new PublicKey('RS256', 'wrong', 'wrong');
         $keySet = new KeySet();
         $keySet->addKey('key-1', $public);
 

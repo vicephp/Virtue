@@ -24,7 +24,6 @@ class OpenSSLTest extends TestCase
         $details = \openssl_pkey_get_details($key);
         $this->assertNotFalse($details);
         $public = new PublicKey(
-            'key-1',
             'RS256',
             Base64Url::encode($details['rsa']['n']),
             Base64Url::encode($details['rsa']['e'])
@@ -58,7 +57,7 @@ class OpenSSLTest extends TestCase
         $private = '';
         \openssl_pkey_export($key, $private);
         $private = new PrivateKey('RS256', $private);
-        $public = new PublicKey('key-1', 'RS256', 'wrong', 'wrong');
+        $public = new PublicKey('RS256', 'wrong', 'wrong');
 
         $sslSign = new OpenSSLSign($private);
         $sslVerify = new OpenSSLVerify($public);
@@ -100,7 +99,7 @@ class OpenSSLTest extends TestCase
         $this->expectException(VerificationFailed::class);
         $this->expectExceptionMessage('Algorithm EC is not supported');
 
-        $public = new PublicKey('key-1', 'EC', 'modules', 'exponent');
+        $public = new PublicKey('EC', 'modules', 'exponent');
 
         $sslVerify = new OpenSSLVerify($public);
         $sslVerify->verify(new Token([], []));
