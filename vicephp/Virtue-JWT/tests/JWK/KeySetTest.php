@@ -12,7 +12,14 @@ class KeySetTest extends TestCase
 {
     public function testFromArray(): void
     {
-        $key = ['use' => 'sig', 'kty' => 'RSA', 'alg' => 'RS256', 'kid' => 'key id', 'n' => 'modulus', 'e' => 'exponent'];
+        $key = [
+            'use' => 'sig',
+            'kty' => 'RSA',
+            'alg' => 'RS256',
+            'kid' => 'key id',
+            'n' => 'modulus',
+            'e' => 'exponent'
+        ];
         $keySet = KeySet::fromArray([$key]);
         $this->assertCount(1, $keySet->getKeys());
         $this->assertEquals('key id', $keySet->getKey('key id')->id());
