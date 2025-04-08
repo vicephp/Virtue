@@ -7,10 +7,13 @@ use Virtue\JWT\Algorithm;
 use Virtue\JWT\SignFailed;
 use Virtue\JWT\SignsToken;
 
+/** @phpstan-import-type Alg from \Virtue\JWT\Algorithm */
 class OpenSSLSign extends Algorithm implements SignsToken
 {
+    /** @var PrivateKey */
     private $private;
 
+    /** @var array<Alg,int|string> */
     private $supported = [
         'RS256' => OPENSSL_ALGO_SHA256,
         'RS384' => OPENSSL_ALGO_SHA384,

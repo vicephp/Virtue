@@ -9,10 +9,13 @@ use Virtue\JWT\Token;
 use Virtue\JWT\VerificationFailed;
 use Virtue\JWT\VerifiesToken;
 
+/** @phpstan-import-type Alg from \Virtue\JWT\Algorithm */
 class HMAC extends Algorithm implements SignsToken, VerifiesToken
 {
     /** @var \Virtue\JWK\Key\HMAC\Key */
     private $key;
+
+    /** @var array<Alg,string> */
     private $supported = [
         'HS256' => 'sha256',
         'HS384' => 'sha384',
@@ -21,7 +24,7 @@ class HMAC extends Algorithm implements SignsToken, VerifiesToken
 
     public function __construct(Key\HMAC\Key $key)
     {
-        parent::__construct($key->alg());;
+        parent::__construct($key->alg());
 
         if (!isset($this->supported[$this->name])) {
             throw new \OutOfBoundsException("Algorithm {$this->name} is not supported");

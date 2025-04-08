@@ -2,14 +2,30 @@
 
 namespace Virtue\JWK;
 
-use _HumbugBox58fd4d9e2a25\OutOfBoundsException;
+use OutOfBoundsException;
 use Virtue\JWK\Key\RSA\PublicKey;
 use Webmozart\Assert\Assert;
 
+/**
+ * @phpstan-type KeyType = 'RSA'
+ * @phpstan-type KeyUse = 'sig'
+ * @phpstan-import-type Alg from \Virtue\JWT\Algorithm
+ * @phpstan-type Key = array{
+ *    use?: KeyUse,
+ *    kty?: KeyType,
+ *    alg: Alg,
+ *    kid?: string,
+ *    n?: string,
+ *    e?: string,
+ *    d?: string,
+ * }
+ */
 class KeySet implements \JsonSerializable
 {
     /** @var PublicKey[] */
     private $keys = [];
+
+    /** @var KeyType[] */
     private static $supportedKeyTypes = ['RSA'];
 
     /**
@@ -45,10 +61,15 @@ class KeySet implements \JsonSerializable
         $this->keys[$key->id()] = $key;
     }
 
+    /** @param array<string,mixed>[] $keys */
     public static function fromArray(array $keys): self
     {
         $keySet = [];
         foreach ($keys as $key) {
+            if (!is_array($key)) {
+                continue;
+            }
+
             //Skip keys not intended for signing
             if (($key['use'] ?? '') !== 'sig') {
                 continue;
@@ -64,12 +85,18 @@ class KeySet implements \JsonSerializable
                 continue;
             }
 
+            Assert::string($key['kid'], 'Key ID must be a string');
+            Assert::string($key['alg'], 'Algorithm must be a string');
+            Assert::string($key['n'], 'Modulus must be a string');
+            Assert::string($key['e'], 'Exponent must be a string');
+
             $keySet[] = new PublicKey($key['kid'], $key['alg'], $key['n'], $key['e']);
         }
 
         return new KeySet($keySet);
     }
 
+    /** @return Key[] */
     public function jsonSerialize(): array
     {
         $keys = [];

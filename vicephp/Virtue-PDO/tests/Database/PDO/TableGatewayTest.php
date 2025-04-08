@@ -57,7 +57,7 @@ class TableGatewayTest extends MockeryTestCase
         $adapter = \Mockery::mock(Database\PDO\Connection::class);
         $adapter->shouldReceive('execute')
             ->with('INSERT INTO aTable (a, b) VALUES (:a, :b)', $params = ['a' => 1, 'b' => 2])
-            ->andReturn($stmt);
+            ->andReturn($stmt)->once();
         $table = new Database\PDO\TableGateway(
             $adapter,
             new Database\Table([
@@ -76,7 +76,7 @@ class TableGatewayTest extends MockeryTestCase
         $adapter = \Mockery::mock(Database\PDO\Connection::class);
         $adapter->shouldReceive('execute')
             ->with('UPDATE aTable SET a = :a, b = :b WHERE id = :id', ['id' => 'foo', 'a' => 1, 'b' => 2])
-            ->andReturn($stmt);
+            ->andReturn($stmt)->once();
         $table = new Database\PDO\TableGateway(
             $adapter,
             new Database\Table([
@@ -95,7 +95,7 @@ class TableGatewayTest extends MockeryTestCase
         $adapter = \Mockery::mock(Database\PDO\Connection::class);
         $adapter->shouldReceive('execute')
             ->with('DELETE FROM aTable WHERE id = :id', ['id' => 'foo'])
-            ->andReturn($stmt);
+            ->andReturn($stmt)->once();
         $table = new Database\PDO\TableGateway(
             $adapter,
             new Database\Table([

@@ -8,7 +8,10 @@ use Virtue\JWT\VerifiesToken;
 
 class OpenIdCaching implements VerifiesToken
 {
+    /** @var KeyCachingStore */
     private $keyStore;
+
+    /** @var OpenId */
     private $openId;
 
     public function __construct(KeyCachingStore $keyStore, ClaimsVerify $claimsVerify)

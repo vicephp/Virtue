@@ -13,7 +13,7 @@ class OpenIdCachingKeyStoreTest extends TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testGetKeySetFromCache()
+    public function testGetKeySetFromCache(): void
     {
         $token = new Token([], ['iss' => 'issuer']);
 
@@ -32,7 +32,7 @@ class OpenIdCachingKeyStoreTest extends TestCase
         $this->assertCount(1, $keySet->getKeys());
     }
 
-    public function testGetKeySetFromStore()
+    public function testGetKeySetFromStore(): void
     {
         $token = new Token([], ['iss' => 'issuer']);
 
@@ -51,7 +51,7 @@ class OpenIdCachingKeyStoreTest extends TestCase
         $this->assertCount(1, $keySet->getKeys());
     }
 
-    public function testRefresh()
+    public function testRefresh(): void
     {
         $token = new Token([], ['iss' => 'issuer']);
 

@@ -7,10 +7,13 @@ use Virtue\JWK\KeyCachingStore;
 use Virtue\JWK\KeySet;
 use Virtue\JWK\KeyStore;
 use Virtue\JWT\Token;
+use Webmozart\Assert\Assert;
 
 class OpenIdCachingKeyStore implements KeyCachingStore
 {
+    /** @var KeyStore */
     private $keyStore;
+    /** @var CacheInterface */
     private $cache;
 
     public function __construct(KeyStore $keyStore, CacheInterface $cache)
@@ -21,9 +24,13 @@ class OpenIdCachingKeyStore implements KeyCachingStore
 
     public function getFor(Token $token): KeySet
     {
-        $key = sha1($token->payload('iss', ''));
+        $issuer = $token->payload('iss', '');
+        Assert::string($issuer, 'Issuer must be a string');
+        $key = sha1($issuer);
         if ($this->cache->has($key)) {
-            return $this->cache->get($key);
+            $keyset = $this->cache->get($key);
+            Assert::isInstanceOf($keyset, KeySet::class);
+            return $keyset;
         }
 
         $keySet = $this->keyStore->getFor($token);
@@ -34,6 +41,8 @@ class OpenIdCachingKeyStore implements KeyCachingStore
 
     public function refresh(Token $token): void
     {
-        $this->cache->delete(sha1($token->payload('iss', '')));
+        $issuer = $token->payload('iss', '');
+        Assert::string($issuer, 'Issuer must be a string');
+        $this->cache->delete(sha1($issuer));
     }
 }

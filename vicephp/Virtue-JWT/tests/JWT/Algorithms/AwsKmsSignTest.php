@@ -14,16 +14,18 @@ class AwsKmsSignTest extends TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testUnsupportedAlgorithm()
+    public function testUnsupportedAlgorithm(): void
     {
         $this->expectException(SignFailed::class);
         $this->expectExceptionMessage('Algorithm FOO256 is not supported');
 
-        $signer = new AwsKmsSign('FOO256', M::mock(KmsClient::class));
+        /** @var string $alg */
+        $alg = 'FOO256';
+        $signer = new AwsKmsSign($alg, M::mock(KmsClient::class));
         $signer->sign('message');
     }
 
-    public function testMessageTooLong()
+    public function testMessageTooLong(): void
     {
         $this->expectException(SignFailed::class);
         $this->expectExceptionMessage('Message length must be less than 4096 bytes');
@@ -32,7 +34,7 @@ class AwsKmsSignTest extends TestCase
         $signer->sign(str_repeat('a', 4097));
     }
 
-    public function testSingMessage()
+    public function testSingMessage(): void
     {
         $message = str_repeat('a', 4096);
 

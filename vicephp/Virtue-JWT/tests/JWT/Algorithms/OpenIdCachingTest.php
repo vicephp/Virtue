@@ -20,19 +20,22 @@ class OpenIdCachingTest extends TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testVerifyUsingCachedKeySet()
+    public function testVerifyUsingCachedKeySet(): void
     {
         $key = \openssl_pkey_new();
+        $this->assertNotFalse($key);
         $private = '';
         \openssl_pkey_export($key, $private);
         $private = new PrivateKey('RS256', $private);
 
         $details = \openssl_pkey_get_details($key);
+        $this->assertNotFalse($details);
         $public = new PublicKey(
             'key-1',
             'RS256',
             Base64Url::encode($details['rsa']['n']),
-            Base64Url::encode($details['rsa']['e']));
+            Base64Url::encode($details['rsa']['e'])
+        );
         $keySet = new KeySet([$public]);
 
         $token = new Token(['kid' => 'key-1'], []);
@@ -52,19 +55,22 @@ class OpenIdCachingTest extends TestCase
         $signed->verifyWith(new OpenIdCaching($keyCachingStore, $claimsVerifier));
     }
 
-    public function testVerifyUsingKeySetFromKeyStore()
+    public function testVerifyUsingKeySetFromKeyStore(): void
     {
         $key = \openssl_pkey_new();
+        $this->assertNotFalse($key);
         $private = '';
         \openssl_pkey_export($key, $private);
         $private = new PrivateKey('RS256', $private);
 
         $details = \openssl_pkey_get_details($key);
+        $this->assertNotFalse($details);
         $public = new PublicKey(
             'key-1',
             'RS256',
             Base64Url::encode($details['rsa']['n']),
-            Base64Url::encode($details['rsa']['e']));
+            Base64Url::encode($details['rsa']['e'])
+        );
         $keySet = new KeySet([$public]);
 
         $token = new Token(['kid' => 'key-1'], []);
@@ -84,19 +90,22 @@ class OpenIdCachingTest extends TestCase
         $signed->verifyWith(new OpenIdCaching($keyCachingStore, $claimsVerifier));
     }
 
-    public function testVerifyRefreshKeyStore()
+    public function testVerifyRefreshKeyStore(): void
     {
         $key = \openssl_pkey_new();
+        $this->assertNotFalse($key);
         $private = '';
         \openssl_pkey_export($key, $private);
         $private = new PrivateKey('RS256', $private);
 
         $details = \openssl_pkey_get_details($key);
+        $this->assertNotFalse($details);
         $public = new PublicKey(
             'key-1',
             'RS256',
             Base64Url::encode($details['rsa']['n']),
-            Base64Url::encode($details['rsa']['e']));
+            Base64Url::encode($details['rsa']['e'])
+        );
         $keySet = new KeySet([$public]);
 
         $token = new Token(['kid' => 'key-1'], []);

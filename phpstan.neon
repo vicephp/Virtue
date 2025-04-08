@@ -1,0 +1,9 @@
+includes:
+    - vendor/phpstan/phpstan-mockery/extension.neon
+parameters:
+	level: max
+	excludePaths:
+		- vendor/*
+	paths:
+		- vicephp/Virtue-JWT/src/
+		- vicephp/Virtue-JWT/tests/

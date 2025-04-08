@@ -1,0 +1,12 @@
+on: [pull_request]
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: "shivammathur/setup-php@v2"
+              with:
+                php-version: "latest"
+            - uses: actions/checkout@v4
+            - uses: ramsey/composer-install@v3
+            - run: composer exec phpstan analyse
+            - run: composer exec phpunit

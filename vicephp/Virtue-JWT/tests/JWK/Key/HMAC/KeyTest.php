@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class KeyTest extends TestCase
 {
-    public function testCreateKey()
+    public function testCreateKey(): void
     {
         $key = new Key('HS256', 'secret');
         $this->assertEquals('HS256', $key->alg());

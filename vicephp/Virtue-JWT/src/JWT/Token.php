@@ -2,19 +2,37 @@
 
 namespace Virtue\JWT;
 
+use Webmozart\Assert\Assert;
+
+/**
+ * @phpstan-import-type Alg from Algorithm
+ * @phpstan-import-type Claims from ClaimSet
+ * @phpstan-type TokenType = 'JWT'
+ * @phpstan-type TokenHeader = array{alg: Alg, typ: TokenType, ...}
+ */
 class Token
 {
+    /** @var TokenHeader&array<string,mixed> */
     private $headers = [
         'alg' => 'none',
         'typ' => 'JWT'
     ];
+    /** @var array<string,mixed> */
     private $payload = [];
+    /** @var string */
     private $signature = '';
+    /** @var string */
     private $msg = '';
 
+    /**
+     * @param array<string,mixed> $headers
+     * @param array<string,mixed> $payload
+     */
     public function __construct(array $headers, array $payload)
     {
-        $this->headers = array_replace($this->headers, $headers);
+        /** @var TokenHeader&array<string,mixed> $tokenHeaders */
+        $tokenHeaders = array_replace($this->headers, $headers);
+        $this->headers = $tokenHeaders;
         $this->payload = $payload;
     }
 
@@ -29,7 +47,7 @@ class Token
         $payload = json_decode(Base64Url::decode($payload), true);
         $signature = Base64Url::decode($signature);
 
-        if (!$header || !$payload || !$signature) {
+        if (!is_array($header) || !is_array($payload) || !$signature) {
             $header = ['alg' => 'malformed', 'typ' => 'malformed'];
             $payload = [];
             $signature = '';
@@ -47,17 +65,26 @@ class Token
 
     /**
      * @deprecated please use headers()
+     * @return mixed
      */
-    public function header($name)
+    public function header(string $name)
     {
         return $this->headers($name);
     }
 
+    /**
+     * @param mixed $default
+     * @return ($name is '' ? TokenHeader : mixed)
+     */
     public function headers(string $name = '', $default = null)
     {
         return $name ? $this->headers[$name] ?? $default : $this->headers;
     }
 
+    /**
+     * @param mixed $default
+     * @return ($name is '' ? Claims & array<string,mixed> : mixed)
+     */
     public function payload(string $name = '', $default = null)
     {
         return $name ? $this->payload[$name] ?? $default : $this->payload;
@@ -71,7 +98,8 @@ class Token
     public function withoutSig(): string
     {
         return $this->msg ?:
-            $this->msg = Base64Url::encode(json_encode($this->headers)) . '.' . Base64Url::encode(json_encode($this->payload));
+            $this->msg = Base64Url::encode(json_encode($this->headers, JSON_THROW_ON_ERROR)) . '.' .
+                Base64Url::encode(json_encode($this->payload, JSON_THROW_ON_ERROR));
     }
 
     public function signWith(SignsToken $alg): Token

@@ -12,19 +12,22 @@ use Virtue\JWT\VerificationFailed;
 
 class JWKSTest extends TestCase
 {
-    public function testVerify()
+    public function testVerify(): void
     {
         $key = \openssl_pkey_new();
+        $this->assertNotFalse($key);
         $private = '';
         \openssl_pkey_export($key, $private);
         $private = new PrivateKey('RS256', $private);
 
         $details = \openssl_pkey_get_details($key);
+        $this->assertNotFalse($details);
         $public = new PublicKey(
             'key-1',
             'RS256',
             Base64Url::encode($details['rsa']['n']),
-            Base64Url::encode($details['rsa']['e']));
+            Base64Url::encode($details['rsa']['e'])
+        );
         $keySet = new KeySet([$public]);
 
         $token = new Token(['kid' => 'key-1'], []);
@@ -35,7 +38,7 @@ class JWKSTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-    public function testVerifyFailWhenNoKeyIsFound()
+    public function testVerifyFailWhenNoKeyIsFound(): void
     {
         $token = new Token(['kid' => 'key-1'], []);
 
@@ -45,11 +48,12 @@ class JWKSTest extends TestCase
         $token->verifyWith(new JWKS(new KeySet()));
     }
 
-    public function testVerifyFailWrongKey()
+    public function testVerifyFailWrongKey(): void
     {
         $this->expectException(VerificationFailed::class);
 
         $key = \openssl_pkey_new();
+        $this->assertNotFalse($key);
         $private = '';
         \openssl_pkey_export($key, $private);
 

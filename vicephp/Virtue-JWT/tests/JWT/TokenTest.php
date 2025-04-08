@@ -7,7 +7,7 @@ use Virtue\JWK\Key\HMAC\Key;
 
 class TokenTest extends TestCase
 {
-    public function testParse()
+    public function testParse(): void
     {
         $token = Token::ofString('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c');
 
@@ -20,7 +20,7 @@ class TokenTest extends TestCase
     /**
      * @dataProvider malformedToken
      */
-    public function testParseMalformedToken($token)
+    public function testParseMalformedToken(string $token): void
     {
         $token = Token::ofString($token);
 
@@ -36,7 +36,7 @@ class TokenTest extends TestCase
         yield 'not readable token' => ['a.b.c'];
     }
 
-    public function testSignature()
+    public function testSignature(): void
     {
         $now = time();
         $claims = new ClaimSet();
@@ -52,13 +52,13 @@ class TokenTest extends TestCase
         $this->assertNotEmpty($token->signature());
     }
 
-    public function testPayloadIsPreserved()
+    public function testPayloadIsPreserved(): void
     {
         $token = Token::ofString('eyJraWQiOiJraWQtMSIsInR5cCI6IkpXVCIsImFsZyI6IkhTMjU2In0.e30.q8fjb85nnNWUoeW4NNXuwWKvFYJ4sjMCA1XJvdOCcsg');
         $this->assertEquals('eyJraWQiOiJraWQtMSIsInR5cCI6IkpXVCIsImFsZyI6IkhTMjU2In0.e30', $token->withoutSig());
     }
 
-    public function testAccessHeaders()
+    public function testAccessHeaders(): void
     {
         $token = Token::ofString('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c');
 
@@ -68,7 +68,7 @@ class TokenTest extends TestCase
         $this->assertEquals('<default>', $token->headers('not_exist', '<default>'));
     }
 
-    public function testAccessPayload()
+    public function testAccessPayload(): void
     {
         $token = Token::ofString('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c');
 

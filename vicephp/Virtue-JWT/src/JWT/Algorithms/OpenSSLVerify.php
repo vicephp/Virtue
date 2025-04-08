@@ -9,10 +9,13 @@ use Virtue\JWT\Token;
 use Virtue\JWT\VerificationFailed;
 use Virtue\JWT\VerifiesToken;
 
+/** @phpstan-import-type Alg from \Virtue\JWT\Algorithm */
 class OpenSSLVerify extends Algorithm implements VerifiesToken
 {
+    /** @var PublicKey */
     private $public;
 
+    /** @var array<Alg,int|string> */
     private $supported = [
         'RS256' => OPENSSL_ALGO_SHA256,
         'RS384' => OPENSSL_ALGO_SHA384,
