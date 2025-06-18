@@ -40,7 +40,7 @@ class Connection implements ExecutesStatements, ControlsTransactions, SupportsSe
         return $this->pdo->rollBack();
     }
 
-    public function lastInsertId(string $name = null): string
+    public function lastInsertId(?string $name = null): string
     {
         return $this->pdo->lastInsertId($name);
     }
