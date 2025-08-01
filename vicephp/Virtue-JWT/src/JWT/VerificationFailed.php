@@ -4,6 +4,7 @@ namespace Virtue\JWT;
 
 class VerificationFailed extends \RuntimeException
 {
+    public const ON_UNKNOWN = 0;
     public const ON_TYPE = 1;
     public const ON_CLAIM = 2;
     public const ON_AUDIENCE = 3;
@@ -13,7 +14,11 @@ class VerificationFailed extends \RuntimeException
     public const ON_TIME = 7;
     public const ON_SIGNATURE = 8;
 
-    public function __construct(string $message = 'Could not verify signature.', int $code = 0, ?\Throwable $previous = null)
+    public function __construct(
+        string $message = 'Could not verify signature.',
+        int $code = VerificationFailed::ON_UNKNOWN,
+        ?\Throwable $previous = null
+    )
     {
         parent::__construct($message, $code, $previous);
     }
