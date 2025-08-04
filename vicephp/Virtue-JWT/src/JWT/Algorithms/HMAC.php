@@ -44,6 +44,6 @@ class HMAC extends Algorithm implements SignsToken, VerifiesToken
             return;
         }
 
-        throw new VerificationFailed();
+        throw new VerificationFailed('Could not verify signature.', VerificationFailed::ON_SIGNATURE);
     }
 }

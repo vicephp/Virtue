@@ -30,6 +30,7 @@ class HMACTest extends TestCase
     public function testVerificationFailed(): void
     {
         $this->expectException(VerificationFailed::class);
+        $this->expectExceptionCode(VerificationFailed::ON_SIGNATURE);
         $this->expectExceptionMessage('Could not verify signature.');
 
         $token = Token::ofString('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c');

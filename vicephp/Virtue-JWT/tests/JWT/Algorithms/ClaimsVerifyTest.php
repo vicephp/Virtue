@@ -48,6 +48,7 @@ class ClaimsVerifyTest extends TestCase
     {
         $token = new Token([], ['exp' => time() - 3600]);
         $this->expectException(VerificationFailed::class);
+        $this->expectExceptionCode(VerificationFailed::ON_TIME);
         $this->expectExceptionMessage('Token has expired');
         $token->verifyWith(new ClaimsVerify());
     }
@@ -56,6 +57,7 @@ class ClaimsVerifyTest extends TestCase
     {
         $token = new Token([], ['nbf' => time() + 3600]);
         $this->expectException(VerificationFailed::class);
+        $this->expectExceptionCode(VerificationFailed::ON_TIME);
         $this->expectExceptionMessage('Token is not yet valid');
         $token->verifyWith(new ClaimsVerify());
     }
@@ -64,7 +66,8 @@ class ClaimsVerifyTest extends TestCase
     {
         $token = new Token([], ['iss' => 'https://foo.com']);
         $this->expectException(VerificationFailed::class);
-        $this->expectExceptionMessage('Issuer is not allowed');
+        $this->expectExceptionCode(VerificationFailed::ON_ISSUER);
+        $this->expectExceptionMessage("Issuer 'https://foo.com' is not allowed");
         $token->verifyWith(new ClaimsVerify(['issuers' => ['https://bar.com']]));
     }
 
@@ -72,7 +75,8 @@ class ClaimsVerifyTest extends TestCase
     {
         $token = new Token([], ['aud' => 'https://foo.com']);
         $this->expectException(VerificationFailed::class);
-        $this->expectExceptionMessage('Audience is not allowed');
+        $this->expectExceptionCode(VerificationFailed::ON_AUDIENCE);
+        $this->expectExceptionMessage("Audience 'https://foo.com' is not allowed");
         $token->verifyWith(new ClaimsVerify(['audience' => 'https://bar.com']));
     }
 
@@ -81,7 +85,8 @@ class ClaimsVerifyTest extends TestCase
         $token = new Token([], []);
         $signed = $token->signWith(new HMAC(new Key('HS256', 'secret')));
         $this->expectException(VerificationFailed::class);
-        $this->expectExceptionMessage('Algorithm is not allowed');
+        $this->expectExceptionCode(VerificationFailed::ON_ALGORITHM);
+        $this->expectExceptionMessage("Algorithm 'HS256' is not allowed");
         $signed->verifyWith(new ClaimsVerify(['algorithms' => ['HS512']]));
     }
 
@@ -97,6 +102,7 @@ class ClaimsVerifyTest extends TestCase
     {
         $token = new Token([], ['iat' => time()]);
         $this->expectException(VerificationFailed::class);
+        $this->expectExceptionCode(VerificationFailed::ON_TIME);
         $this->expectExceptionMessage('Token was issued after expected time');
         $token->verifyWith(new ClaimsVerify(['iat' => ['before' => time() - 3600]]));
     }
@@ -105,6 +111,7 @@ class ClaimsVerifyTest extends TestCase
     {
         $token = new Token([], ['iat' => time()]);
         $this->expectException(VerificationFailed::class);
+        $this->expectExceptionCode(VerificationFailed::ON_TIME);
         $this->expectExceptionMessage('Token was issued before expected time');
         $token->verifyWith(new ClaimsVerify(['iat' => ['after' => time() + 3600]]));
     }
@@ -113,7 +120,8 @@ class ClaimsVerifyTest extends TestCase
     {
         $token = new Token([], ['sub' => 'foo']);
         $this->expectException(VerificationFailed::class);
-        $this->expectExceptionMessage('Subject is not allowed');
+        $this->expectExceptionCode(VerificationFailed::ON_SUBJECT);
+        $this->expectExceptionMessage("Subject 'foo' is not allowed");
         $token->verifyWith(new ClaimsVerify(['subjects' => ['bar']]));
     }
 
@@ -122,6 +130,7 @@ class ClaimsVerifyTest extends TestCase
         $token = new Token([], ['exp' => time() - 10]);
         $token->verifyWith(new ClaimsVerify(['leeway' => 20]));
         $this->expectException(VerificationFailed::class);
+        $this->expectExceptionCode(VerificationFailed::ON_TIME);
         $this->expectExceptionMessage('Token has expired');
         $token->verifyWith(new ClaimsVerify(['leeway' => 5]));
     }
@@ -131,6 +140,7 @@ class ClaimsVerifyTest extends TestCase
         $token = new Token([], ['nbf' => time() + 10]);
         $token->verifyWith(new ClaimsVerify(['leeway' => 20]));
         $this->expectException(VerificationFailed::class);
+        $this->expectExceptionCode(VerificationFailed::ON_TIME);
         $this->expectExceptionMessage('Token is not yet valid');
         $token->verifyWith(new ClaimsVerify(['leeway' => 5]));
     }
@@ -140,6 +150,7 @@ class ClaimsVerifyTest extends TestCase
         $token = new Token([], ['iat' => time()]);
         $token->verifyWith(new ClaimsVerify(['leeway' => 20, 'iat' => ['before' => time() - 10]]));
         $this->expectException(VerificationFailed::class);
+        $this->expectExceptionCode(VerificationFailed::ON_TIME);
         $this->expectExceptionMessage('Token was issued after expected time');
         $token->verifyWith(new ClaimsVerify(['leeway' => 5, 'iat' => ['before' => time() - 10]]));
     }
@@ -149,6 +160,7 @@ class ClaimsVerifyTest extends TestCase
         $token = new Token([], ['iat' => time()]);
         $token->verifyWith(new ClaimsVerify(['leeway' => 20, 'iat' => ['after' => time() + 10]]));
         $this->expectException(VerificationFailed::class);
+        $this->expectExceptionCode(VerificationFailed::ON_TIME);
         $this->expectExceptionMessage('Token was issued before expected time');
         $token->verifyWith(new ClaimsVerify(['leeway' => 5, 'iat' => ['after' => time() + 10]]));
     }
@@ -157,6 +169,7 @@ class ClaimsVerifyTest extends TestCase
     {
         $token = new Token([], []);
         $this->expectException(VerificationFailed::class);
+        $this->expectExceptionCode(VerificationFailed::ON_CLAIM);
         $this->expectExceptionMessage("Required claim 'sub' is missing");
         $token->verifyWith(new ClaimsVerify(['required' => ['sub']]));
     }
@@ -169,7 +182,8 @@ class ClaimsVerifyTest extends TestCase
         $payload = ['aud' => true];
         $token = new Token([], $payload);
         $this->expectException(VerificationFailed::class);
-        $this->expectExceptionMessage('Audience is not allowed');
+        $this->expectExceptionCode(VerificationFailed::ON_AUDIENCE);
+        $this->expectExceptionMessage("Audience '' is not allowed");
         $token->verifyWith(new ClaimsVerify(['required' => ['aud'], 'audience' => 'https://audience.com']));
     }
 }

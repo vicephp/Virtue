@@ -31,11 +31,11 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
     public function verify(Token $token): void
     {
         if (!isset($this->supported[$this->name])) {
-            throw new VerificationFailed("Algorithm {$this->name} is not supported");
+            throw new VerificationFailed("Algorithm {$this->name} is not supported", VerificationFailed::ON_SIGNATURE);
         }
 
         if (!$public = \openssl_pkey_get_public($this->public->asPem())) {
-            throw new VerificationFailed('Key is invalid.');
+            throw new VerificationFailed('Key is invalid.', VerificationFailed::ON_SIGNATURE);
         }
 
         $msg = $token->withoutSig();
@@ -49,9 +49,9 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
         if ($success === 1) {
             return;
         } elseif ($success === 0) {
-            throw new VerificationFailed();
+            throw new VerificationFailed('Could not verify signature.', VerificationFailed::ON_SIGNATURE);
         }
 
-        throw new VerificationFailed('OpenSSL error: ' . \openssl_error_string());
+        throw new VerificationFailed('OpenSSL error: ' . \openssl_error_string(), VerificationFailed::ON_SIGNATURE);
     }
 }

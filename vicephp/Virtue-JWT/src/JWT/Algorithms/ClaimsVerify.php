@@ -32,59 +32,66 @@ class ClaimsVerify implements VerifiesToken
     {
         $typ = $token->headers('typ');
         if ($typ !== 'JWT') {
-            throw new VerificationFailed('Only JWT tokens are allowed');
+            throw new VerificationFailed('Only JWT tokens are allowed', VerificationFailed::ON_TYPE);
         }
 
         foreach ($this->settings['required'] ?? [] as $claim) {
             if (!$token->payload($claim)) {
-                throw new VerificationFailed("Required claim '$claim' is missing");
+                throw new VerificationFailed("Required claim '{$claim}' is missing", VerificationFailed::ON_CLAIM);
             }
         }
 
         $now = time();
+        /** @var int $exp */
         $exp = $token->payload('exp') ?: $now;
+        /** @var int $iat */
         $iat = $token->payload('iat') ?: $now;
+        /** @var int $nbf */
         $nbf = $token->payload('nbf') ?: $now;
-
         $leeway = $this->settings['leeway'] ?? 0;
 
-        $issuer = $token->payload('iss');
-        $audience = $token->payload('aud');
-        $audience = is_string($audience) ? [$audience] : (is_array($audience) ? $audience : []);
-        $subject = $token->payload('sub');
-
         if ($now > $exp + $leeway) {
-            throw new VerificationFailed('Token has expired');
+            throw new VerificationFailed('Token has expired', VerificationFailed::ON_TIME);
         }
 
         if (isset($this->settings['iat'])) {
             if (isset($this->settings['iat']['before']) && $iat > $this->settings['iat']['before'] + $leeway) {
-                throw new VerificationFailed('Token was issued after expected time');
+                throw new VerificationFailed('Token was issued after expected time', VerificationFailed::ON_TIME);
             }
             if (isset($this->settings['iat']['after']) && $iat < $this->settings['iat']['after'] - $leeway) {
-                throw new VerificationFailed('Token was issued before expected time');
+                throw new VerificationFailed('Token was issued before expected time', VerificationFailed::ON_TIME);
             }
         }
 
         if ($now < $nbf - $leeway) {
-            throw new VerificationFailed('Token is not yet valid');
+            throw new VerificationFailed('Token is not yet valid', VerificationFailed::ON_TIME);
         }
 
-        if (isset($this->settings['issuers']) && !in_array($issuer, $this->settings['issuers'])) {
-            throw new VerificationFailed('Issuer is not allowed');
+        /** @var string $issuer */
+        $issuer = $token->payload('iss');
+        if (isset($this->settings['issuers']) && !in_array($issuer, $this->settings['issuers'], true)) {
+            throw new VerificationFailed("Issuer '{$issuer}' is not allowed", VerificationFailed::ON_ISSUER);
         }
 
-        if (isset($this->settings['audience']) && !in_array($this->settings['audience'], $audience)) {
-            throw new VerificationFailed('Audience is not allowed');
+        $audience = $token->payload('aud');
+        $audience = is_string($audience) ? [$audience] : (is_array($audience) ? $audience : []);
+        if (isset($this->settings['audience']) && !in_array($this->settings['audience'], $audience, true)) {
+            throw new VerificationFailed(
+                sprintf("Audience '%s' is not allowed", implode(', ', $audience)),
+                VerificationFailed::ON_AUDIENCE
+            );
         }
 
-        if (isset($this->settings['subjects']) && !in_array($subject, $this->settings['subjects'])) {
-            throw new VerificationFailed('Subject is not allowed');
+        /** @var string $subject */
+        $subject = $token->payload('sub');
+        if (isset($this->settings['subjects']) && !in_array($subject, $this->settings['subjects'], true)) {
+            throw new VerificationFailed("Subject '{$subject}' is not allowed", VerificationFailed::ON_SUBJECT);
         }
 
+        /** @var string $alg */
         $alg = $token->headers('alg', 'none');
-        if (isset($this->settings['algorithms']) && !in_array($alg, $this->settings['algorithms'])) {
-            throw new VerificationFailed('Algorithm is not allowed');
+        if (isset($this->settings['algorithms']) && !in_array($alg, $this->settings['algorithms'], true)) {
+            throw new VerificationFailed("Algorithm '{$alg}' is not allowed", VerificationFailed::ON_ALGORITHM);
         }
     }
 }
