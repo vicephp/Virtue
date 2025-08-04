@@ -1,6 +1,6 @@
 <?php
 
-namespace JWT\Algorithms;
+namespace Virtue\JWT\Algorithms;
 
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
@@ -10,9 +10,6 @@ use Virtue\JWK\Key\RSA\PublicKey;
 use Virtue\JWK\KeySet;
 use Virtue\JWK\KeyStore;
 use Virtue\JWK\Store\OpenIdCachingKeyStore;
-use Virtue\JWT\Algorithms\ClaimsVerify;
-use Virtue\JWT\Algorithms\OpenIdCaching;
-use Virtue\JWT\Algorithms\OpenSSLSign;
 use Virtue\JWT\Base64Url;
 use Virtue\JWT\Token;
 
