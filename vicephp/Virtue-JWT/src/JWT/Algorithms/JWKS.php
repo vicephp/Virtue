@@ -6,6 +6,7 @@ use Virtue\JWK\KeySet;
 use Virtue\JWT\Token;
 use Virtue\JWT\VerificationFailed;
 use Virtue\JWT\VerifiesToken;
+use Webmozart\Assert\Assert;
 
 class JWKS implements VerifiesToken
 {
@@ -22,6 +23,7 @@ class JWKS implements VerifiesToken
     public function verify(Token $token): void
     {
         $kid = $token->headers('kid');
+        Assert::string($kid);
         if (!isset($this->verifiers[$kid])) {
             throw new VerificationFailed('No key found for kid: ' . $kid);
         }

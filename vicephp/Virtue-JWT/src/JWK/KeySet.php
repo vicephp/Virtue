@@ -28,9 +28,7 @@ class KeySet implements \JsonSerializable
     /** @var KeyType[] */
     private static $supportedKeyTypes = ['RSA'];
 
-    /**
-     * @param PublicKey[] $keys
-     */
+    /** @param PublicKey[] $keys */
     public function __construct(array $keys = [])
     {
         Assert::allIsInstanceOf($keys, PublicKey::class);

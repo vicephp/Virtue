@@ -12,6 +12,7 @@ use Virtue\JWK\KeyStore;
 use Virtue\JWK\Store\OpenIdCachingKeyStore;
 use Virtue\JWT\Base64Url;
 use Virtue\JWT\Token;
+use Webmozart\Assert\Assert;
 
 class OpenIdCachingTest extends TestCase
 {
@@ -23,10 +24,14 @@ class OpenIdCachingTest extends TestCase
         $this->assertNotFalse($key);
         $private = '';
         \openssl_pkey_export($key, $private);
+        Assert::string($private);
         $private = new PrivateKey('RS256', $private);
 
         $details = \openssl_pkey_get_details($key);
         $this->assertNotFalse($details);
+        Assert::isMap($details['rsa']);
+        Assert::string($details['rsa']['n']);
+        Assert::string($details['rsa']['e']);
         $public = new PublicKey(
             'key-1',
             'RS256',
@@ -58,10 +63,14 @@ class OpenIdCachingTest extends TestCase
         $this->assertNotFalse($key);
         $private = '';
         \openssl_pkey_export($key, $private);
+        Assert::string($private);
         $private = new PrivateKey('RS256', $private);
 
         $details = \openssl_pkey_get_details($key);
         $this->assertNotFalse($details);
+        Assert::isMap($details['rsa']);
+        Assert::string($details['rsa']['n']);
+        Assert::string($details['rsa']['e']);
         $public = new PublicKey(
             'key-1',
             'RS256',
@@ -93,10 +102,14 @@ class OpenIdCachingTest extends TestCase
         $this->assertNotFalse($key);
         $private = '';
         \openssl_pkey_export($key, $private);
+        Assert::string($private);
         $private = new PrivateKey('RS256', $private);
 
         $details = \openssl_pkey_get_details($key);
         $this->assertNotFalse($details);
+        Assert::isMap($details['rsa']);
+        Assert::string($details['rsa']['n']);
+        Assert::string($details['rsa']['e']);
         $public = new PublicKey(
             'key-1',
             'RS256',

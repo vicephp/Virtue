@@ -10,6 +10,7 @@ use Virtue\JWT\SignFailed;
 use Virtue\JWT\Token;
 use Virtue\JWT\VerificationFailed;
 use Mockery as M;
+use Webmozart\Assert\Assert;
 
 class OpenSSLTest extends TestCase
 {
@@ -19,10 +20,14 @@ class OpenSSLTest extends TestCase
         $this->assertNotFalse($key);
         $private = '';
         \openssl_pkey_export($key, $private);
+        Assert::string($private);
         $private = new PrivateKey('RS256', $private);
 
         $details = \openssl_pkey_get_details($key);
         $this->assertNotFalse($details);
+        Assert::isMap($details['rsa']);
+        Assert::string($details['rsa']['n']);
+        Assert::string($details['rsa']['e']);
         $public = new PublicKey(
             'key-1',
             'RS256',
@@ -57,6 +62,7 @@ class OpenSSLTest extends TestCase
         $this->assertNotFalse($key);
         $private = '';
         \openssl_pkey_export($key, $private);
+        Assert::string($private);
         $private = new PrivateKey('RS256', $private);
         $public = new PublicKey('key-1', 'RS256', 'wrong', 'wrong');
 
@@ -89,6 +95,7 @@ class OpenSSLTest extends TestCase
         $this->assertNotFalse($key);
         $private = '';
         \openssl_pkey_export($key, $private);
+        Assert::string($private);
         $private = new PrivateKey('EC', $private);
 
         $sslVerify = new OpenSSLSign($private);

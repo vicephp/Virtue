@@ -6,6 +6,7 @@ use Virtue\JWK\Key\RSA\PrivateKey;
 use Virtue\JWT\Algorithm;
 use Virtue\JWT\SignFailed;
 use Virtue\JWT\SignsToken;
+use Webmozart\Assert\Assert;
 
 /** @phpstan-import-type Alg from \Virtue\JWT\Algorithm */
 class OpenSSLSign extends Algorithm implements SignsToken
@@ -45,6 +46,7 @@ class OpenSSLSign extends Algorithm implements SignsToken
         if (!$success) {
             throw new SignFailed('OpenSSL error: ' . \openssl_error_string());
         } else {
+            Assert::string($signature);
             return $signature;
         }
     }

@@ -24,7 +24,7 @@ class HMACTest extends TestCase
         $hmac = new HMAC(new Key('HS256', 'your-256-bit-secret'));
 
         $token->verifyWith($hmac);
-        $this->assertTrue(true);
+        $this->addToAssertionCount(1);
     }
 
     public function testVerificationFailed(): void
