@@ -3,8 +3,7 @@
 namespace Virtue\JWT\Algorithms;
 
 use PHPUnit\Framework\TestCase;
-use Virtue\JWK\Key\RSA\PrivateKey;
-use Virtue\JWK\Key\RSA\PublicKey;
+use Virtue\JWK\Key\RSA;
 use Virtue\JWT\Base64Url;
 use Virtue\JWT\SignFailed;
 use Virtue\JWT\Token;
@@ -14,23 +13,32 @@ use Webmozart\Assert\Assert;
 
 class OpenSSLTest extends TestCase
 {
-    public function testSign(): void
+    public function rsaAlgs(): \Generator
+    {
+        yield ['RS256'];
+        yield ['RS384'];
+        yield ['RS512'];
+    }
+
+    /** @dataProvider rsaAlgs */
+    public function testSignRSA(string $alg): void
     {
         $key = \openssl_pkey_new();
         $this->assertNotFalse($key);
         $private = '';
         \openssl_pkey_export($key, $private);
         Assert::string($private);
-        $private = new PrivateKey('RS256', $private);
+        $private = new RSA\PrivateKey($alg, $private);
 
         $details = \openssl_pkey_get_details($key);
+        /* var_dump($details['key']); */
         $this->assertNotFalse($details);
         Assert::isMap($details['rsa']);
         Assert::string($details['rsa']['n']);
         Assert::string($details['rsa']['e']);
-        $public = new PublicKey(
+        $public = new RSA\PublicKey(
             'key-1',
-            'RS256',
+            $alg,
             Base64Url::encode($details['rsa']['n']),
             Base64Url::encode($details['rsa']['e'])
         );
@@ -63,8 +71,8 @@ class OpenSSLTest extends TestCase
         $private = '';
         \openssl_pkey_export($key, $private);
         Assert::string($private);
-        $private = new PrivateKey('RS256', $private);
-        $public = new PublicKey('key-1', 'RS256', 'wrong', 'wrong');
+        $private = new RSA\PrivateKey('RS256', $private);
+        $public = new RSA\PublicKey('key-1', 'RS256', 'wrong', 'wrong');
 
         $sslSign = new OpenSSLSign($private);
         $sslVerify = new OpenSSLVerify($public);
@@ -78,25 +86,25 @@ class OpenSSLTest extends TestCase
         $this->expectException(VerificationFailed::class);
         $this->expectExceptionMessage('Key is invalid.');
 
-        $public = M::mock(PublicKey::class);
+        $public = M::mock(RSA\PublicKey::class);
         $public->shouldReceive('alg')->andReturn('RS256')->once();
         $public->shouldReceive('asPem')->andReturn('invalid pem')->once();
 
         $sslVerify = new OpenSSLVerify($public);
-        $sslVerify->verify(new Token([], []));
+        $sslVerify->verify(new Token(['alg' => 'RS256'], []));
     }
 
     public function testAlgorithmNotSupportedBySigner(): void
     {
         $this->expectException(SignFailed::class);
-        $this->expectExceptionMessage('Algorithm EC is not supported');
+        $this->expectExceptionMessage('Algorithm FOO is not supported');
 
         $key = \openssl_pkey_new();
         $this->assertNotFalse($key);
         $private = '';
         \openssl_pkey_export($key, $private);
         Assert::string($private);
-        $private = new PrivateKey('EC', $private);
+        $private = new RSA\PrivateKey('FOO', $private);
 
         $sslVerify = new OpenSSLSign($private);
         $sslVerify->sign(new Token([], []));
@@ -105,11 +113,11 @@ class OpenSSLTest extends TestCase
     public function testAlgorithmNotSupportedByVerifier(): void
     {
         $this->expectException(VerificationFailed::class);
-        $this->expectExceptionMessage('Algorithm EC is not supported');
+        $this->expectExceptionMessage('Algorithm FOO is not supported');
 
-        $public = new PublicKey('key-1', 'EC', 'modules', 'exponent');
+        $public = new RSA\PublicKey('key-1', 'FOO', 'modules', 'exponent');
 
         $sslVerify = new OpenSSLVerify($public);
-        $sslVerify->verify(new Token([], []));
+        $sslVerify->verify(new Token(['alg' => 'FOO'], []));
     }
 }

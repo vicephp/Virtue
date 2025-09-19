@@ -88,4 +88,9 @@ class PublicKey implements AsymmetricKey
             'e'   => $this->exponent,
         ];
     }
+
+    public function passphrase(): string
+    {
+        throw new \RuntimeException(__METHOD__ . ' is not implemented');
+    }
 }

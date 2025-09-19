@@ -2,7 +2,7 @@
 
 namespace Virtue\JWT\Algorithms;
 
-use Virtue\JWK\Key\RSA\PrivateKey;
+use Virtue\JWK\AsymmetricKey;
 use Virtue\JWT\Algorithm;
 use Virtue\JWT\SignFailed;
 use Virtue\JWT\SignsToken;
@@ -11,7 +11,7 @@ use Webmozart\Assert\Assert;
 /** @phpstan-import-type Alg from \Virtue\JWT\Algorithm */
 class OpenSSLSign extends Algorithm implements SignsToken
 {
-    /** @var PrivateKey */
+    /** @var AsymmetricKey */
     private $private;
 
     /** @var array<Alg,int|string> */
@@ -19,9 +19,13 @@ class OpenSSLSign extends Algorithm implements SignsToken
         'RS256' => OPENSSL_ALGO_SHA256,
         'RS384' => OPENSSL_ALGO_SHA384,
         'RS512' => OPENSSL_ALGO_SHA512,
+        'ES256' => OPENSSL_ALGO_SHA256,
+        'ES256K' => OPENSSL_ALGO_SHA256,
+        'ES384' => OPENSSL_ALGO_SHA384,
+        'ES512' => OPENSSL_ALGO_SHA512,
     ];
 
-    public function __construct(PrivateKey $private)
+    public function __construct(AsymmetricKey $private)
     {
         parent::__construct($private->alg());
         $this->private = $private;

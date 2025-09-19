@@ -2,8 +2,7 @@
 
 namespace Virtue\JWT\Algorithms;
 
-use Virtue\JWK\Key;
-use Virtue\JWK\Key\RSA\PublicKey;
+use Virtue\JWK\AsymmetricKey;
 use Virtue\JWT\Algorithm;
 use Virtue\JWT\Token;
 use Virtue\JWT\VerificationFailed;
@@ -12,7 +11,7 @@ use Virtue\JWT\VerifiesToken;
 /** @phpstan-import-type Alg from \Virtue\JWT\Algorithm */
 class OpenSSLVerify extends Algorithm implements VerifiesToken
 {
-    /** @var PublicKey */
+    /** @var AsymmetricKey */
     private $public;
 
     /** @var array<Alg,int|string> */
@@ -22,7 +21,7 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
         'RS512' => OPENSSL_ALGO_SHA512,
     ];
 
-    public function __construct(PublicKey $public)
+    public function __construct(AsymmetricKey $public)
     {
         parent::__construct($public->alg());
         $this->public = $public;
@@ -30,8 +29,10 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
 
     public function verify(Token $token): void
     {
-        if (!isset($this->supported[$this->name])) {
-            throw new VerificationFailed("Algorithm {$this->name} is not supported", VerificationFailed::ON_SIGNATURE);
+        $alg = $token->headers('alg', 'none');
+        assert(is_string($alg));
+        if (!isset($this->supported[$alg])) {
+            throw new VerificationFailed("Algorithm {$alg} is not supported", VerificationFailed::ON_SIGNATURE);
         }
 
         if (!$public = \openssl_pkey_get_public($this->public->asPem())) {
@@ -41,7 +42,7 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
         $msg = $token->withoutSig();
         $sig = $token->signature();
         // returns 1 on success, 0 on failure, -1 on error.
-        $success = \openssl_verify($msg, $sig, $public, $this->supported[$this->name]);
+        $success = \openssl_verify($msg, $sig, $public, $this->supported[$alg]);
         //TODO remove together with the support of PHP versions < 8.0
         if (version_compare(PHP_VERSION, '8.0.0') < 0) {
             \openssl_pkey_free($public);
