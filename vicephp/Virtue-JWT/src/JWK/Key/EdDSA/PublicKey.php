@@ -32,7 +32,13 @@ class PublicKey implements AsymmetricKey
     /** @return mixed[] */
     public function jsonSerialize(): array
     {
-        throw new \Exception(__METHOD__ . ' is not implemented yet');
+        return [
+            'kty' => 'OKP',
+            'alg' => 'EdDSA',
+            'kid' => $this->id,
+            'crv' => $this->crv,
+            'x' => $this->public,
+        ];
     }
 
     public function asPem(): string
@@ -55,5 +61,10 @@ class PublicKey implements AsymmetricKey
     public function passphrase(): string
     {
         throw new \Exception(__METHOD__ . ' is not implemented yet');
+    }
+
+    public function id(): string
+    {
+        return $this->id;
     }
 }

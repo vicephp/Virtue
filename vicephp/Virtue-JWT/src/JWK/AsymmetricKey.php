@@ -9,4 +9,6 @@ interface AsymmetricKey extends \JsonSerializable
     public function alg(): string;
 
     public function passphrase(): string;
+
+    public function id(): string;
 }

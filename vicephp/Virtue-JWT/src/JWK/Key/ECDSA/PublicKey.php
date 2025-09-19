@@ -50,7 +50,14 @@ class PublicKey implements AsymmetricKey
     /** @return mixed[] */
     public function jsonSerialize(): array
     {
-        throw new \RuntimeException(__METHOD__ . ' is not implemented');
+        return [
+            'kty' => 'EC',
+            'alg' => self::ALGS[$this->crv],
+            'crv' => $this->crv,
+            'kid' => $this->id,
+            'x' => $this->x,
+            'y' => $this->y,
+        ];
     }
 
     public function asPem(): string
@@ -76,5 +83,10 @@ class PublicKey implements AsymmetricKey
     public function passphrase(): string
     {
         throw new \RuntimeException(__METHOD__ . ' is not implemented');
+    }
+
+    public function id(): string
+    {
+        return $this->id;
     }
 }

@@ -46,4 +46,9 @@ class PrivateKey implements AsymmetricKey
     {
         return $this->passphrase;
     }
+
+    public function id(): string
+    {
+        throw new \Exception(__METHOD__ . ' is not implemented yet');
+    }
 }

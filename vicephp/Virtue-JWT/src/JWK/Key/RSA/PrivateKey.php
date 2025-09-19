@@ -51,4 +51,9 @@ class PrivateKey implements AsymmetricKey
             'pem' => $this->pem,
         ];
     }
+
+    public function id(): string
+    {
+        throw new \Exception(__METHOD__ . ' is not implemented yet');
+    }
 }
