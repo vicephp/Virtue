@@ -10,13 +10,110 @@ use Virtue\JWK\Key\RSA\PublicKey;
  */
 class KeySetTest extends TestCase
 {
-    public function testFromArray(): void
+    private const KEYS = [
+        [
+            'use' => 'sig',
+            'kty' => 'RSA',
+            'alg' => 'RS256',
+            'kid' => 'rsa-key',
+            'n' => 'modulus',
+            'e' => 'exponent'
+        ],
+        [
+            'use' => 'sig',
+            'kty' => 'EC',
+            'crv' => 'P-256',
+            'alg' => 'ES256',
+            'kid' => 'ec256-key',
+            'x' => 'point-x',
+            'y' => 'point-y'
+        ],
+        [
+            'use' => 'sig',
+            'kty' => 'EC',
+            'alg' => 'ES384',
+            'crv' => 'P-384',
+            'kid' => 'ec384-key',
+            'x' => 'point-x',
+            'y' => 'point-y'
+        ],
+        [
+            'use' => 'sig',
+            'kty' => 'EC',
+            'alg' => 'ES512',
+            'crv' => 'P-521',
+            'kid' => 'ec521-key',
+            'x' => 'point-x',
+            'y' => 'point-y'
+        ],
+        [
+            'use' => 'sig',
+            'kty' => 'OKP',
+            'alg' => 'EdDSA',
+            'crv' => 'Ed25519',
+            'kid' => 'ed25519-key',
+            'x' => 'public-key',
+        ],
+        [
+            'use' => 'sig',
+            'kty' => 'OKP',
+            'alg' => 'EdDSA',
+            'crv' => 'Ed448',
+            'kid' => 'ed448-key',
+            'x' => 'public-key',
+        ],
+    ];
+
+    public function testSerialize(): void
     {
-        $key = ['use' => 'sig', 'kty' => 'RSA', 'alg' => 'RS256', 'kid' => 'key id', 'n' => 'modulus', 'e' => 'exponent'];
-        $keySet = KeySet::fromArray([$key]);
-        $this->assertCount(1, $keySet->getKeys());
-        $this->assertEquals('key id', $keySet->getKey('key id')->id());
-        $this->assertEquals([$key], $keySet->jsonSerialize());
+        $keySet = KeySet::fromArray(self::KEYS);
+        $this->assertCount(count(self::KEYS), $keySet->getKeys());
+        $this->assertEquals(self::KEYS, $keySet->jsonSerialize());
+    }
+
+    public function keys(): \Generator
+    {
+        yield [
+            'rsa-key',
+            'MCQwDQYJKoZIhvcNAQEBBQADEwAwEAIGAJqHbpbrAgZ7Gmid6e0=',
+        ];
+        yield [
+            'ec256-key',
+            'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEAAAAAAAAAAAAAAAAAAAAAAAAAAAA' .
+            'AAAAAAAApoint+wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACmiKe37A==',
+        ];
+        yield [
+            'ec384-key',
+            'MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' .
+            'AAAAAAAAAAAAAAAAAAAAAAAAAKaIp7fsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' .
+            'AAAAAAAAAAAAAAAAAAAAAAAAAKaIp7fs',
+        ];
+        yield [
+            'ec521-key',
+            'MIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' .
+            'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAApoint+wAAAAA' .
+            'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' .
+            'AAAAAAAAAAAApoint+w=',
+        ];
+        yield [
+            'ed25519-key',
+            'MBEwBQYDK2VwAwgApublic+kew==',
+        ];
+        yield [
+            'ed448-key',
+            'MBEwBQYDK2VxAwgApublic+kew==',
+        ];
+    }
+
+    /** @dataProvider keys */
+    public function testFromArray(string $kid, string $pem): void
+    {
+        $keySet = KeySet::fromArray(self::KEYS);
+        $this->assertEquals($kid, $keySet->getKey($kid)->id());
+        $this->assertEquals(
+            "-----BEGIN PUBLIC KEY-----\n" . \chunk_split($pem, 64) . "-----END PUBLIC KEY-----",
+            $keySet->getKey($kid)->asPem()
+        );
     }
 
     public function testAddKey(): void
