@@ -4,6 +4,7 @@ namespace Virtue\JWT\Algorithms;
 
 use PHPUnit\Framework\TestCase;
 use Virtue\JWK\Key\RSA;
+use Virtue\JWK\Key\ECDSA;
 use Virtue\JWT\Base64Url;
 use Virtue\JWT\SignFailed;
 use Virtue\JWT\Token;
@@ -50,12 +51,53 @@ class OpenSSLTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
+    public function ecdsaAlgs(): \Generator
+    {
+        yield ['ES256', 'prime256v1', 'P-256'];
+        yield ['ES256K', 'secp256k1', 'P-256K'];
+        yield ['ES384', 'secp384r1', 'P-384'];
+        yield ['ES512', 'secp521r1', 'P-521'];
+    }
+
+    /** @dataProvider ecdsaAlgs */
+    public function testSignECDSA(string $alg, string $crvOpenSSL, string $crvJWK): void
+    {
+        $key = \openssl_pkey_new([
+            'private_key_type' => OPENSSL_KEYTYPE_EC,
+            'curve_name' => $crvOpenSSL,
+        ]);
+        $this->assertNotFalse($key);
+        $private = '';
+        \openssl_pkey_export($key, $private);
+        Assert::string($private);
+        $private = new ECDSA\PrivateKey($alg, $private);
+
+        $details = \openssl_pkey_get_details($key);
+        $this->assertNotFalse($details);
+        Assert::isMap($details['ec']);
+        Assert::eq($crvOpenSSL, $details['ec']['curve_name']);
+        Assert::string($details['ec']['x']);
+        Assert::string($details['ec']['y']);
+        $public = new ECDSA\PublicKey(
+            'key-1',
+            $crvJWK,
+            Base64Url::encode($details['ec']['x']),
+            Base64Url::encode($details['ec']['y'])
+        );
+
+        $sslSign = new OpenSSLSign($private);
+        $sslVerify = new OpenSSLVerify($public);
+        $token = (new Token([], ['foo' => 'bar']))->signWith($sslSign);
+        $sslVerify->verify($token);
+        $this->addToAssertionCount(1);
+    }
+
     public function testSignFailed(): void
     {
         $this->expectException(SignFailed::class);
         $this->expectExceptionMessage('Key or passphrase are invalid.');
 
-        $private = new PrivateKey('RS256', 'invalid pem');
+        $private = new RSA\PrivateKey('RS256', 'invalid pem');
 
         $sslVerify = new OpenSSLSign($private);
         $sslVerify->sign('a-message');

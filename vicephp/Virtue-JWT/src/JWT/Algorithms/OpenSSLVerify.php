@@ -19,6 +19,10 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
         'RS256' => OPENSSL_ALGO_SHA256,
         'RS384' => OPENSSL_ALGO_SHA384,
         'RS512' => OPENSSL_ALGO_SHA512,
+        'ES256' => OPENSSL_ALGO_SHA256,
+        'ES256K' => OPENSSL_ALGO_SHA256,
+        'ES384' => OPENSSL_ALGO_SHA384,
+        'ES512' => OPENSSL_ALGO_SHA512,
     ];
 
     public function __construct(AsymmetricKey $public)
