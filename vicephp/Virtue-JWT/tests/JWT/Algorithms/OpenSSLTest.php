@@ -5,6 +5,7 @@ namespace Virtue\JWT\Algorithms;
 use PHPUnit\Framework\TestCase;
 use Virtue\JWK\Key\RSA;
 use Virtue\JWK\Key\ECDSA;
+use Virtue\JWK\Key\EdDSA;
 use Virtue\JWT\Base64Url;
 use Virtue\JWT\SignFailed;
 use Virtue\JWT\Token;
@@ -83,6 +84,41 @@ class OpenSSLTest extends TestCase
             $crvJWK,
             Base64Url::encode($details['ec']['x']),
             Base64Url::encode($details['ec']['y'])
+        );
+
+        $sslSign = new OpenSSLSign($private);
+        $sslVerify = new OpenSSLVerify($public);
+        $token = (new Token([], ['foo' => 'bar']))->signWith($sslSign);
+        $sslVerify->verify($token);
+        $this->addToAssertionCount(1);
+    }
+
+    public function eddsaAlgs(): \Generator
+    {
+        yield ['EdDSA', OPENSSL_KEYTYPE_ED25519, 'ed25519', 'Ed25519'];
+        yield ['EdDSA', OPENSSL_KEYTYPE_ED448, 'ed448', 'Ed448'];
+    }
+
+    /** @dataProvider eddsaAlgs */
+    public function testSignEdDSA(string $alg, int $crvIdOpenSSL, string $crvOpenSSL, string $crvJWK): void
+    {
+        $key = \openssl_pkey_new([
+            'private_key_type' => $crvIdOpenSSL,
+        ]);
+        $this->assertNotFalse($key);
+        $private = '';
+        \openssl_pkey_export($key, $private);
+        Assert::string($private);
+        $private = new EdDSA\PrivateKey($alg, $private);
+
+        $details = \openssl_pkey_get_details($key);
+        $this->assertNotFalse($details);
+        Assert::isMap($details[$crvOpenSSL]);
+        Assert::string($details[$crvOpenSSL]['pub_key']);
+        $public = new EdDSA\PublicKey(
+            'key-1',
+            $crvJWK,
+            Base64Url::encode($details[$crvOpenSSL]['pub_key']),
         );
 
         $sslSign = new OpenSSLSign($private);
