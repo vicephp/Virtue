@@ -1,12 +1,16 @@
 <?php
 
-namespace Virtue\JWK\Key\EdDSA;
+namespace Virtue\JWK\Key\OpenSSL;
 
 use Virtue\JWK\AsymmetricKey;
 
+/**
+ * @phpstan-import-type Key from \Virtue\JWK\KeySet
+ * @phpstan-import-type Alg from \Virtue\JWT\Algorithm
+ */
 class PrivateKey implements AsymmetricKey
 {
-    /** @var string */
+    /** @var Alg */
     private $alg;
     /** @var string */
     private $pem;
@@ -19,20 +23,14 @@ class PrivateKey implements AsymmetricKey
         $this->pem = $pem;
     }
 
-    /** @return mixed[] */
-    public function jsonSerialize(): array
+    public function alg(): string
     {
-        throw new \RuntimeException(__METHOD__ . ' is not implemented');
+        return $this->alg;
     }
 
     public function asPem(): string
     {
         return $this->pem;
-    }
-
-    public function alg(): string
-    {
-        return $this->alg;
     }
 
     public function withPassphrase(string $passphrase): void
@@ -43,6 +41,15 @@ class PrivateKey implements AsymmetricKey
     public function passphrase(): string
     {
         return $this->passphrase;
+    }
+
+    /** @return Key */
+    public function jsonSerialize(): array
+    {
+        return [
+            'alg' => $this->alg,
+            'pem' => $this->pem,
+        ];
     }
 
     public function id(): string

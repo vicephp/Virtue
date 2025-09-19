@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Virtue\JWK\Key\RSA;
 use Virtue\JWK\Key\ECDSA;
 use Virtue\JWK\Key\EdDSA;
+use Virtue\JWK\Key\OpenSSL;
 use Virtue\JWT\Base64Url;
 use Virtue\JWT\SignFailed;
 use Virtue\JWT\Token;
@@ -30,7 +31,7 @@ class OpenSSLTest extends TestCase
         $private = '';
         \openssl_pkey_export($key, $private);
         Assert::string($private);
-        $private = new RSA\PrivateKey($alg, $private);
+        $private = new OpenSSL\PrivateKey($alg, $private);
 
         $details = \openssl_pkey_get_details($key);
         /* var_dump($details['key']); */
@@ -71,7 +72,7 @@ class OpenSSLTest extends TestCase
         $private = '';
         \openssl_pkey_export($key, $private);
         Assert::string($private);
-        $private = new ECDSA\PrivateKey($alg, $private);
+        $private = new OpenSSL\PrivateKey($alg, $private);
 
         $details = \openssl_pkey_get_details($key);
         $this->assertNotFalse($details);
@@ -109,7 +110,7 @@ class OpenSSLTest extends TestCase
         $private = '';
         \openssl_pkey_export($key, $private);
         Assert::string($private);
-        $private = new EdDSA\PrivateKey($alg, $private);
+        $private = new OpenSSL\PrivateKey($alg, $private);
 
         $details = \openssl_pkey_get_details($key);
         $this->assertNotFalse($details);
@@ -133,7 +134,7 @@ class OpenSSLTest extends TestCase
         $this->expectException(SignFailed::class);
         $this->expectExceptionMessage('Key or passphrase are invalid.');
 
-        $private = new RSA\PrivateKey('RS256', 'invalid pem');
+        $private = new OpenSSL\PrivateKey('RS256', 'invalid pem');
 
         $sslVerify = new OpenSSLSign($private);
         $sslVerify->sign('a-message');
@@ -149,7 +150,7 @@ class OpenSSLTest extends TestCase
         $private = '';
         \openssl_pkey_export($key, $private);
         Assert::string($private);
-        $private = new RSA\PrivateKey('RS256', $private);
+        $private = new OpenSSL\PrivateKey('RS256', $private);
         $public = new RSA\PublicKey('key-1', 'RS256', 'wrong', 'wrong');
 
         $sslSign = new OpenSSLSign($private);
@@ -182,7 +183,7 @@ class OpenSSLTest extends TestCase
         $private = '';
         \openssl_pkey_export($key, $private);
         Assert::string($private);
-        $private = new RSA\PrivateKey('FOO', $private);
+        $private = new OpenSSL\PrivateKey('FOO', $private);
 
         $sslVerify = new OpenSSLSign($private);
         $sslVerify->sign(new Token([], []));

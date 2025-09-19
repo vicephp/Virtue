@@ -3,7 +3,7 @@
 namespace Virtue\JWT\Algorithms;
 
 use PHPUnit\Framework\TestCase;
-use Virtue\JWK\Key\RSA\PrivateKey;
+use Virtue\JWK\Key\OpenSSL\PrivateKey;
 use Virtue\JWK\Key\RSA\PublicKey;
 use Virtue\JWK\KeySet;
 use Virtue\JWT\Base64Url;

@@ -4,7 +4,7 @@ namespace Virtue\JWT\Algorithms;
 
 use Mockery as M;
 use PHPUnit\Framework\TestCase;
-use Virtue\JWK\Key\RSA\PrivateKey;
+use Virtue\JWK\Key\OpenSSL\PrivateKey;
 use Virtue\JWK\Key\RSA\PublicKey;
 use Virtue\JWK\KeySet;
 use Virtue\JWK\KeyStore;
