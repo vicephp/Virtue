@@ -15,6 +15,7 @@
             "Virtue\\Http\\": "vicephp/Virtue-Http/src/Http/",
             "Virtue\\JWK\\": "vicephp/Virtue-JWT/src/JWK/",
             "Virtue\\JWT\\": "vicephp/Virtue-JWT/src/JWT/",
+            "Virtue\\Encoding\\": "vicephp/Virtue-JWT/src/Encoding/",
             "Virtue\\View\\": "vicephp/Virtue-View/src/View/",
             "Virtue\\Config\\": "vicephp/Virtue-Config/src/Config/"
         }
@@ -30,6 +31,7 @@
             "Virtue\\Http\\": "vicephp/Virtue-Http/tests/Http/",
             "Virtue\\JWK\\": "vicephp/Virtue-JWT/tests/JWK/",
             "Virtue\\JWT\\": "vicephp/Virtue-JWT/tests/JWT/",
+            "Virtue\\Encoding\\": "vicephp/Virtue-JWT/tests/Encoding/",
             "Virtue\\View\\": "vicephp/Virtue-View/tests/View/",
             "Virtue\\Config\\": "vicephp/Virtue-Config/tests/Config/"
         }
