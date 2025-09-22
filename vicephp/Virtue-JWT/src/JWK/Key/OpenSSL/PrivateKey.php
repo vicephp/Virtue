@@ -5,10 +5,13 @@ namespace Virtue\JWK\Key\OpenSSL;
 use Virtue\JWK\AsymmetricKey;
 
 /**
- * @phpstan-import-type Key from \Virtue\JWK\KeySet
  * @phpstan-import-type Alg from \Virtue\JWT\Algorithm
+ * @phpstan-type Key = array{
+ *  alg: string,
+ *  pem: string,
+ * }
  */
-class PrivateKey implements AsymmetricKey
+class PrivateKey implements Exportable
 {
     /** @var Alg */
     private $alg;

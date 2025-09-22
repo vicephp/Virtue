@@ -5,23 +5,41 @@ namespace Virtue\JWK\Key\RSA;
 use Virtue\Encoding\ASN1;
 use Virtue\JWK\AsymmetricKey;
 use Virtue\JWT\Base64Url;
+use Virtue\JWT\VerificationFailed;
+use Webmozart\Assert\Assert;
 
-/** @phpstan-import-type Key from \Virtue\JWK\KeySet
- * @phpstan-import-type Alg from \Virtue\JWT\Algorithm
+/**
+ * @phpstan-type RSAKey = array{
+ *    kid: string,
+ *    kty: 'RSA',
+ *    alg: value-of<PublicKey::SUPPORTED>,
+ *    n: string,
+ *    e: string,
+ *    d?: string,
+ * }
  */
 class PublicKey implements AsymmetricKey
 {
     /** @var string */
     private $id;
-    /** @var Alg */
+    /** @var value-of<PublicKey::SUPPORTED> */
     private $alg;
     /** @var string */
     private $modulus;
     /** @var string */
     private $exponent;
 
+    private const SUPPORTED = ['RS256', 'RS384', 'RS512'];
+
+    /** @phpstan-assert-if-true value-of<PublicKey::SUPPORTED> $alg */
+    private function isSupported(string $alg): bool
+    {
+        return in_array($alg, self::SUPPORTED);
+    }
+
     public function __construct(string $id, string $alg, string $modulus, string $exponent)
     {
+        assert($this->isSupported($alg), new VerificationFailed("Algorithm {$alg} is not supported"));
         $this->id = $id;
         $this->alg = $alg;
         $this->modulus = $modulus;
@@ -57,7 +75,7 @@ class PublicKey implements AsymmetricKey
             "-----END PUBLIC KEY-----";
     }
 
-    /** @return Key */
+    /** @return RSAKey */
     public function jsonSerialize(): array
     {
         return [
@@ -70,6 +88,11 @@ class PublicKey implements AsymmetricKey
     }
 
     public function passphrase(): string
+    {
+        throw new \RuntimeException(__METHOD__ . ' is not implemented');
+    }
+
+    public function withPassphrase(string $passphrase): void
     {
         throw new \RuntimeException(__METHOD__ . ' is not implemented');
     }

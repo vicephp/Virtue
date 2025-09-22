@@ -9,18 +9,13 @@ use Virtue\JWK\Key\EdDSA;
 use Webmozart\Assert\Assert;
 
 /**
- * @phpstan-type KeyType = 'RSA'|'EC'|'OKP'
+ * @phpstan-import-type RSAKey from RSA\PublicKey
+ * @phpstan-import-type EdDSAKey from EdDSA\PublicKey
+ * @phpstan-import-type ECDSAKey from ECDSA\PublicKey
+ * @phpstan-type Key = RSAKey|ECDSAKey|EdDSAKey
+ * @phpstan-type KeyType Key['kty']
+ * @phpstan-type Alg Key['alg']
  * @phpstan-type KeyUse = 'sig'
- * @phpstan-import-type Alg from \Virtue\JWT\Algorithm
- * @phpstan-type Key = array{
- *    use?: KeyUse,
- *    kty?: KeyType,
- *    alg: Alg,
- *    kid?: string,
- *    n?: string,
- *    e?: string,
- *    d?: string,
- * }
  */
 class KeySet implements \JsonSerializable
 {
@@ -132,9 +127,12 @@ class KeySet implements \JsonSerializable
     /** @return Key[] */
     public function jsonSerialize(): array
     {
+        /** @var Key[] */
         $keys = [];
         foreach ($this->keys as $key) {
-            $keys[] = array_merge($key->jsonSerialize(), ['use' => 'sig']);
+            $key = $key->jsonSerialize();
+            $key['use'] = 'sig';
+            $keys[] = $key;
         }
 
         return $keys;

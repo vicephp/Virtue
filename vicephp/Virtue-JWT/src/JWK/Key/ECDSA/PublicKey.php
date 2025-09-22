@@ -6,9 +6,17 @@ use Virtue\Encoding\ASN1;
 use Virtue\JWK\AsymmetricKey;
 use Virtue\JWT\Base64Url;
 
+/** @phpstan-type ECDSAKey = array{
+ *  kty: 'EC',
+ *  kid: string,
+ *  crv: key-of<PublicKey::CURVE_OID>,
+ *  alg: value-of<PublicKey::ALGS>,
+ *  x: string,
+ *  y: string,
+ * } */
 class PublicKey implements AsymmetricKey
 {
-    /** @var string */
+    /** @var key-of<PublicKey::CURVE_OID> */
     private $crv;
     /** @var string */
     private $x;
@@ -47,7 +55,7 @@ class PublicKey implements AsymmetricKey
         $this->id = $id;
     }
 
-    /** @return mixed[] */
+    /** @return ECDSAKey */
     public function jsonSerialize(): array
     {
         return [
@@ -88,5 +96,10 @@ class PublicKey implements AsymmetricKey
     public function id(): string
     {
         return $this->id;
+    }
+
+    public function withPassphrase(string $passphrase): void
+    {
+        throw new \RuntimeException(__METHOD__ . ' is not implemented');
     }
 }
