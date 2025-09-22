@@ -12,6 +12,8 @@ class OpenIdKeyStore implements KeyStore
 {
     /** @var Client */
     private $client;
+    /** @var bool */
+    private $strict = false;
 
     public function __construct(Client $client)
     {
@@ -25,6 +27,10 @@ class OpenIdKeyStore implements KeyStore
         $response = $this->client->get(rtrim($issuer, '/') . '/.well-known/openid-configuration');
         $config = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
         Assert::isArray($config, 'Invalid OpenID configuration');
+        if ($this->strict) {
+            Assert::keyExists($config, 'iss', 'Invalid OpenID configuration');
+            assert($config['iss'] == $issuer, 'iss claim does not match configured issuer');
+        }
 
         if (!filter_var($config['jwks_uri'] ?? '', FILTER_VALIDATE_URL)) {
             throw new \OutOfBoundsException('The value of jwks_uri must be a valid URI');
@@ -44,5 +50,12 @@ class OpenIdKeyStore implements KeyStore
         Assert::allIsMap($keySet['keys']);
 
         return KeySet::fromArray($keySet['keys']);
+    }
+
+    public function strict(): self
+    {
+        $copy = clone $this;
+        $copy->strict = true;
+        return $copy;
     }
 }
