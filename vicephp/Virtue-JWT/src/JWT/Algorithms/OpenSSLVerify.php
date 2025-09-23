@@ -3,7 +3,9 @@
 namespace Virtue\JWT\Algorithms;
 
 use Virtue\JWK\AsymmetricKey;
+use Virtue\JWK\Key\EdDSA;
 use Virtue\JWT\Algorithm;
+use Virtue\JWT\Base64Url;
 use Virtue\JWT\Token;
 use Virtue\JWT\VerificationFailed;
 use Virtue\JWT\VerifiesToken;
@@ -35,6 +37,24 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
     public function verify(Token $token): void
     {
         $alg = $token->headers('alg', 'none');
+        $msg = $token->withoutSig();
+        $sig = $token->signature();
+
+        if ($alg == 'EdDSA' && $this->public->alg() == 'EdDSA' && !defined('OPENSSL_KEYTYPE_ED25519')) {
+            assert($this->public instanceof EdDSA\PublicKey);
+            $pub = Base64Url::decode($this->public->publicKey());
+            if (strlen($pub) != SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES) {
+                throw new VerificationFailed('Key is invalid.', VerificationFailed::ON_SIGNATURE);
+            }
+            if (strlen($sig) != SODIUM_CRYPTO_SIGN_BYTES) {
+                throw new VerificationFailed('Invalid signature.', VerificationFailed::ON_SIGNATURE);
+            }
+            if (!\sodium_crypto_sign_verify_detached($sig, $msg, $pub)) {
+                throw new VerificationFailed('Could not verify signature.', VerificationFailed::ON_SIGNATURE);
+            }
+            return;
+        }
+
         assert(is_string($alg));
         if (!isset($this->supported[$alg])) {
             throw new VerificationFailed("Algorithm {$alg} is not supported", VerificationFailed::ON_SIGNATURE);
@@ -44,8 +64,6 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
             throw new VerificationFailed('Key is invalid.', VerificationFailed::ON_SIGNATURE);
         }
 
-        $msg = $token->withoutSig();
-        $sig = $token->signature();
         // returns 1 on success, 0 on failure, -1 on error.
         $success = \openssl_verify($msg, $sig, $public, $this->supported[$alg]);
         //TODO remove together with the support of PHP versions < 8.0

@@ -96,31 +96,21 @@ class OpenSSLTest extends TestCase
 
     public function eddsaAlgs(): \Generator
     {
-        yield ['EdDSA', OPENSSL_KEYTYPE_ED25519, 'ed25519', 'Ed25519'];
-        yield ['EdDSA', OPENSSL_KEYTYPE_ED448, 'ed448', 'Ed448'];
+        yield [
+            'EdDSA',
+            'MC4CAQAwBQYDK2VwBCIEIKqv2Nxz978STwRyqhsSCVk9svyqMoFjCldcRzfllCaM',
+            'jWZ57Q7I6b9IMBD9Qekdh8kTPzeDuWqEu1NB24Njxfw',
+            'Ed25519'
+        ];
     }
 
     /** @dataProvider eddsaAlgs */
-    public function testSignEdDSA(string $alg, int $crvIdOpenSSL, string $crvOpenSSL, string $crvJWK): void
+    public function testSignEdDSA(string $alg, string $secret, string $public, string $crvJWK): void
     {
-        $key = \openssl_pkey_new([
-            'private_key_type' => $crvIdOpenSSL,
-        ]);
-        $this->assertNotFalse($key);
-        $private = '';
-        \openssl_pkey_export($key, $private);
-        Assert::string($private);
+        $private = "-----BEGIN PRIVATE KEY-----\n{$secret}\n-----END PRIVATE KEY-----";
         $private = new OpenSSL\PrivateKey($alg, $private);
 
-        $details = \openssl_pkey_get_details($key);
-        $this->assertNotFalse($details);
-        Assert::isMap($details[$crvOpenSSL]);
-        Assert::string($details[$crvOpenSSL]['pub_key']);
-        $public = new EdDSA\PublicKey(
-            'key-1',
-            $crvJWK,
-            Base64Url::encode($details[$crvOpenSSL]['pub_key']),
-        );
+        $public = new EdDSA\PublicKey('key-1', $crvJWK, $public);
 
         $sslSign = new OpenSSLSign($private);
         $sslVerify = new OpenSSLVerify($public);

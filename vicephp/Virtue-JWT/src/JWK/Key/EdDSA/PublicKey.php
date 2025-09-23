@@ -60,6 +60,11 @@ class PublicKey implements AsymmetricKey
             "-----END PUBLIC KEY-----";
     }
 
+    public function publicKey(): string
+    {
+        return $this->public;
+    }
+
     public function alg(): string
     {
         return 'EdDSA';

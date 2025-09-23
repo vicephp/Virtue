@@ -35,6 +35,19 @@ class OpenSSLSign extends Algorithm implements SignsToken
 
     public function sign(string $msg): string
     {
+        if (!defined('OPENSSL_KEYTYPE_ED25519') && $this->private->alg() == 'EdDSA') {
+            // Last 32 bytes pf the DER-encoded private key is the seed
+            $seed = \substr(\base64_decode(\str_replace(
+                ["-----BEGIN PRIVATE KEY-----", "-----END PRIVATE KEY-----", "\n"],
+                "",
+                $this->private->asPem()
+            )), -32);
+
+            \assert($seed);
+            $secret = \sodium_crypto_sign_secretkey(\sodium_crypto_sign_seed_keypair($seed));
+            return \sodium_crypto_sign_detached($msg, $secret);
+        }
+
         if (!$private = \openssl_pkey_get_private($this->private->asPem(), $this->private->passphrase())) {
             throw new SignFailed('Key or passphrase are invalid.');
         }
