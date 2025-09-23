@@ -1,11 +1,15 @@
 on: [pull_request]
 jobs:
     test:
+        strategy:
+            matrix:
+                php-version: ["7.3", "8.1", "latest"]
+        name: test php v.${{ matrix.php-version }}
         runs-on: ubuntu-latest
         steps:
             - uses: "shivammathur/setup-php@v2"
               with:
-                php-version: "latest"
+                php-version: ${{ matrix.php-version }}
             - uses: actions/checkout@v4
             - uses: ramsey/composer-install@v3
             - run: composer exec phpstan analyse
