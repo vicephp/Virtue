@@ -29,7 +29,7 @@ class OpenIdKeyStore implements KeyStore
         Assert::isArray($config, 'Invalid OpenID configuration');
         if ($this->strict) {
             Assert::keyExists($config, 'iss', 'Invalid OpenID configuration');
-            assert($config['iss'] == $issuer, 'iss claim does not match configured issuer');
+            Assert::eq($config['iss'], $issuer, 'iss claim does not match configured issuer');
         }
 
         if (!filter_var($config['jwks_uri'] ?? '', FILTER_VALIDATE_URL)) {

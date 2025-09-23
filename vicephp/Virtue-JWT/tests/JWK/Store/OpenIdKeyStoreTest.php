@@ -94,7 +94,7 @@ class OpenIdKeyStoreTest extends TestCase
 
     public function testIssuerMismatch(): void
     {
-        $this->expectException(\AssertionError::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('iss claim does not match configured issuer');
 
         $token = new Token([], ['iss' => 'https://issuer.ggs-ps.com']);
