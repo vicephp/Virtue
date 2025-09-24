@@ -9,7 +9,8 @@
         "sort-packages": true
     },
     "require": {
-        "ext-openssl": "*"
+        "ext-openssl": "*",
+        "ext-sodium": "*"
     },
     "require-dev": {
         "ext-SimpleXML": "*",
@@ -26,14 +27,16 @@
         "psr-4": {
             "Virtue\\JWT\\": "src/JWT/",
             "Virtue\\JWK\\": "src/JWK/",
-            "Virtue\\Aws\\": "src/Aws/"
+            "Virtue\\Aws\\": "src/Aws/",
+            "Virtue\\Encoding\\": "src/Encoding/"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "Virtue\\JWT\\": "tests/JWT/",
             "Virtue\\JWK\\": "tests/JWK/",
-            "Virtue\\Aws\\": "tests/Aws/"
+            "Virtue\\Aws\\": "tests/Aws/",
+            "Virtue\\Encoding\\": "src/Encoding/",
         }
     },
     "suggest": {
