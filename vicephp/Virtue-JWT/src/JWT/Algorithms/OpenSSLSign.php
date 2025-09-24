@@ -2,15 +2,17 @@
 
 namespace Virtue\JWT\Algorithms;
 
-use Virtue\JWK\Key\RSA\PrivateKey;
+use Virtue\JWK\AsymmetricKey;
+use Virtue\JWK\Key\OpenSSL\Exportable;
 use Virtue\JWT\Algorithm;
 use Virtue\JWT\SignFailed;
 use Virtue\JWT\SignsToken;
+use Webmozart\Assert\Assert;
 
 /** @phpstan-import-type Alg from \Virtue\JWT\Algorithm */
 class OpenSSLSign extends Algorithm implements SignsToken
 {
-    /** @var PrivateKey */
+    /** @var Exportable */
     private $private;
 
     /** @var array<Alg,int|string> */
@@ -18,9 +20,14 @@ class OpenSSLSign extends Algorithm implements SignsToken
         'RS256' => OPENSSL_ALGO_SHA256,
         'RS384' => OPENSSL_ALGO_SHA384,
         'RS512' => OPENSSL_ALGO_SHA512,
+        'ES256' => OPENSSL_ALGO_SHA256,
+        'ES256K' => OPENSSL_ALGO_SHA256,
+        'ES384' => OPENSSL_ALGO_SHA384,
+        'ES512' => OPENSSL_ALGO_SHA512,
+        'EdDSA' => 0,
     ];
 
-    public function __construct(PrivateKey $private)
+    public function __construct(Exportable $private)
     {
         parent::__construct($private->alg());
         $this->private = $private;
@@ -28,6 +35,19 @@ class OpenSSLSign extends Algorithm implements SignsToken
 
     public function sign(string $msg): string
     {
+        if (!defined('OPENSSL_KEYTYPE_ED25519') && $this->private->alg() == 'EdDSA') {
+            // Last 32 bytes pf the DER-encoded private key is the seed
+            $seed = \substr(\base64_decode(\str_replace(
+                ["-----BEGIN PRIVATE KEY-----", "-----END PRIVATE KEY-----", "\n"],
+                "",
+                $this->private->asPem()
+            )), -32);
+
+            \assert($seed);
+            $secret = \sodium_crypto_sign_secretkey(\sodium_crypto_sign_seed_keypair($seed));
+            return \sodium_crypto_sign_detached($msg, $secret);
+        }
+
         if (!$private = \openssl_pkey_get_private($this->private->asPem(), $this->private->passphrase())) {
             throw new SignFailed('Key or passphrase are invalid.');
         }
@@ -45,6 +65,7 @@ class OpenSSLSign extends Algorithm implements SignsToken
         if (!$success) {
             throw new SignFailed('OpenSSL error: ' . \openssl_error_string());
         } else {
+            Assert::string($signature);
             return $signature;
         }
     }

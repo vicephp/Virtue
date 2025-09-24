@@ -1,6 +1,6 @@
 <?php
 
-namespace Virtue\JWK\Key\RSA;
+namespace Virtue\JWK\Key\OpenSSL;
 
 use PHPUnit\Framework\TestCase;
 

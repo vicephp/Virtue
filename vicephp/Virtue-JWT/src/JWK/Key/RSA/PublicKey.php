@@ -2,25 +2,44 @@
 
 namespace Virtue\JWK\Key\RSA;
 
+use Virtue\Encoding\ASN1;
 use Virtue\JWK\AsymmetricKey;
 use Virtue\JWT\Base64Url;
+use Virtue\JWT\VerificationFailed;
+use Webmozart\Assert\Assert;
 
-/** @phpstan-import-type Key from \Virtue\JWK\KeySet
- * @phpstan-import-type Alg from \Virtue\JWT\Algorithm
+/**
+ * @phpstan-type RSAKey = array{
+ *    kid: string,
+ *    kty: 'RSA',
+ *    alg: value-of<PublicKey::SUPPORTED>,
+ *    n: string,
+ *    e: string,
+ *    d?: string,
+ * }
  */
 class PublicKey implements AsymmetricKey
 {
     /** @var string */
     private $id;
-    /** @var Alg */
+    /** @var value-of<PublicKey::SUPPORTED> */
     private $alg;
     /** @var string */
     private $modulus;
     /** @var string */
     private $exponent;
 
+    private const SUPPORTED = ['RS256', 'RS384', 'RS512'];
+
+    /** @phpstan-assert-if-true value-of<PublicKey::SUPPORTED> $alg */
+    private function isSupported(string $alg): bool
+    {
+        return in_array($alg, self::SUPPORTED);
+    }
+
     public function __construct(string $id, string $alg, string $modulus, string $exponent)
     {
+        assert($this->isSupported($alg), new VerificationFailed("Algorithm {$alg} is not supported"));
         $this->id = $id;
         $this->alg = $alg;
         $this->modulus = $modulus;
@@ -39,45 +58,24 @@ class PublicKey implements AsymmetricKey
 
     public function asPem(): string
     {
-        $modulus = "\x00" . Base64Url::decode($this->modulus);
-        $exponent = Base64Url::decode($this->exponent);
-
-        $components = [
-            'modulus'  => \pack('Ca*a*', 2, $this->encodeLength(\strlen($modulus)), $modulus),
-            'exponent' => \pack('Ca*a*', 2, $this->encodeLength(\strlen($exponent)), $exponent),
-        ];
-
-        $length = $this->encodeLength(\strlen($components['modulus']) + \strlen($components['exponent']));
-        $publicKey = \pack('Ca*a*a*', 48, $length, $components['modulus'], $components['exponent']);
-
-        $rsaOID = \pack('H*', '300d06092a864886f70d0101010500'); // http://tools.ietf.org/html/rfc3279#section-2.3.1
-        $publicKey = "\x00" . $publicKey;
-        $publicKey = "\x03" . $this->encodeLength(\strlen($publicKey)) . $publicKey;
-
-        $publicKey = \pack(
-            'Ca*a*',
-            48,
-            $this->encodeLength(\strlen($rsaOID . $publicKey)),
-            $rsaOID . $publicKey
-        );
 
         return "-----BEGIN PUBLIC KEY-----\n" .
-            \chunk_split(\base64_encode($publicKey), 64) .
+            \chunk_split(ASN1::seq(
+                ASN1::seq(
+                    ASN1::oid('1.2.840.113549.1.1.1'),
+                    ASN1::null(),
+                ),
+                ASN1::bitstr(
+                    ASN1::seq(
+                        ASN1::uint(Base64Url::decode($this->modulus)),
+                        ASN1::uint(Base64Url::decode($this->exponent)),
+                    )->encode()
+                )
+            )->__toString(), 64) .
             "-----END PUBLIC KEY-----";
     }
 
-    private function encodeLength(int $length): string
-    {
-        if ($length <= 0x7F) {
-            return \chr($length);
-        }
-
-        $temp = ltrim(\pack('N', $length), "\x00");
-
-        return \pack('Ca*', 0x80 | \strlen($temp), $temp);
-    }
-
-    /** @return Key */
+    /** @return RSAKey */
     public function jsonSerialize(): array
     {
         return [
@@ -87,5 +85,15 @@ class PublicKey implements AsymmetricKey
             'n'   => $this->modulus,
             'e'   => $this->exponent,
         ];
+    }
+
+    public function passphrase(): string
+    {
+        throw new \RuntimeException(__METHOD__ . ' is not implemented');
+    }
+
+    public function withPassphrase(string $passphrase): void
+    {
+        throw new \RuntimeException(__METHOD__ . ' is not implemented');
     }
 }

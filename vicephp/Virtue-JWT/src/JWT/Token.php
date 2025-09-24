@@ -53,6 +53,8 @@ class Token
             $signature = '';
         }
 
+        Assert::isMap($header);
+        Assert::isMap($payload);
         $token = new self($header, $payload);
         $token->signature = $signature;
 

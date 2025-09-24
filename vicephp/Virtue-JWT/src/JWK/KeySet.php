@@ -3,60 +3,52 @@
 namespace Virtue\JWK;
 
 use OutOfBoundsException;
-use Virtue\JWK\Key\RSA\PublicKey;
+use Virtue\JWK\Key\RSA;
+use Virtue\JWK\Key\ECDSA;
+use Virtue\JWK\Key\EdDSA;
 use Webmozart\Assert\Assert;
 
 /**
- * @phpstan-type KeyType = 'RSA'
+ * @phpstan-import-type RSAKey from RSA\PublicKey
+ * @phpstan-import-type EdDSAKey from EdDSA\PublicKey
+ * @phpstan-import-type ECDSAKey from ECDSA\PublicKey
+ * @phpstan-type Key = RSAKey|ECDSAKey|EdDSAKey
+ * @phpstan-type KeyType Key['kty']
+ * @phpstan-type Alg Key['alg']
  * @phpstan-type KeyUse = 'sig'
- * @phpstan-import-type Alg from \Virtue\JWT\Algorithm
- * @phpstan-type Key = array{
- *    use?: KeyUse,
- *    kty?: KeyType,
- *    alg: Alg,
- *    kid?: string,
- *    n?: string,
- *    e?: string,
- *    d?: string,
- * }
  */
 class KeySet implements \JsonSerializable
 {
-    /** @var PublicKey[] */
+    /** @var AsymmetricKey[] */
     private $keys = [];
 
-    /** @var KeyType[] */
-    private static $supportedKeyTypes = ['RSA'];
-
-    /**
-     * @param PublicKey[] $keys
-     */
+    /** @param AsymmetricKey[] $keys */
     public function __construct(array $keys = [])
     {
-        Assert::allIsInstanceOf($keys, PublicKey::class);
+        Assert::allIsInstanceOf($keys, AsymmetricKey::class);
         foreach ($keys as $key) {
             $this->keys[$key->id()] = $key;
         }
     }
 
-    public function getKey(string $id): PublicKey
+    public function getKey(string $id): AsymmetricKey
     {
         if (!isset($this->keys[$id])) {
-            throw new OutOfBoundsException("Kei with id $id not found in key set");
+            throw new OutOfBoundsException("Key with id $id not found in key set");
         }
 
         return $this->keys[$id];
     }
 
     /**
-     * @return PublicKey[]
+     * @return AsymmetricKey[]
      */
     public function getKeys(): array
     {
         return $this->keys;
     }
 
-    public function addKey(PublicKey $key): void
+    public function addKey(AsymmetricKey $key): void
     {
         $this->keys[$key->id()] = $key;
     }
@@ -64,6 +56,43 @@ class KeySet implements \JsonSerializable
     /** @param array<string,mixed>[] $keys */
     public static function fromArray(array $keys): self
     {
+        /** @var array<KeyType,(callable(string, mixed[]): ?AsymmetricKey)> */
+        static $keyFactories = [];
+        if (count($keyFactories) == 0) {
+            $keyFactories['RSA'] = function (string $kid, array $key) {
+                if (!isset($key['n']) || !isset($key['e']) || isset($key['d'])) {
+                    return null;
+                }
+
+                Assert::string($key['alg']);
+                Assert::string($key['n']);
+                Assert::string($key['e']);
+
+                return new RSA\PublicKey($kid, $key['alg'], $key['n'], $key['e']);
+            };
+            $keyFactories['EC'] = function (string $kid, array $key) {
+                if (!isset($key['x']) || !isset($key['y']) || isset($key['d'])) {
+                    return null;
+                }
+
+                Assert::string($key['crv']);
+                Assert::string($key['x']);
+                Assert::string($key['y']);
+
+                return new ECDSA\PublicKey($kid, $key['crv'], $key['x'], $key['y']);
+            };
+            $keyFactories['OKP'] = function (string $kid, array $key) {
+                if (!isset($key['x']) || isset($key['d'])) {
+                    return null;
+                }
+
+                Assert::string($key['crv']);
+                Assert::string($key['x']);
+
+                return new EdDSA\PublicKey($kid, $key['crv'], $key['x']);
+            };
+        }
+
         $keySet = [];
         foreach ($keys as $key) {
             if (!is_array($key)) {
@@ -75,22 +104,21 @@ class KeySet implements \JsonSerializable
                 continue;
             }
 
+            $kty = $key['kty'] ?? '';
             // Skip unsupported key types
-            if (!in_array($key['kty'] ?? '', self::$supportedKeyTypes)) {
+            if (!is_string($kty) || !key_exists($kty, $keyFactories)) {
                 continue;
             }
 
-            // Skip keys with missing key id, exponent or modulus as well as private keys
-            if (!isset($key['kid']) || !isset($key['n']) || !isset($key['e']) || isset($key['d'])) {
+            $kid = $key['kid'] ?? null;
+            if (!is_string($kid)) {
                 continue;
             }
 
-            Assert::string($key['kid'], 'Key ID must be a string');
-            Assert::string($key['alg'], 'Algorithm must be a string');
-            Assert::string($key['n'], 'Modulus must be a string');
-            Assert::string($key['e'], 'Exponent must be a string');
-
-            $keySet[] = new PublicKey($key['kid'], $key['alg'], $key['n'], $key['e']);
+            if (($key = call_user_func($keyFactories[$kty], $kid, $key)) == null) {
+                continue;
+            }
+            $keySet[] = $key;
         }
 
         return new KeySet($keySet);
@@ -99,9 +127,12 @@ class KeySet implements \JsonSerializable
     /** @return Key[] */
     public function jsonSerialize(): array
     {
+        /** @var Key[] */
         $keys = [];
         foreach ($this->keys as $key) {
-            $keys[] = array_merge($key->jsonSerialize(), ['use' => 'sig']);
+            $key = $key->jsonSerialize();
+            $key['use'] = 'sig';
+            $keys[] = $key;
         }
 
         return $keys;

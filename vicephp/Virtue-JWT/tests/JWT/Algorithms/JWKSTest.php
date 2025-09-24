@@ -3,12 +3,13 @@
 namespace Virtue\JWT\Algorithms;
 
 use PHPUnit\Framework\TestCase;
-use Virtue\JWK\Key\RSA\PrivateKey;
+use Virtue\JWK\Key\OpenSSL\PrivateKey;
 use Virtue\JWK\Key\RSA\PublicKey;
 use Virtue\JWK\KeySet;
 use Virtue\JWT\Base64Url;
 use Virtue\JWT\Token;
 use Virtue\JWT\VerificationFailed;
+use Webmozart\Assert\Assert;
 
 class JWKSTest extends TestCase
 {
@@ -18,10 +19,14 @@ class JWKSTest extends TestCase
         $this->assertNotFalse($key);
         $private = '';
         \openssl_pkey_export($key, $private);
+        Assert::string($private);
         $private = new PrivateKey('RS256', $private);
 
         $details = \openssl_pkey_get_details($key);
         $this->assertNotFalse($details);
+        Assert::isMap($details['rsa']);
+        Assert::string($details['rsa']['n']);
+        Assert::string($details['rsa']['e']);
         $public = new PublicKey(
             'key-1',
             'RS256',
@@ -57,6 +62,7 @@ class JWKSTest extends TestCase
         $private = '';
         \openssl_pkey_export($key, $private);
 
+        Assert::string($private);
         $private = new PrivateKey('RS256', $private);
         $public = new PublicKey('key-1', 'RS256', 'wrong', 'wrong');
         $keySet = new KeySet([$public]);

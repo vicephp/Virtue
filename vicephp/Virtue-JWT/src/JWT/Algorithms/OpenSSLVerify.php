@@ -2,9 +2,10 @@
 
 namespace Virtue\JWT\Algorithms;
 
-use Virtue\JWK\Key;
-use Virtue\JWK\Key\RSA\PublicKey;
+use Virtue\JWK\AsymmetricKey;
+use Virtue\JWK\Key\EdDSA;
 use Virtue\JWT\Algorithm;
+use Virtue\JWT\Base64Url;
 use Virtue\JWT\Token;
 use Virtue\JWT\VerificationFailed;
 use Virtue\JWT\VerifiesToken;
@@ -12,7 +13,7 @@ use Virtue\JWT\VerifiesToken;
 /** @phpstan-import-type Alg from \Virtue\JWT\Algorithm */
 class OpenSSLVerify extends Algorithm implements VerifiesToken
 {
-    /** @var PublicKey */
+    /** @var AsymmetricKey */
     private $public;
 
     /** @var array<Alg,int|string> */
@@ -20,9 +21,14 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
         'RS256' => OPENSSL_ALGO_SHA256,
         'RS384' => OPENSSL_ALGO_SHA384,
         'RS512' => OPENSSL_ALGO_SHA512,
+        'ES256' => OPENSSL_ALGO_SHA256,
+        'ES256K' => OPENSSL_ALGO_SHA256,
+        'ES384' => OPENSSL_ALGO_SHA384,
+        'ES512' => OPENSSL_ALGO_SHA512,
+        'EdDSA' => 0,
     ];
 
-    public function __construct(PublicKey $public)
+    public function __construct(AsymmetricKey $public)
     {
         parent::__construct($public->alg());
         $this->public = $public;
@@ -30,18 +36,36 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
 
     public function verify(Token $token): void
     {
-        if (!isset($this->supported[$this->name])) {
-            throw new VerificationFailed("Algorithm {$this->name} is not supported", VerificationFailed::ON_SIGNATURE);
+        $alg = $token->headers('alg', 'none');
+        $msg = $token->withoutSig();
+        $sig = $token->signature();
+
+        if ($alg == 'EdDSA' && $this->public->alg() == 'EdDSA' && !defined('OPENSSL_KEYTYPE_ED25519')) {
+            assert($this->public instanceof EdDSA\PublicKey);
+            $pub = Base64Url::decode($this->public->publicKey());
+            if (strlen($pub) != SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES) {
+                throw new VerificationFailed('Key is invalid.', VerificationFailed::ON_SIGNATURE);
+            }
+            if (strlen($sig) != SODIUM_CRYPTO_SIGN_BYTES) {
+                throw new VerificationFailed('Invalid signature.', VerificationFailed::ON_SIGNATURE);
+            }
+            if (!\sodium_crypto_sign_verify_detached($sig, $msg, $pub)) {
+                throw new VerificationFailed('Could not verify signature.', VerificationFailed::ON_SIGNATURE);
+            }
+            return;
+        }
+
+        assert(is_string($alg));
+        if (!isset($this->supported[$alg])) {
+            throw new VerificationFailed("Algorithm {$alg} is not supported", VerificationFailed::ON_SIGNATURE);
         }
 
         if (!$public = \openssl_pkey_get_public($this->public->asPem())) {
             throw new VerificationFailed('Key is invalid.', VerificationFailed::ON_SIGNATURE);
         }
 
-        $msg = $token->withoutSig();
-        $sig = $token->signature();
         // returns 1 on success, 0 on failure, -1 on error.
-        $success = \openssl_verify($msg, $sig, $public, $this->supported[$this->name]);
+        $success = \openssl_verify($msg, $sig, $public, $this->supported[$alg]);
         //TODO remove together with the support of PHP versions < 8.0
         if (version_compare(PHP_VERSION, '8.0.0') < 0) {
             \openssl_pkey_free($public);

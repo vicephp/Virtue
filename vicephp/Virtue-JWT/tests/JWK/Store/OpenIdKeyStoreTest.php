@@ -92,6 +92,31 @@ class OpenIdKeyStoreTest extends TestCase
         $store->getFor($token);
     }
 
+    public function testIssuerMismatch(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('iss claim does not match configured issuer');
+
+        $token = new Token([], ['iss' => 'https://issuer.ggs-ps.com']);
+
+        $response = new Response(
+            200,
+            [],
+            Psr7\Utils::streamFor(json_encode([
+                'iss' => 'http://malicious.com',
+                'jwks_uri' => 'http://localhost',
+            ]))
+        );
+        $client = M::mock(Client::class);
+        $client->shouldReceive('get')
+            ->with('https://issuer.ggs-ps.com/.well-known/openid-configuration')
+            ->andReturn($response)
+            ->once();
+
+        $store = (new OpenIdKeyStore($client))->strict();
+        $store->getFor($token);
+    }
+
     public function testEmptyKeys(): void
     {
         $this->expectException(\OutOfBoundsException::class);
