@@ -2,6 +2,7 @@
 
 namespace Virtue\JWT\Algorithms;
 
+use Virtue\Encoding\ASN1;
 use Virtue\JWK\AsymmetricKey;
 use Virtue\JWK\Key\EdDSA;
 use Virtue\JWT\Algorithm;
@@ -62,6 +63,17 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
 
         if (!$public = \openssl_pkey_get_public($this->public->asPem())) {
             throw new VerificationFailed('Key is invalid.', VerificationFailed::ON_SIGNATURE);
+        }
+        $ecPadding = [
+            'ES256' => 32,
+            'ES384' => 48,
+            'ES512' => 66,
+        ];
+        if (array_key_exists($alg, $ecPadding)) {
+            $x = substr($sig, 0, $ecPadding[$alg]);
+            $y = substr($sig, $ecPadding[$alg]);
+            $sig = ASN1::seq(ASN1::uint(ltrim($x, "\00")), ASN1::uint(ltrim($y, "\00")));
+            $sig = $sig->encode();
         }
 
         // returns 1 on success, 0 on failure, -1 on error.
