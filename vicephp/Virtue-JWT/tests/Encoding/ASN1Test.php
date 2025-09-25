@@ -48,4 +48,39 @@ class ASN1Test extends TestCase
         $asn1 = ASN1::octstr("Hello World");
         $this->assertEquals("BAtIZWxsbyBXb3JsZA==", $asn1->__toString());
     }
+
+    public function testDecode(): void
+    {
+        $longString = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" .
+                      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" .
+                      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" .
+                      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" .
+                      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" .
+                      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" .
+                      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" .
+                      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+        $asn1 = ASN1::seq(
+            ASN1::int(\strrev(\pack('s', 1337))),
+            ASN1::bitstr($longString),
+        );
+
+        $block = ASN1::decode($asn1->encode());
+        $this->assertEquals(ASN1::SEQUENCE, $block->type());
+        $this->assertEquals(521, $block->length());
+        $this->assertEmpty($block->rest());
+
+        $block = ASN1::decode($block->bytes());
+        $this->assertEquals(ASN1::INTEGER, $block->type());
+        $this->assertEquals(2, $block->length());
+        $this->assertEquals(\strrev(\pack('s', 1337)), $block->bytes());
+        $this->assertNotEmpty($block->rest());
+
+        $block = ASN1::decode($block->rest());
+        $this->assertEquals(ASN1::BIT_STRING, $block->type());
+        $this->assertEquals(strlen($longString) + 1, $block->length());
+        $this->assertEquals("\00" . $longString, $block->bytes());
+        $this->assertEmpty($block->rest());
+
+    }
+
 }
