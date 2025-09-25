@@ -34,7 +34,6 @@ class OpenSSLTest extends TestCase
         $private = new OpenSSL\PrivateKey($alg, $private);
 
         $details = \openssl_pkey_get_details($key);
-        /* var_dump($details['key']); */
         $this->assertNotFalse($details);
         Assert::isMap($details['rsa']);
         Assert::string($details['rsa']['n']);

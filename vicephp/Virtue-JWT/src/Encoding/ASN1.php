@@ -4,13 +4,12 @@ namespace Virtue\Encoding;
 
 class ASN1
 {
-    private const INTEGER = 2;
-    private const BIT_STRING = 3;
-    private const OCTET_STRING = 4;
-    private const OBJECT_IDENTIFIER = 6;
-    private const NULL = 5;
-    private const SEQUENCE = 48;
-
+    public const INTEGER = 2;
+    public const BIT_STRING = 3;
+    public const OCTET_STRING = 4;
+    public const OBJECT_IDENTIFIER = 6;
+    public const NULL = 5;
+    public const SEQUENCE = 48;
 
     /** @var int */
     private $type;
@@ -18,10 +17,14 @@ class ASN1
     /** @var string */
     private $bytes;
 
-    private function __construct(int $type, string $bytes)
+    /** @var string */
+    private $rest;
+
+    private function __construct(int $type, string $bytes, string $rest = "")
     {
         $this->type = $type;
         $this->bytes = $bytes;
+        $this->rest = $rest;
     }
 
     public function encode(): string
@@ -99,5 +102,48 @@ class ASN1
     public static function null(): self
     {
         return new self(self::NULL, "");
+    }
+
+    public static function decode(string $string): self
+    {
+        $offset = 0;
+        assert(strlen($string) > 1);
+        $type = ord($string[$offset++]);
+
+        $length = ord($string[$offset++]);
+        if ($length & 0x80) {
+            $temp = $length & ~0x80;
+            $result = \unpack("N", str_pad(substr($string, $offset, $temp), 4, "\00", STR_PAD_LEFT));
+            assert($result !== false);
+            assert(count($result) == 1);
+            $length = array_shift($result);
+            assert(is_int($length));
+            $offset += $temp;
+        }
+
+        $bytes = substr($string, $offset, $length);
+        $rest = substr($string, $offset + $length);
+
+        return new self($type, $bytes, $rest);
+    }
+
+    public function bytes(): string
+    {
+        return $this->bytes;
+    }
+
+    public function type(): int
+    {
+        return $this->type;
+    }
+
+    public function rest(): string
+    {
+        return $this->rest;
+    }
+
+    public function length(): int
+    {
+        return strlen($this->bytes);
     }
 }
