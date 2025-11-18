@@ -44,7 +44,7 @@ class OpenSSLSign extends Algorithm implements SignsToken
                 $this->private->asPem()
             )), -32);
 
-            \assert($seed);
+            \assert($seed !== false);
             $secret = \sodium_crypto_sign_secretkey(\sodium_crypto_sign_seed_keypair($seed));
             return \sodium_crypto_sign_detached($msg, $secret);
         }
