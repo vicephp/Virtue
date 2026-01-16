@@ -60,7 +60,7 @@
         "psr/http-server-middleware": "^1.0",
         "slim/php-view": "^2.0",
         "slim/slim": "~4.0",
-        "webmozart/assert": "^1.0"
+        "webmozart/assert": "^1.0 || ^2.1"
     },
     "require-dev": {
         "ext-SimpleXML": "*",
