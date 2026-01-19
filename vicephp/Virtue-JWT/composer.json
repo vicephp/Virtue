@@ -21,7 +21,7 @@
         "aws/aws-sdk-php": "^3.200",
         "psr/simple-cache": "^1.0 || ^2.0 || ^3.0",
         "guzzlehttp/guzzle": "^6.0 || ^7.0",
-        "webmozart/assert": "^1.0"
+        "webmozart/assert": "^1.0  || ^2.1"
     },
     "autoload": {
         "psr-4": {
