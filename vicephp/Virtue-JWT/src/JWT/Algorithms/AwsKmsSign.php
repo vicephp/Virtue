@@ -20,6 +20,9 @@ class AwsKmsSign extends Algorithm implements SignsToken
         'RS256' => 'RSASSA_PKCS1_V1_5_SHA_256',
         'RS384' => 'RSASSA_PKCS1_V1_5_SHA_384',
         'RS512' => 'RSASSA_PKCS1_V1_5_SHA_512',
+        'ES256' => 'ECDSA_SHA_256',
+        'ES384' => 'ECDSA_SHA_384',
+        'ES512' => 'ECDSA_SHA_512',
     ];
 
     /** @var KmsClient */
