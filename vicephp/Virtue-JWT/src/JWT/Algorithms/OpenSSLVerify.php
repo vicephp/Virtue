@@ -7,6 +7,7 @@ use Virtue\JWK\AsymmetricKey;
 use Virtue\JWK\Key\EdDSA;
 use Virtue\JWT\Algorithm;
 use Virtue\JWT\Base64Url;
+use Virtue\JWT\OpenSslException;
 use Virtue\JWT\Token;
 use Virtue\JWT\VerificationFailed;
 use Virtue\JWT\VerifiesToken;
@@ -62,7 +63,8 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
         }
 
         if (!$public = \openssl_pkey_get_public($this->public->asPem())) {
-            throw new VerificationFailed('Key is invalid.', VerificationFailed::ON_SIGNATURE);
+            $opensslException = new OpenSslException(OpenSslException::collectErrors());
+            throw new VerificationFailed('Key is invalid.', VerificationFailed::ON_SIGNATURE, $opensslException);
         }
         $ecPadding = [
             'ES256' => 32,
@@ -84,10 +86,22 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
         }
         if ($success === 1) {
             return;
-        } elseif ($success === 0) {
-            throw new VerificationFailed('Could not verify signature.', VerificationFailed::ON_SIGNATURE);
         }
 
-        throw new VerificationFailed('OpenSSL error: ' . \openssl_error_string(), VerificationFailed::ON_SIGNATURE);
+        $opensslException = new OpenSslException(OpenSslException::collectErrors());
+
+        if ($success === 0) {
+            throw new VerificationFailed(
+                'Could not verify signature.',
+                VerificationFailed::ON_SIGNATURE,
+                $opensslException
+            );
+        }
+
+        throw new VerificationFailed(
+            'OpenSSL error occurred during signature verification.',
+            VerificationFailed::ON_UNKNOWN,
+            $opensslException
+        );
     }
 }

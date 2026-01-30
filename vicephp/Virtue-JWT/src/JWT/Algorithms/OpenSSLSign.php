@@ -3,9 +3,9 @@
 namespace Virtue\JWT\Algorithms;
 
 use Virtue\Encoding\ASN1;
-use Virtue\JWK\AsymmetricKey;
 use Virtue\JWK\Key\OpenSSL\Exportable;
 use Virtue\JWT\Algorithm;
+use Virtue\JWT\OpenSslException;
 use Virtue\JWT\SignFailed;
 use Virtue\JWT\SignsToken;
 use Webmozart\Assert\Assert;
@@ -50,7 +50,8 @@ class OpenSSLSign extends Algorithm implements SignsToken
         }
 
         if (!$private = \openssl_pkey_get_private($this->private->asPem(), $this->private->passphrase())) {
-            throw new SignFailed('Key or passphrase are invalid.');
+            $opensslException = new OpenSslException(OpenSslException::collectErrors());
+            throw new SignFailed('Key or passphrase are invalid.', 0, $opensslException);
         }
 
         if (!isset($this->supported[$this->name])) {
@@ -85,7 +86,8 @@ class OpenSSLSign extends Algorithm implements SignsToken
             \openssl_pkey_free($private);
         }
         if (!$success) {
-            throw new SignFailed('OpenSSL error: ' . \openssl_error_string());
+            $opensslException = new OpenSslException(OpenSslException::collectErrors());
+            throw new SignFailed('OpenSSL error occurred during signing.', 0, $opensslException);
         } else {
             return $signature;
         }
