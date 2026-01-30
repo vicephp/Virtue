@@ -3,6 +3,7 @@
 namespace Virtue\JWT\Algorithms;
 
 use Virtue\Aws\KmsClient;
+use Virtue\Encoding\ASN1;
 use Virtue\JWT\Algorithm;
 use Virtue\JWT\SignFailed;
 use Virtue\JWT\SignsToken;
@@ -45,12 +46,33 @@ class AwsKmsSign extends Algorithm implements SignsToken
         }
 
         $result = $this->client->sign([
-            'Message'          => $msg,
-            'MessageType'      => 'RAW',
+            'Message' => $msg,
+            'MessageType' => 'RAW',
             'SigningAlgorithm' => $this->signingAlgorithms[$this->name]
         ]);
 
         Assert::string($result['Signature'], 'Issue when signing the message');
-        return $result['Signature'];
+        $signature = $result['Signature'];
+
+        $ecPadding = [
+            'ES256' => 32,
+            'ES384' => 48,
+            'ES512' => 66,
+        ];
+        if (array_key_exists($this->name, $ecPadding)) {
+            $block = ASN1::decode($signature);
+            assert($block->type() == ASN1::SEQUENCE);
+
+            $block = ASN1::decode($block->bytes());
+            assert($block->type() == ASN1::INTEGER);
+            $x = str_pad(ltrim($block->bytes(), "\00"), $ecPadding[$this->name], "\00", STR_PAD_LEFT);
+
+            $block = ASN1::decode($block->rest());
+            assert($block->type() == ASN1::INTEGER);
+            $y = str_pad(ltrim($block->bytes(), "\00"), $ecPadding[$this->name], "\00", STR_PAD_LEFT);
+            $signature = $x . $y;
+        }
+
+        return $signature;
     }
 }
