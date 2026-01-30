@@ -50,8 +50,7 @@ class OpenSSLSign extends Algorithm implements SignsToken
         }
 
         if (!$private = \openssl_pkey_get_private($this->private->asPem(), $this->private->passphrase())) {
-            $opensslException = new OpenSslException(OpenSslException::collectErrors());
-            throw new SignFailed('Key or passphrase are invalid.', 0, $opensslException);
+            throw new SignFailed('Key or passphrase are invalid.', 0, OpenSslException::collectErrors());
         }
 
         if (!isset($this->supported[$this->name])) {
@@ -86,8 +85,7 @@ class OpenSSLSign extends Algorithm implements SignsToken
             \openssl_pkey_free($private);
         }
         if (!$success) {
-            $opensslException = new OpenSslException(OpenSslException::collectErrors());
-            throw new SignFailed('OpenSSL error occurred during signing.', 0, $opensslException);
+            throw new SignFailed('OpenSSL error occurred during signing.', 0, OpenSslException::collectErrors());
         } else {
             return $signature;
         }

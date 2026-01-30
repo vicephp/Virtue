@@ -10,7 +10,7 @@ class OpenSslException extends \RuntimeException
     /**
      * @param string[] $errors
      */
-    public function __construct(array $errors, int $code = 0, ?\Throwable $previous = null)
+    private function __construct(array $errors, int $code = 0, ?\Throwable $previous = null)
     {
         if (empty($errors)) {
             $errors = ['Unknown OpenSSL error'];
@@ -29,14 +29,14 @@ class OpenSslException extends \RuntimeException
     }
 
     /**
-     * @return string[]
+     * @return self
      */
-    public static function collectErrors(): array
+    public static function collectErrors(): self
     {
         $errors = [];
         while ($error = \openssl_error_string()) {
             $errors[] = $error;
         }
-        return $errors;
+        return new self($errors);
     }
 }

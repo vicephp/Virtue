@@ -63,8 +63,11 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
         }
 
         if (!$public = \openssl_pkey_get_public($this->public->asPem())) {
-            $opensslException = new OpenSslException(OpenSslException::collectErrors());
-            throw new VerificationFailed('Key is invalid.', VerificationFailed::ON_SIGNATURE, $opensslException);
+            throw new VerificationFailed(
+                'Key is invalid.',
+                VerificationFailed::ON_SIGNATURE,
+                OpenSslException::collectErrors()
+            );
         }
         $ecPadding = [
             'ES256' => 32,
@@ -88,7 +91,7 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
             return;
         }
 
-        $opensslException = new OpenSslException(OpenSslException::collectErrors());
+        $opensslException = OpenSslException::collectErrors();
 
         if ($success === 0) {
             throw new VerificationFailed(
@@ -100,7 +103,7 @@ class OpenSSLVerify extends Algorithm implements VerifiesToken
 
         throw new VerificationFailed(
             'OpenSSL error occurred during signature verification.',
-            VerificationFailed::ON_UNKNOWN,
+            VerificationFailed::ON_SIGNATURE,
             $opensslException
         );
     }
