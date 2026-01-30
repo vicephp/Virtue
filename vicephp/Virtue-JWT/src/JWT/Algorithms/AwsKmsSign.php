@@ -65,12 +65,12 @@ class AwsKmsSign extends Algorithm implements SignsToken
 
             $block = ASN1::decode($block->bytes());
             assert($block->type() == ASN1::INTEGER);
-            $x = str_pad(ltrim($block->bytes(), "\00"), $ecPadding[$this->name], "\00", STR_PAD_LEFT);
+            $r = str_pad(ltrim($block->bytes(), "\00"), $ecPadding[$this->name], "\00", STR_PAD_LEFT);
 
             $block = ASN1::decode($block->rest());
             assert($block->type() == ASN1::INTEGER);
-            $y = str_pad(ltrim($block->bytes(), "\00"), $ecPadding[$this->name], "\00", STR_PAD_LEFT);
-            $signature = $x . $y;
+            $s = str_pad(ltrim($block->bytes(), "\00"), $ecPadding[$this->name], "\00", STR_PAD_LEFT);
+            $signature = $r . $s;
         }
 
         return $signature;
