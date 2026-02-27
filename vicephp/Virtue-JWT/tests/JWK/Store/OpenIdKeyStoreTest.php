@@ -2,7 +2,7 @@
 
 namespace Virtue\JWK\Store;
 
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Response;
 use Mockery as M;
 use Virtue\Api\TestCase;
@@ -22,9 +22,9 @@ class OpenIdKeyStoreTest extends TestCase
             [],
             Psr7\Utils::streamFor(json_encode(['jwks_uri' => 'https://issuer.ggs-ps.com/keys']))
         );
-        $client = M::mock(Client::class);
-        $client->shouldReceive('get')
-            ->with('https://issuer.ggs-ps.com/.well-known/openid-configuration')
+        $client = M::mock(ClientInterface::class);
+        $client->shouldReceive('request')
+            ->with('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration')
             ->andReturn($response)
             ->once();
 
@@ -33,7 +33,7 @@ class OpenIdKeyStoreTest extends TestCase
             [],
             Psr7\Utils::streamFor(json_encode(['keys' => [[]]]))
         );
-        $client->shouldReceive('get')->andReturn($response)->once();
+        $client->shouldReceive('request')->andReturn($response)->once();
 
         $store = new OpenIdKeyStore($client);
         $store->getFor($token);
@@ -48,9 +48,9 @@ class OpenIdKeyStoreTest extends TestCase
             [],
             Psr7\Utils::streamFor(json_encode(['jwks_uri' => 'https://issuer.ggs-ps.com/keys']))
         );
-        $client = M::mock(Client::class);
-        $client->shouldReceive('get')
-            ->with('https://issuer.ggs-ps.com/.well-known/openid-configuration')
+        $client = M::mock(ClientInterface::class);
+        $client->shouldReceive('request')
+            ->with('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration')
             ->andReturn($response)
             ->once();
 
@@ -60,8 +60,8 @@ class OpenIdKeyStoreTest extends TestCase
             [],
             Psr7\Utils::streamFor(json_encode(['keys' => [$key]]))
         );
-        $client->shouldReceive('get')
-            ->with('https://issuer.ggs-ps.com/keys')
+        $client->shouldReceive('request')
+            ->with('GET', 'https://issuer.ggs-ps.com/keys')
             ->andReturn($response)
             ->once();
 
@@ -82,9 +82,9 @@ class OpenIdKeyStoreTest extends TestCase
             [],
             Psr7\Utils::streamFor(json_encode(['jwks_uri' => 'not a URI']))
         );
-        $client = M::mock(Client::class);
-        $client->shouldReceive('get')
-            ->with('https://issuer.ggs-ps.com/.well-known/openid-configuration')
+        $client = M::mock(ClientInterface::class);
+        $client->shouldReceive('request')
+            ->with('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration')
             ->andReturn($response)
             ->once();
 
@@ -107,9 +107,9 @@ class OpenIdKeyStoreTest extends TestCase
                 'jwks_uri' => 'http://localhost',
             ]))
         );
-        $client = M::mock(Client::class);
-        $client->shouldReceive('get')
-            ->with('https://issuer.ggs-ps.com/.well-known/openid-configuration')
+        $client = M::mock(ClientInterface::class);
+        $client->shouldReceive('request')
+            ->with('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration')
             ->andReturn($response)
             ->once();
 
@@ -129,9 +129,9 @@ class OpenIdKeyStoreTest extends TestCase
             [],
             Psr7\Utils::streamFor(json_encode(['jwks_uri' => 'https://issuer.ggs-ps.com/keys']))
         );
-        $client = M::mock(Client::class);
-        $client->shouldReceive('get')
-            ->with('https://issuer.ggs-ps.com/.well-known/openid-configuration')
+        $client = M::mock(ClientInterface::class);
+        $client->shouldReceive('request')
+            ->with('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration')
             ->andReturn($response)
             ->once();
 
@@ -140,8 +140,8 @@ class OpenIdKeyStoreTest extends TestCase
             [],
             Psr7\Utils::streamFor(json_encode(''))
         );
-        $client->shouldReceive('get')
-            ->with('https://issuer.ggs-ps.com/keys')
+        $client->shouldReceive('request')
+            ->with('GET', 'https://issuer.ggs-ps.com/keys')
             ->andReturn($response)
             ->once();
 

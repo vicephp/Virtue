@@ -2,7 +2,7 @@
 
 namespace Virtue\JWK\Store;
 
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use Virtue\JWK\KeySet;
 use Virtue\JWK\KeyStore;
 use Virtue\JWT\Token;
@@ -10,12 +10,12 @@ use Webmozart\Assert\Assert;
 
 class OpenIdKeyStore implements KeyStore
 {
-    /** @var Client */
+    /** @var ClientInterface */
     private $client;
     /** @var bool */
     private $strict = false;
 
-    public function __construct(Client $client)
+    public function __construct(ClientInterface $client)
     {
         $this->client = $client;
     }
@@ -24,7 +24,7 @@ class OpenIdKeyStore implements KeyStore
     {
         $issuer = $token->payload('iss');
         Assert::string($issuer, 'Issuer must be a string');
-        $response = $this->client->get(rtrim($issuer, '/') . '/.well-known/openid-configuration');
+        $response = $this->client->request('GET', rtrim($issuer, '/') . '/.well-known/openid-configuration');
         $config = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
         Assert::isArray($config, 'Invalid OpenID configuration');
         if ($this->strict) {
@@ -37,7 +37,7 @@ class OpenIdKeyStore implements KeyStore
         }
         Assert::string($config['jwks_uri']);
 
-        $response = $this->client->get($config['jwks_uri']);
+        $response = $this->client->request('GET', $config['jwks_uri']);
         $keySet = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
         if (!is_array($keySet)) {
             $keySet = [];
