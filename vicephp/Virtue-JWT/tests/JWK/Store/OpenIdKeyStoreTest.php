@@ -13,6 +13,43 @@ class OpenIdKeyStoreTest extends TestCase
 {
     use M\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+    /**
+     * @dataProvider invalidOpenIdConfigResponse
+     */
+    public function testInvalidOpenIdConfiguration(
+        Response $openIdConfigResponse,
+        string $expectedException,
+        string $expectedExceptionMessage
+    ): void {
+        $this->expectException($expectedException);
+        $this->expectExceptionMessage($expectedExceptionMessage);
+
+        $client = M::mock(ClientInterface::class);
+        $client->shouldReceive('request')
+            ->with('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration')
+            ->andReturn($openIdConfigResponse)
+            ->once();
+
+        $token = new Token([], ['iss' => 'https://issuer.ggs-ps.com/']);
+
+        (new OpenIdKeyStore($client))->getFor($token);
+    }
+
+    public function invalidOpenIdConfigResponse(): \Generator
+    {
+        yield 'not 200 response' => [
+            new Response(500),
+            \InvalidArgumentException::class,
+            'Failed to fetch OpenID configuration',
+        ];
+
+        yield '200 response with invalid content' => [
+            new Response(200, [], Psr7\Utils::streamFor('asd-fgh')),
+            \InvalidArgumentException::class,
+            'Invalid OpenID configuration: It must be a valid JSON string',
+        ];
+    }
+
     public function testRemoveTrailingSlashFromIssuer(): void
     {
         $token = new Token([], ['iss' => 'https://issuer.ggs-ps.com/']);

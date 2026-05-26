@@ -24,9 +24,14 @@ class OpenIdKeyStore implements KeyStore
     {
         $issuer = $token->payload('iss');
         Assert::string($issuer, 'Issuer must be a string');
+
         $response = $this->client->request('GET', rtrim($issuer, '/') . '/.well-known/openid-configuration');
-        $config = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        Assert::isArray($config, 'Invalid OpenID configuration');
+        Assert::eq($response->getStatusCode(), 200, 'Failed to fetch OpenID configuration');
+
+        $config = json_decode((string) $response->getBody(), true, 512);
+        Assert::eq(json_last_error(), JSON_ERROR_NONE, 'Invalid OpenID configuration: It must be a valid JSON string');
+        Assert::isArray($config, 'Invalid OpenID configuration: It must be an array');
+
         if ($this->strict) {
             Assert::keyExists($config, 'iss', 'Invalid OpenID configuration');
             Assert::eq($config['iss'], $issuer, 'iss claim does not match configured issuer');
