@@ -5,6 +5,7 @@ namespace Virtue\Aws;
 use Aws\Result;
 
 /**
+ * @phpstan-type SigningAlgorithm = 'RSASSA_PKCS1_V1_5_SHA_256'|'RSASSA_PKCS1_V1_5_SHA_384'|'RSASSA_PKCS1_V1_5_SHA_512'|'ECDSA_SHA_256'|'ECDSA_SHA_384'|'ECDSA_SHA_512'
  * @phpstan-type KmsClientConfig = array{
  *   version: string,
  *   region: string,
@@ -30,8 +31,8 @@ class KmsClient extends \Aws\Kms\KmsClient
     /**
      * @param array{
      *  Message?: string,
-     *  MessageType?: string,
-     *  SigningAlgorithm?: string
+     *  MessageType?: 'RAW'|'DIGEST',
+     *  SigningAlgorithm?: SigningAlgorithm
      * } $args
      * @return Result<string,mixed>
      */

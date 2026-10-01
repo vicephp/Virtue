@@ -11,12 +11,13 @@ use Webmozart\Assert\Assert;
 
 /**
  * @phpstan-import-type Alg from \Virtue\JWT\Algorithm
+ * @phpstan-import-type SigningAlgorithm from KmsClient
  */
 class AwsKmsSign extends Algorithm implements SignsToken
 {
     private const MaxMessageLengthBytes = 4096;
 
-    /** @var array<Alg,string> */
+    /** @var array<Alg,SigningAlgorithm> */
     private $signingAlgorithms = [
         'RS256' => 'RSASSA_PKCS1_V1_5_SHA_256',
         'RS384' => 'RSASSA_PKCS1_V1_5_SHA_384',
