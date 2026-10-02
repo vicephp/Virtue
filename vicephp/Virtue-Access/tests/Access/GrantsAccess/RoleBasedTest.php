@@ -35,6 +35,28 @@ class RoleBasedTest extends TestCase
         $this->assertFalse($access->granted('emptyResource'), 'User was granted a resource with an empty role list.');
     }
 
+    public function testFallsBackToRolesOfAnyResource()
+    {
+        $roles = ['aResource' => ['aRole'], RoleBased::ANY => ['admin']];
+
+        $admin = new RoleBased(new Access\Identities\User('anAdmin', ['admin']), $roles);
+        $this->assertTrue($admin->granted('unknownResource'), 'Admin was denied a resource covered by ANY.');
+        $this->assertFalse($admin->granted('aResource'), 'ANY was used although the resource has roles of its own.');
+
+        $user = new RoleBased(new Access\Identities\User('anUser', ['aRole']), $roles);
+        $this->assertFalse($user->granted('unknownResource'), 'User was granted a resource covered by ANY without its role.');
+        $this->assertTrue($user->granted('aResource'), 'User was denied a resource despite having its role.');
+    }
+
+    public function testDeniesResourceWithEmptyRolesDespiteAny()
+    {
+        $access = new RoleBased(
+            new Access\Identities\User('anAdmin', ['admin']), ['emptyResource' => [], RoleBased::ANY => ['admin']]
+        );
+
+        $this->assertFalse($access->granted('emptyResource'), 'An empty role list fell back to ANY.');
+    }
+
     public function testDeniesRootResourceWithoutRoles()
     {
         $access = new RoleBased(new Access\Identities\Root(), ['aResource' => ['aRole']]);
