@@ -48,9 +48,41 @@ class JWKSTest extends TestCase
         $token = new Token(['kid' => 'key-1'], []);
 
         $this->expectException(VerificationFailed::class);
+        $this->expectExceptionCode(VerificationFailed::ON_KEY);
         $this->expectExceptionMessage('No key found for kid: key-1');
 
         $token->verifyWith(new JWKS(new KeySet()));
+    }
+
+    public function testVerifyFailWhenAlgorithmDoesNotMatchKey(): void
+    {
+        $key = \openssl_pkey_new();
+        $this->assertNotFalse($key);
+        $private = '';
+        \openssl_pkey_export($key, $private);
+        Assert::string($private);
+
+        $details = \openssl_pkey_get_details($key);
+        $this->assertNotFalse($details);
+        Assert::isMap($details['rsa']);
+        Assert::string($details['rsa']['n']);
+        Assert::string($details['rsa']['e']);
+        $public = new PublicKey(
+            'key-1',
+            'RS256',
+            Base64Url::encode($details['rsa']['n']),
+            Base64Url::encode($details['rsa']['e'])
+        );
+
+        // validly signed, but with another algorithm than the key is meant for
+        $token = new Token(['kid' => 'key-1'], []);
+        $signed = $token->signWith(new OpenSSLSign(new PrivateKey('RS512', $private)));
+
+        $this->expectException(VerificationFailed::class);
+        $this->expectExceptionCode(VerificationFailed::ON_ALGORITHM);
+        $this->expectExceptionMessage("Algorithm 'RS512' does not match the key for kid: key-1");
+
+        $signed->verifyWith(new JWKS(new KeySet([$public])));
     }
 
     public function testVerifyFailWrongKey(): void

@@ -13,6 +13,7 @@ class VerificationFailed extends \RuntimeException
     public const ON_ALGORITHM = 6;
     public const ON_TIME = 7;
     public const ON_SIGNATURE = 8;
+    public const ON_KEY = 9;
 
     public function __construct(
         string $message = 'Could not verify signature.',

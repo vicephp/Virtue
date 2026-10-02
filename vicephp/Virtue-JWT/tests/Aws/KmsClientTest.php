@@ -24,6 +24,6 @@ class KmsClientTest extends TestCase
             'handler'     => $handler,
             'credentials' => ['key' => '', 'secret' => '']
         ]);
-        $client->sign(['Message' => '<message>', 'SigningAlgorithm' => '<alg>']);
+        $client->sign(['Message' => '<message>', 'SigningAlgorithm' => 'RSASSA_PKCS1_V1_5_SHA_256']);
     }
 }

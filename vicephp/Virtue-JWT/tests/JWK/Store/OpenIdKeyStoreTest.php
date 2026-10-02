@@ -15,6 +15,7 @@ class OpenIdKeyStoreTest extends TestCase
 
     /**
      * @dataProvider invalidOpenIdConfigResponse
+     * @param class-string<\Throwable> $expectedException
      */
     public function testInvalidOpenIdConfiguration(
         Response $openIdConfigResponse,
