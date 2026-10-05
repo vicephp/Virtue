@@ -186,4 +186,63 @@ class OpenIdKeyStoreTest extends TestCase
         $store = new OpenIdKeyStore($client);
         $store->getFor($token);
     }
+
+    public function testRejectsHttpIssuerWithoutRequest(): void
+    {
+        $client = M::mock(ClientInterface::class);
+        $client->expects()->request(M::any(), M::any())->never();
+
+        $this->expectException(\OutOfBoundsException::class);
+        $this->expectExceptionMessage("The value of issuer must be a URL with one of the schemes: https, 'http://issuer.ggs-ps.com' given");
+
+        (new OpenIdKeyStore($client))->getFor(new Token([], ['iss' => 'http://issuer.ggs-ps.com']));
+    }
+
+    public function testNeverFetchesHttpJwksUri(): void
+    {
+        $client = M::mock(ClientInterface::class);
+        $client->expects()
+            ->request('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration')
+            ->andReturn(new Response(200, [], Psr7\Utils::streamFor(json_encode(['jwks_uri' => 'http://issuer.ggs-ps.com/keys']))));
+        $client->expects()->request('GET', 'http://issuer.ggs-ps.com/keys')->never();
+
+        $this->expectException(\OutOfBoundsException::class);
+        $this->expectExceptionMessage("The value of jwks_uri must be a URL with one of the schemes: https, 'http://issuer.ggs-ps.com/keys' given");
+
+        (new OpenIdKeyStore($client))->getFor(new Token([], ['iss' => 'https://issuer.ggs-ps.com']));
+    }
+
+    public function testAllowsConfiguredSchemes(): void
+    {
+        $key = ['use' => 'sig', 'kty' => 'RSA', 'alg' => 'RS256', 'kid' => 'key id', 'n' => 'modulus', 'e' => 'exponent'];
+        $client = M::mock(ClientInterface::class);
+        $client->expects()
+            ->request('GET', 'http://issuer.local/.well-known/openid-configuration')
+            ->andReturn(new Response(200, [], Psr7\Utils::streamFor(json_encode(['jwks_uri' => 'http://issuer.local/keys']))));
+        $client->expects()
+            ->request('GET', 'http://issuer.local/keys')
+            ->andReturn(new Response(200, [], Psr7\Utils::streamFor(json_encode(['keys' => [$key]]))));
+
+        $keySet = (new OpenIdKeyStore($client))->allowSchemes('HTTP', 'https')->getFor(new Token([], ['iss' => 'http://issuer.local']));
+
+        $this->assertCount(1, $keySet->getKeys());
+    }
+
+    public function testReplacesAllowedSchemes(): void
+    {
+        $client = M::mock(ClientInterface::class);
+        $client->expects()->request(M::any(), M::any())->never();
+
+        $this->expectException(\OutOfBoundsException::class);
+        $this->expectExceptionMessage("The value of issuer must be a URL with one of the schemes: http, 'https://issuer.ggs-ps.com' given");
+
+        (new OpenIdKeyStore($client))->allowSchemes('http')->getFor(new Token([], ['iss' => 'https://issuer.ggs-ps.com']));
+    }
+
+    public function testRequiresAtLeastOneScheme(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        (new OpenIdKeyStore(M::mock(ClientInterface::class)))->allowSchemes();
+    }
 }
