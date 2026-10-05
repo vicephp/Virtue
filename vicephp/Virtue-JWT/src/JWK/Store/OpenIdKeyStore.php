@@ -28,7 +28,11 @@ class OpenIdKeyStore implements KeyStore
         Assert::string($issuer, 'Issuer must be a string');
         $this->assertScheme($issuer, 'issuer');
 
-        $response = $this->client->request('GET', rtrim($issuer, '/') . '/.well-known/openid-configuration');
+        $response = $this->client->request(
+            'GET',
+            rtrim($issuer, '/') . '/.well-known/openid-configuration',
+            $this->options()
+        );
         Assert::eq($response->getStatusCode(), 200, 'Failed to fetch OpenID configuration');
 
         $config = json_decode((string)$response->getBody(), true, 512);
@@ -46,7 +50,7 @@ class OpenIdKeyStore implements KeyStore
         Assert::string($config['jwks_uri']);
         $this->assertScheme($config['jwks_uri'], 'jwks_uri');
 
-        $response = $this->client->request('GET', $config['jwks_uri']);
+        $response = $this->client->request('GET', $config['jwks_uri'], $this->options());
         $keySet = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
         if (!is_array($keySet)) {
             $keySet = [];
@@ -74,6 +78,11 @@ class OpenIdKeyStore implements KeyStore
         $copy = clone $this;
         $copy->schemes = array_values(array_map('strtolower', $schemes));
         return $copy;
+    }
+
+    private function options(): array
+    {
+        return ['allow_redirects' => ['protocols' => $this->schemes]];
     }
 
     private function assertScheme(string $url, string $name): void

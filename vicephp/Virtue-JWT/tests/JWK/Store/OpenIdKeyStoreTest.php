@@ -2,7 +2,11 @@
 
 namespace Virtue\JWK\Store;
 
+use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Mockery as M;
 use Virtue\Api\TestCase;
@@ -27,7 +31,7 @@ class OpenIdKeyStoreTest extends TestCase
 
         $client = M::mock(ClientInterface::class);
         $client->shouldReceive('request')
-            ->with('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration')
+            ->with('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration', M::any())
             ->andReturn($openIdConfigResponse)
             ->once();
 
@@ -62,7 +66,7 @@ class OpenIdKeyStoreTest extends TestCase
         );
         $client = M::mock(ClientInterface::class);
         $client->shouldReceive('request')
-            ->with('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration')
+            ->with('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration', M::any())
             ->andReturn($response)
             ->once();
 
@@ -88,7 +92,7 @@ class OpenIdKeyStoreTest extends TestCase
         );
         $client = M::mock(ClientInterface::class);
         $client->shouldReceive('request')
-            ->with('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration')
+            ->with('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration', M::any())
             ->andReturn($response)
             ->once();
 
@@ -99,7 +103,7 @@ class OpenIdKeyStoreTest extends TestCase
             Psr7\Utils::streamFor(json_encode(['keys' => [$key]]))
         );
         $client->shouldReceive('request')
-            ->with('GET', 'https://issuer.ggs-ps.com/keys')
+            ->with('GET', 'https://issuer.ggs-ps.com/keys', M::any())
             ->andReturn($response)
             ->once();
 
@@ -122,7 +126,7 @@ class OpenIdKeyStoreTest extends TestCase
         );
         $client = M::mock(ClientInterface::class);
         $client->shouldReceive('request')
-            ->with('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration')
+            ->with('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration', M::any())
             ->andReturn($response)
             ->once();
 
@@ -147,7 +151,7 @@ class OpenIdKeyStoreTest extends TestCase
         );
         $client = M::mock(ClientInterface::class);
         $client->shouldReceive('request')
-            ->with('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration')
+            ->with('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration', M::any())
             ->andReturn($response)
             ->once();
 
@@ -169,7 +173,7 @@ class OpenIdKeyStoreTest extends TestCase
         );
         $client = M::mock(ClientInterface::class);
         $client->shouldReceive('request')
-            ->with('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration')
+            ->with('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration', M::any())
             ->andReturn($response)
             ->once();
 
@@ -179,7 +183,7 @@ class OpenIdKeyStoreTest extends TestCase
             Psr7\Utils::streamFor(json_encode(''))
         );
         $client->shouldReceive('request')
-            ->with('GET', 'https://issuer.ggs-ps.com/keys')
+            ->with('GET', 'https://issuer.ggs-ps.com/keys', M::any())
             ->andReturn($response)
             ->once();
 
@@ -190,7 +194,7 @@ class OpenIdKeyStoreTest extends TestCase
     public function testRejectsHttpIssuerWithoutRequest(): void
     {
         $client = M::mock(ClientInterface::class);
-        $client->expects()->request(M::any(), M::any())->never();
+        $client->expects()->request(M::any(), M::any(), M::any())->never();
 
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage("The value of issuer must be a URL with one of the schemes: https, 'http://issuer.ggs-ps.com' given");
@@ -202,9 +206,9 @@ class OpenIdKeyStoreTest extends TestCase
     {
         $client = M::mock(ClientInterface::class);
         $client->expects()
-            ->request('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration')
+            ->request('GET', 'https://issuer.ggs-ps.com/.well-known/openid-configuration', M::any())
             ->andReturn(new Response(200, [], Psr7\Utils::streamFor(json_encode(['jwks_uri' => 'http://issuer.ggs-ps.com/keys']))));
-        $client->expects()->request('GET', 'http://issuer.ggs-ps.com/keys')->never();
+        $client->expects()->request('GET', 'http://issuer.ggs-ps.com/keys', M::any())->never();
 
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage("The value of jwks_uri must be a URL with one of the schemes: https, 'http://issuer.ggs-ps.com/keys' given");
@@ -217,10 +221,10 @@ class OpenIdKeyStoreTest extends TestCase
         $key = ['use' => 'sig', 'kty' => 'RSA', 'alg' => 'RS256', 'kid' => 'key id', 'n' => 'modulus', 'e' => 'exponent'];
         $client = M::mock(ClientInterface::class);
         $client->expects()
-            ->request('GET', 'http://issuer.local/.well-known/openid-configuration')
+            ->request('GET', 'http://issuer.local/.well-known/openid-configuration', M::any())
             ->andReturn(new Response(200, [], Psr7\Utils::streamFor(json_encode(['jwks_uri' => 'http://issuer.local/keys']))));
         $client->expects()
-            ->request('GET', 'http://issuer.local/keys')
+            ->request('GET', 'http://issuer.local/keys', M::any())
             ->andReturn(new Response(200, [], Psr7\Utils::streamFor(json_encode(['keys' => [$key]]))));
 
         $keySet = (new OpenIdKeyStore($client))->allowSchemes('HTTP', 'https')->getFor(new Token([], ['iss' => 'http://issuer.local']));
@@ -231,7 +235,7 @@ class OpenIdKeyStoreTest extends TestCase
     public function testReplacesAllowedSchemes(): void
     {
         $client = M::mock(ClientInterface::class);
-        $client->expects()->request(M::any(), M::any())->never();
+        $client->expects()->request(M::any(), M::any(), M::any())->never();
 
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage("The value of issuer must be a URL with one of the schemes: http, 'https://issuer.ggs-ps.com' given");
@@ -244,5 +248,50 @@ class OpenIdKeyStoreTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         (new OpenIdKeyStore(M::mock(ClientInterface::class)))->allowSchemes();
+    }
+
+    public function testRefusesDiscoveryRedirectToHttp(): void
+    {
+        $this->expectException(BadResponseException::class);
+        $this->expectExceptionMessage('does not use one of the allowed redirect protocols: https');
+
+        $client = $this->client(
+            new Response(302, ['Location' => 'http://issuer.ggs-ps.com/.well-known/openid-configuration']),
+        );
+
+        (new OpenIdKeyStore($client))->getFor(new Token([], ['iss' => 'https://issuer.ggs-ps.com']));
+    }
+
+    public function testRefusesJwksRedirectToHttp(): void
+    {
+        $this->expectException(BadResponseException::class);
+        $this->expectExceptionMessage('does not use one of the allowed redirect protocols: https');
+
+        $client = $this->client(
+            new Response(200, [], Psr7\Utils::streamFor(json_encode(['jwks_uri' => 'https://issuer.ggs-ps.com/keys']))),
+            new Response(302, ['Location' => 'http://issuer.ggs-ps.com/keys']),
+        );
+
+        (new OpenIdKeyStore($client))->getFor(new Token([], ['iss' => 'https://issuer.ggs-ps.com']));
+    }
+
+    public function testFollowsRedirectsWithinAllowedSchemes(): void
+    {
+        $key = ['use' => 'sig', 'kty' => 'RSA', 'alg' => 'RS256', 'kid' => 'key id', 'n' => 'modulus', 'e' => 'exponent'];
+        $client = $this->client(
+            new Response(301, ['Location' => 'https://login.ggs-ps.com/.well-known/openid-configuration']),
+            new Response(200, [], Psr7\Utils::streamFor(json_encode(['jwks_uri' => 'https://issuer.ggs-ps.com/keys']))),
+            new Response(302, ['Location' => 'https://keys.ggs-ps.com/']),
+            new Response(200, [], Psr7\Utils::streamFor(json_encode(['keys' => [$key]]))),
+        );
+
+        $keySet = (new OpenIdKeyStore($client))->getFor(new Token([], ['iss' => 'https://issuer.ggs-ps.com']));
+
+        $this->assertCount(1, $keySet->getKeys());
+    }
+
+    private function client(Response ...$responses): Client
+    {
+        return new Client(['handler' => HandlerStack::create(new MockHandler(array_values($responses)))]);
     }
 }
