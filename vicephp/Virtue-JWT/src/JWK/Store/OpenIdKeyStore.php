@@ -14,6 +14,8 @@ class OpenIdKeyStore implements KeyStore
     private $client;
     /** @var bool */
     private $strict = false;
+    /** @var bool */
+    private $httpsOnly = false;
 
     public function __construct(ClientInterface $client)
     {
@@ -24,6 +26,7 @@ class OpenIdKeyStore implements KeyStore
     {
         $issuer = $token->payload('iss');
         Assert::string($issuer, 'Issuer must be a string');
+        $this->assertHttps($issuer, 'issuer');
 
         $response = $this->client->request('GET', rtrim($issuer, '/') . '/.well-known/openid-configuration');
         Assert::eq($response->getStatusCode(), 200, 'Failed to fetch OpenID configuration');
@@ -41,6 +44,7 @@ class OpenIdKeyStore implements KeyStore
             throw new \OutOfBoundsException('The value of jwks_uri must be a valid URI');
         }
         Assert::string($config['jwks_uri']);
+        $this->assertHttps($config['jwks_uri'], 'jwks_uri');
 
         $response = $this->client->request('GET', $config['jwks_uri']);
         $keySet = json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
@@ -62,5 +66,19 @@ class OpenIdKeyStore implements KeyStore
         $copy = clone $this;
         $copy->strict = true;
         return $copy;
+    }
+
+    public function httpsOnly(): self
+    {
+        $copy = clone $this;
+        $copy->httpsOnly = true;
+        return $copy;
+    }
+
+    private function assertHttps(string $url, string $name): void
+    {
+        if ($this->httpsOnly && strtolower((string) parse_url($url, PHP_URL_SCHEME)) !== 'https') {
+            throw new \OutOfBoundsException("The value of {$name} must be an https URL");
+        }
     }
 }
