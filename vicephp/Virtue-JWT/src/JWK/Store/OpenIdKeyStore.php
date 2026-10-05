@@ -80,6 +80,7 @@ class OpenIdKeyStore implements KeyStore
         return $copy;
     }
 
+    /** @return array{allow_redirects: array{protocols: list<string>}} */
     private function options(): array
     {
         return ['allow_redirects' => ['protocols' => $this->schemes]];
